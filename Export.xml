@@ -1,0 +1,30 @@
+<project name="Export to submit server" default="export" basedir=".">
+	<!--
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		This is an ANT build script to create a JAR file containing all .java source files
+		as well as the .submit, .project, and .classpath files, suitable for submission to the
+		submit server.
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	-->
+	<property name="jar.name" value="meeshquest-part1-sp07-submission.jar" />
+
+	<!-- Stuff that goes in the test-setup JAR -->
+	<!-- Java source directory -->
+	<property name="sub.dir" value="." />
+	<!-- List of all java source files that need to go into the test setup -->
+	<property name="sub.source" value="*.java, **/*.java" />
+	<property name="sub.other" value=".submit, .project, .classpath, README" />
+
+	<!-- 
+		TARGETS: The builds available in this file. 
+			    - - - - - - - - - - - - - - - - - -
+	-->
+
+	<target name="export">
+		<jar destfile="${jar.name}" update="false">
+			<fileset dir="." includes="${sub.source}" />
+			<fileset dir="." includes="${sub.other}" />
+		</jar>
+	</target>
+	
+</project>
