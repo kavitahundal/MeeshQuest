@@ -6,7 +6,7 @@
 		submit server.
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	-->
-	<property name="jar.name" value="meeshquest-part1-sp07-submission.jar" />
+	<property name="jar.name" value="meeshquest-part1-submission.jar" />
 
 	<!-- Stuff that goes in the test-setup JAR -->
 	<!-- Java source directory -->
