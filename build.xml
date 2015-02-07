@@ -1,27 +1,43 @@
-<project name="Export to submit server" default="export" basedir=".">
-	<!--
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		This is an ANT build script to create a JAR file containing all .java source files
-		as well as the .submit, .project, and .classpath files, suitable for submission to the
-		submit server.
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	-->
-	<property name="jar.name" value="meeshquest-part1-submission.jar" />
+<!--
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	This is an ANT build script to create a JAR file containing all .java source files
+	as well as the .submit, .project, and .classpath files, suitable for submission to the
+	submit server.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<project name="MeeshQuest Buildfile" default="all" basedir=".">
+	
+	<property name="prog.name" value="meeshquest.jar" />
+	<property name="submit.name" value="aliu1-meeshquest-part1-submission.jar" />
 
 	<!-- Stuff that goes in the test-setup JAR -->
-	<!-- Java source directory -->
-	<property name="sub.dir" value="." />
+
 	<!-- List of all java source files that need to go into the test setup -->
 	<property name="sub.source" value="*.java, **/*.java" />
 	<property name="sub.other" value=".submit, .project, .classpath, README" />
+	<!-- Contents of cmsc420utils.jar -->
+	<property name="sub.utils" value="lib/cmsc420util.jar" />
 
 	<!-- 
 		TARGETS: The builds available in this file. 
-			    - - - - - - - - - - - - - - - - - -
 	-->
+	
+	<target name="all" depends="test, submit" />
 
-	<target name="export">
-		<jar destfile="${jar.name}" update="false">
+	<target name="test">
+		<jar destfile="${prog.name}" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="cmsc420.meeshquest.part1.MeeshQuest"/>
+                <attribute name="Class-Path" value="."/>
+			</manifest>
+			<fileset dir="bin" />
+			<zipfileset excludes="META-INF/*.SF" src="${sub.utils}" />
+		</jar>
+	</target>
+	
+	<target name="submit">
+		<jar destfile="${submit.name}" update="false">
 			<fileset dir="." includes="${sub.source}" />
 			<fileset dir="." includes="${sub.other}" />
 		</jar>
