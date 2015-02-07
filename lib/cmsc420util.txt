@@ -1,1 +1,2 @@
 The class jar file 'cmsc420util.jar' goes in this directory.
+https://www.cs.umd.edu/users/meesh/420/cmsc420util.jar
