@@ -9,7 +9,7 @@
 <project name="MeeshQuest Buildfile" default="all" basedir=".">
 	
 	<property name="prog.name" value="meeshquest.jar" />
-	<property name="submit.name" value="aliu1-meeshquest-part1-submission.jar" />
+	<property name="submit.name" value="meeshquest-part1-submission_aliu1.jar" />
 
 	<!-- Stuff that goes in the test-setup JAR -->
 
