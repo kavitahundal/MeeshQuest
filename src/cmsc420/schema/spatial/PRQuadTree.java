@@ -4,12 +4,13 @@ import cmsc420.schema.City;
 
 public class PRQuadTree implements SpatialStructure {
 	
+	private TreeNode root;
 	private boolean hasBounds;
 	private float width;
 	private float height;
 	
 	public PRQuadTree() {
-		//
+		this.root = new WhiteNode();
 	}
 	
 	public PRQuadTree(float width, float height) {
@@ -19,20 +20,26 @@ public class PRQuadTree implements SpatialStructure {
 
 	@Override
 	public void add(City city) {
-		// TODO Auto-generated method stub
-		
+		if (!hasBounds) {
+			return;
+		}
+		//
 	}
 
 	@Override
 	public boolean contains(City city) {
-		// TODO Auto-generated method stub
+		if (!hasBounds) {
+			return false;
+		}
 		return false;
 	}
 
 	@Override
 	public void remove(City city) {
-		// TODO Auto-generated method stub
-		
+		if (!hasBounds) {
+			return;
+		}
+		//
 	}
 
 	@Override
