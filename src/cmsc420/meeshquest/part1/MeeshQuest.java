@@ -31,7 +31,9 @@ public class MeeshQuest {
 				doc = XmlUtility.validateNoNamespace(System.in);
 				Node root = doc.getFirstChild(); // root tag from XML document
 				NodeList commands = root.getChildNodes(); // command tags
-				
+				Element resultsRoot = results.createElement("results");
+				results.appendChild(resultsRoot); // root tag of XML output
+
 				/* retrieve spatial attributes */
 				NamedNodeMap atts = root.getAttributes();
 				Node width = atts.getNamedItem("spatialWidth");
@@ -43,10 +45,12 @@ public class MeeshQuest {
 				for (int i = 0; i < commands.getLength(); i++) {
 					Node commandNode = commands.item(i);
 					if (commandNode instanceof Element) {
-						// read the data stuff
 						String command = commandNode.getNodeName();
+						NamedNodeMap params = commandNode.getAttributes();
 						if (command.equals("createCity")) {
-							//
+							// retrieve params
+							// null check them all
+							// undefined error if one is null?
 						} else if (command.equals("deleteCity")) {
 							//
 						} else if (command.equals("clearAll")) {
@@ -65,13 +69,10 @@ public class MeeshQuest {
 							//
 						} else if (command.equals("nearestCity")) {
 							//
-						} else {
-							//
 						}
 					}
 				}
-			} catch (SAXException | IOException | ParserConfigurationException
-					| NumberFormatException e) {
+			} catch (SAXException | IOException | ParserConfigurationException e) {
 
 				/* create fatal error tag */
 				Element elt = results.createElement("fatalError");
