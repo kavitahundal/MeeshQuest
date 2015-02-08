@@ -16,10 +16,16 @@ public class TreeMapDictionary implements DictionaryStructure {
 		this.cityToName = new TreeMap<>(new CityCoordinateComparator());
 	}
 	
-	public void insert(City city) {
+	@Override
+	public void add(City city) {
 		// TODO what if coordinates are the same?
 		this.nameToCity.put(city.getName(), city);
 		this.cityToName.put(city, city.getName());
+	}
+	
+	@Override
+	public boolean contains(City city) {
+		return this.containsName(city.getName()) || this.containsCoordinates(city);
 	}
 	
 	public boolean containsName(String name) {
@@ -31,7 +37,8 @@ public class TreeMapDictionary implements DictionaryStructure {
 		// in other words, don't override equals :)
 	}
 	
-	public void delete(City city) {
+	@Override
+	public void remove(City city) {
 		// precondition: contains returns true
 		this.nameToCity.remove(city.getName());
 		this.cityToName.remove(city);
