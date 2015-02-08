@@ -12,6 +12,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import cmsc420.schema.CityColor;
+import cmsc420.schema.SortType;
 import cmsc420.xml.XmlUtility;
 
 public class MeeshQuest {
@@ -52,13 +54,13 @@ public class MeeshQuest {
 						int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
 						int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
 						int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
-						// color
+						CityColor color = CityColor.getCityColor(params.getNamedItem("color").getNodeValue());
 					} else if (command.equals("deleteCity")) {
 						String name = params.getNamedItem("name").getNodeValue();
 					} else if (command.equals("clearAll")) {
 						// no params
 					} else if (command.equals("listCities")) {
-						// comparator?
+						SortType sortBy = SortType.getSortType(params.getNamedItem("sortBy").getNodeValue());
 					} else if (command.equals("mapCity")) {
 						String name = params.getNamedItem("name").getNodeValue();
 					} else if (command.equals("unmapCity")) {
@@ -66,13 +68,12 @@ public class MeeshQuest {
 					} else if (command.equals("printPRQuadtree")) {
 						// no params
 					} else if (command.equals("saveMap")) {
-						// is a filename
 						String name = params.getNamedItem("name").getNodeValue();
 					} else if (command.equals("rangeCities")) {
 						int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
 						int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
 						int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
-						// optional filename for save?
+						String name = params.getNamedItem("name").getNodeValue();
 					} else if (command.equals("nearestCity")) {
 						int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
 						int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
@@ -80,7 +81,6 @@ public class MeeshQuest {
 				}
 			}
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-
 			/* create fatal error tag */
 			Element elt = results.createElement("fatalError");
 			results.appendChild(elt);
