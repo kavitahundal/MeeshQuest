@@ -6,7 +6,7 @@ import cmsc420.schema.City;
 import cmsc420.schema.CityCoordinateComparator;
 import cmsc420.schema.CityNameComparator;
 
-public class TreeMapDictionary {
+public class TreeMapDictionary implements DictionaryStructure {
 
 	private TreeMap<String, City> nameToCity;
 	private TreeMap<City, String> cityToName;
