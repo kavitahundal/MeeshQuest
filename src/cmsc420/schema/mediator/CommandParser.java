@@ -32,7 +32,7 @@ public class CommandParser {
 
 	private Document input;
 //	private Document output;
-	private Element results;
+//	private Element results;
 
 	private boolean processed;
 //	private float spatialWidth;
@@ -150,7 +150,8 @@ public class CommandParser {
 		NamedNodeMap attrs = root.getAttributes();
 		float spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
 		float spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
-		this.spatial = this.seed.generate(spatialWidth, spatialHeight); //TODO runner
+		this.spatial = this.seed.generate(spatialWidth, spatialHeight);
+		this.runner = new CommandRunner(this.dictionary, this.spatial, this.adjacencyList);
 
 		/* process each command */
 		for (int i = 0; i < commands.getLength(); i++) {
