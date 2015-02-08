@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -31,12 +30,7 @@ import cmsc420.xml.XmlUtility;
 public class CommandParser {
 
 	private Document input;
-//	private Document output;
-//	private Element results;
-
 	private boolean processed;
-//	private float spatialWidth;
-//	private float spatialHeight;
 
 	private DictionaryStructure dictionary;
 	private Seedling seed;
@@ -65,12 +59,7 @@ public class CommandParser {
 		this.seed = seed;
 		this.adjacencyList = adj;
 
-		/* initialize output XML document */
-//		try {
-//			this.output = XmlUtility.getDocumentBuilder().newDocument();
-//		} catch (ParserConfigurationException e) {
-//		}
-		
+		/* initialize output XML writer */
 		writer = new CommandWriter();
 	}
 
@@ -108,7 +97,6 @@ public class CommandParser {
 			this.input = XmlUtility.validateNoNamespace(xmlStream);
 			this.parse();
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-//			output.appendChild(output.createElement("fatalError"));
 			this.writer.fatalError();
 		}
 	}
@@ -130,7 +118,6 @@ public class CommandParser {
 			this.input = XmlUtility.validateNoNamespace(xmlFile);
 			this.parse();
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-//			output.appendChild(output.createElement("fatalError"));
 			this.writer.fatalError();
 		}
 	}
@@ -139,17 +126,14 @@ public class CommandParser {
 	 * process input
 	 */
 	private void parse() {
-//		this.results = output.createElement("results");
-//		this.output.appendChild(results); // root tag of XML output
-		this.writer.createRoot();
-
+		this.writer.createRoot(); // initialize writer for adding tags
 		Node root = this.input.getFirstChild(); // root tag from XML document
 		NodeList commands = root.getChildNodes(); // command tags
 
 		/* retrieve spatial attributes and generate spatial structure */
 		NamedNodeMap attrs = root.getAttributes();
-		float spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
-		float spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
+		int spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
+		int spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
 		this.spatial = this.seed.generate(spatialWidth, spatialHeight);
 		this.runner = new CommandRunner(this.dictionary, this.spatial, this.adjacencyList);
 
@@ -165,28 +149,36 @@ public class CommandParser {
 					int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
 					int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
 					CityColor color = CityColor.getCityColor(params.getNamedItem("color").getNodeValue());
+					this.runner.createCity(name, x, y, radius, color);
 				} else if (command.equals("deleteCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					this.runner.deleteCity(name);
 				} else if (command.equals("clearAll")) {
-					// no params
+					this.runner.clearAll();
 				} else if (command.equals("listCities")) {
 					SortType sortBy = SortType.getSortType(params.getNamedItem("sortBy").getNodeValue());
+					this.runner.listCities(sortBy);
 				} else if (command.equals("mapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					this.runner.mapCity(name);
 				} else if (command.equals("unmapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					this.runner.unmapCity(name);
 				} else if (command.equals("printPRQuadtree")) {
-					// no params
+					this.runner.printPRQuadTree();
 				} else if (command.equals("saveMap")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					this.runner.saveMap(name);
 				} else if (command.equals("rangeCities")) {
 					int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
 					int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
 					int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
 					String name = params.getNamedItem("name").getNodeValue();
+					this.runner.rangeCities(x, y, radius, name);
 				} else if (command.equals("nearestCity")) {
 					int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
 					int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
+					this.runner.nearestCity(x, y);
 				}
 			}
 		}
@@ -200,10 +192,6 @@ public class CommandParser {
 		if (this.processed) {
 			return;
 		}
-//		try {
-//			XmlUtility.print(this.output);
-//		} catch (TransformerException e) {
-//		}
 		this.writer.print();
 	}
 }
