@@ -31,17 +31,20 @@ import cmsc420.xml.XmlUtility;
 public class CommandParser {
 
 	private Document input;
-	private Document output;
+//	private Document output;
 	private Element results;
 
 	private boolean processed;
-	private float spatialWidth;
-	private float spatialHeight;
+//	private float spatialWidth;
+//	private float spatialHeight;
 
 	private DictionaryStructure dictionary;
 	private Seedling seed;
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
+	
+	private CommandRunner runner;
+	private CommandWriter writer;
 
 	/**
 	 * Constructor. Initializes functional data structures and prepares the XML
@@ -63,10 +66,12 @@ public class CommandParser {
 		this.adjacencyList = adj;
 
 		/* initialize output XML document */
-		try {
-			this.output = XmlUtility.getDocumentBuilder().newDocument();
-		} catch (ParserConfigurationException e) {
-		}
+//		try {
+//			this.output = XmlUtility.getDocumentBuilder().newDocument();
+//		} catch (ParserConfigurationException e) {
+//		}
+		
+		writer = new CommandWriter();
 	}
 
 	/**
@@ -103,7 +108,8 @@ public class CommandParser {
 			this.input = XmlUtility.validateNoNamespace(xmlStream);
 			this.parse();
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-			output.appendChild(output.createElement("fatalError"));
+//			output.appendChild(output.createElement("fatalError"));
+			this.writer.fatalError();
 		}
 	}
 
@@ -124,7 +130,8 @@ public class CommandParser {
 			this.input = XmlUtility.validateNoNamespace(xmlFile);
 			this.parse();
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-			output.appendChild(output.createElement("fatalError"));
+//			output.appendChild(output.createElement("fatalError"));
+			this.writer.fatalError();
 		}
 	}
 
@@ -132,17 +139,18 @@ public class CommandParser {
 	 * process input
 	 */
 	private void parse() {
-		this.results = output.createElement("results");
-		this.output.appendChild(results); // root tag of XML output
+//		this.results = output.createElement("results");
+//		this.output.appendChild(results); // root tag of XML output
+		this.writer.createRoot();
 
 		Node root = this.input.getFirstChild(); // root tag from XML document
 		NodeList commands = root.getChildNodes(); // command tags
 
 		/* retrieve spatial attributes and generate spatial structure */
 		NamedNodeMap attrs = root.getAttributes();
-		this.spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
-		this.spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
-		this.spatial = this.seed.generate(spatialWidth, spatialHeight);
+		float spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
+		float spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
+		this.spatial = this.seed.generate(spatialWidth, spatialHeight); //TODO runner
 
 		/* process each command */
 		for (int i = 0; i < commands.getLength(); i++) {
@@ -191,9 +199,10 @@ public class CommandParser {
 		if (this.processed) {
 			return;
 		}
-		try {
-			XmlUtility.print(this.output);
-		} catch (TransformerException e) {
-		}
+//		try {
+//			XmlUtility.print(this.output);
+//		} catch (TransformerException e) {
+//		}
+		this.writer.print();
 	}
 }
