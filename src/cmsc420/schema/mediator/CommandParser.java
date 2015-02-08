@@ -1,6 +1,8 @@
 package cmsc420.schema.mediator;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -20,54 +22,121 @@ import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.xml.XmlUtility;
 
+/**
+ * 
+ * 
+ * @author Andrew Liu
+ *
+ */
 public class CommandParser {
 
 	private Document input;
 	private Document output;
+	private Element results;
+
+	private boolean processed;
 	private float spatialWidth;
 	private float spatialHeight;
+
 	private DictionaryStructure dictionary;
 	private Seedling seed;
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
-	private boolean processed;
-	private Element results;
-	
-	// TODO documentation, print success/error, classes for each command???
 
+	/**
+	 * Constructor. Initializes functional data structures and prepares the XML
+	 * output document.
+	 * 
+	 * @param dict
+	 *            dictionary data structure
+	 * @param seed
+	 *            seedling for spatial data structure
+	 * @param adj
+	 *            adjacency list data structure
+	 */
 	public CommandParser(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj) {
 		this.processed = false;
-		
+
 		/* initialize data structures */
 		this.dictionary = dict;
 		this.seed = seed;
 		this.adjacencyList = adj;
-		
+
 		/* initialize output XML document */
 		try {
 			this.output = XmlUtility.getDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
 		}
 	}
-	
+
+	/**
+	 * Checks if the parser has processed any input yet.
+	 * 
+	 * @return whether this instance has run process yet
+	 */
+	public boolean isProcessed() {
+		return this.processed;
+	}
+
+	/**
+	 * Reads and validates XML input from stdin and proceeds to parse the input.
+	 * This method does nothing if process has already been called before.
+	 */
 	public void process() {
-		if (!this.processed) {
-			this.processed = true;
-			try {
-				input = XmlUtility.validateNoNamespace(System.in);
-				results = output.createElement("results");
-				output.appendChild(results); // root tag of XML output
-				this.parse();
-			} catch (SAXException | IOException | ParserConfigurationException e) {
-				output.appendChild(output.createElement("fatalError"));
-			}
+		this.process(System.in);
+	}
+
+	/**
+	 * Reads and validates XML input from an input stream and proceeds to parse
+	 * the input. This method does nothing if process has already been called
+	 * before.
+	 * 
+	 * @param xmlStream
+	 *            the XML input stream
+	 */
+	public void process(InputStream xmlStream) {
+		if (this.processed) {
+			return;
+		}
+		this.processed = true;
+		try {
+			this.input = XmlUtility.validateNoNamespace(xmlStream);
+			this.parse();
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			output.appendChild(output.createElement("fatalError"));
 		}
 	}
-	
+
+	/**
+	 * Reads and validates XML input from a file and proceeds to parse the
+	 * input. This method does nothing if process has already been called
+	 * before.
+	 * 
+	 * @param xmlFile
+	 *            the XML input file
+	 */
+	public void process(File xmlFile) {
+		if (this.processed) {
+			return;
+		}
+		this.processed = true;
+		try {
+			this.input = XmlUtility.validateNoNamespace(xmlFile);
+			this.parse();
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			output.appendChild(output.createElement("fatalError"));
+		}
+	}
+
+	/**
+	 * process input
+	 */
 	private void parse() {
-		Node root = input.getFirstChild(); // root tag from XML document
+		this.results = output.createElement("results");
+		this.output.appendChild(results); // root tag of XML output
+
+		Node root = this.input.getFirstChild(); // root tag from XML document
 		NodeList commands = root.getChildNodes(); // command tags
-		
 
 		/* retrieve spatial attributes and generate spatial structure */
 		NamedNodeMap attrs = root.getAttributes();
@@ -113,13 +182,18 @@ public class CommandParser {
 			}
 		}
 	}
-	
+
+	/**
+	 * Prints the XML output contents after processing the input commands. This
+	 * method does nothing if process has net yet been called before.
+	 */
 	public void print() {
 		if (this.processed) {
-			try {
-				XmlUtility.print(this.output);
-			} catch (TransformerException e) {
-			}	
+			return;
+		}
+		try {
+			XmlUtility.print(this.output);
+		} catch (TransformerException e) {
 		}
 	}
 }
