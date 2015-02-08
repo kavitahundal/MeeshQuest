@@ -14,6 +14,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import cmsc420.exceptions.CityAlreadyMappedException;
+import cmsc420.exceptions.CityDoesNotExistException;
+import cmsc420.exceptions.CityNotMappedException;
+import cmsc420.exceptions.CityOutOfBoundsException;
+import cmsc420.exceptions.DuplicateCityCoordinatesException;
+import cmsc420.exceptions.DuplicateCityNameException;
+import cmsc420.exceptions.MapIsEmptyException;
+import cmsc420.exceptions.NameNotInDictionaryException;
+import cmsc420.exceptions.NoCitiesExistInRangeException;
+import cmsc420.exceptions.NoCitiesToListException;
 import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
@@ -156,13 +166,23 @@ public class CommandParser {
 					int radius = Integer.parseInt(radiusString);
 					CityColor color = CityColor.getCityColor(colorString);
 					String[] parameters = { name, xString, yString, radiusString, colorString };
-					this.runner.createCity(name, x, y, radius, color);
-					this.writer.appendTag(null, command, parameters);
+					try {
+						this.runner.createCity(name, x, y, radius, color);
+						this.writer.appendTag(null, command, parameters);
+					} catch (DuplicateCityNameException | DuplicateCityCoordinatesException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (command.equals("deleteCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { name };
-					City deleted = this.runner.deleteCity(name);
-					this.writer.appendTagUnmapped(command, parameters, deleted);
+					try {
+						City deleted = this.runner.deleteCity(name);
+						this.writer.appendTagUnmapped(command, parameters, deleted);
+					} catch (CityDoesNotExistException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (command.equals("clearAll")) {
 					String[] parameters = {};
 					this.runner.clearAll();
@@ -171,22 +191,43 @@ public class CommandParser {
 					String sortByString = params.getNamedItem("sortBy").getNodeValue();
 					SortType sortBy = SortType.getSortType(sortByString);
 					String[] parameters = { sortByString };
-					List<City> cities = this.runner.listCities(sortBy);
-					this.writer.appendTag(command, parameters, cities);
+					try {
+						List<City> cities = this.runner.listCities(sortBy);
+						this.writer.appendTag(command, parameters, cities);
+					} catch (NoCitiesToListException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (command.equals("mapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { name };
-					this.runner.mapCity(name);
-					this.writer.appendTag(null, command, parameters);
+					try {
+						this.runner.mapCity(name);
+						this.writer.appendTag(null, command, parameters);
+					} catch (NameNotInDictionaryException | CityAlreadyMappedException | CityOutOfBoundsException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (command.equals("unmapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { name };
-					this.runner.unmapCity(name);
-					this.writer.appendTag(null, command, parameters);
+					try {
+						this.runner.unmapCity(name);
+						this.writer.appendTag(null, command, parameters);
+					} catch (NameNotInDictionaryException | CityNotMappedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (command.equals("printPRQuadtree")) {
 					String parameters[] = {};
-					PRQuadTree tree = this.runner.printPRQuadTree();
-					this.writer.appendTag(command, parameters, tree);
+					PRQuadTree tree;
+					try {
+						tree = this.runner.printPRQuadTree();
+						this.writer.appendTag(command, parameters, tree);
+					} catch (MapIsEmptyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (command.equals("saveMap")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = {};
@@ -201,16 +242,26 @@ public class CommandParser {
 					int radius = Integer.parseInt(radiusString);
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { xString, yString, radiusString, name };
-					List<City> cities = this.runner.rangeCities(x, y, radius, name);
-					this.writer.appendTag(command, parameters, cities);
+					try {
+						List<City> cities = this.runner.rangeCities(x, y, radius, name);
+						this.writer.appendTag(command, parameters, cities);
+					} catch (NoCitiesExistInRangeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				} else if (command.equals("nearestCity")) {
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
 					String[] parameters = { xString, yString };
-					City city = this.runner.nearestCity(x, y);
-					this.writer.appendTag(command, parameters, city);
+					try {
+						City city = this.runner.nearestCity(x, y);
+						this.writer.appendTag(command, parameters, city);
+					} catch (MapIsEmptyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}
