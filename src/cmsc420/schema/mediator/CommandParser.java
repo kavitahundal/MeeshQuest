@@ -3,6 +3,7 @@ package cmsc420.schema.mediator;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -13,10 +14,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyListStructure;
 import cmsc420.schema.dictionary.DictionaryStructure;
+import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.xml.XmlUtility;
@@ -126,7 +129,6 @@ public class CommandParser {
 	 * process input
 	 */
 	private void parse() {
-		this.writer.createRoot(); // initialize writer for adding tags
 		Node root = this.input.getFirstChild(); // root tag from XML document
 		NodeList commands = root.getChildNodes(); // command tags
 
@@ -155,33 +157,41 @@ public class CommandParser {
 					CityColor color = CityColor.getCityColor(colorString);
 					String[] parameters = { name, xString, yString, radiusString, colorString };
 					this.runner.createCity(name, x, y, radius, color);
+					this.writer.appendTag(null, command, parameters);
 				} else if (command.equals("deleteCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { name };
-					this.runner.deleteCity(name);
+					City deleted = this.runner.deleteCity(name);
+					this.writer.appendTagUnmapped(command, parameters, deleted);
 				} else if (command.equals("clearAll")) {
 					String[] parameters = {};
 					this.runner.clearAll();
+					this.writer.appendTag(null, command, parameters);
 				} else if (command.equals("listCities")) {
 					String sortByString = params.getNamedItem("sortBy").getNodeValue();
 					SortType sortBy = SortType.getSortType(sortByString);
 					String[] parameters = { sortByString };
-					this.runner.listCities(sortBy);
+					List<City> cities = this.runner.listCities(sortBy);
+					this.writer.appendTag(command, parameters, cities);
 				} else if (command.equals("mapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { name };
 					this.runner.mapCity(name);
+					this.writer.appendTag(null, command, parameters);
 				} else if (command.equals("unmapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { name };
 					this.runner.unmapCity(name);
+					this.writer.appendTag(null, command, parameters);
 				} else if (command.equals("printPRQuadtree")) {
 					String parameters[] = {};
-					this.runner.printPRQuadTree();
+					PRQuadTree tree = this.runner.printPRQuadTree();
+					this.writer.appendTag(command, parameters, tree);
 				} else if (command.equals("saveMap")) {
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = {};
 					this.runner.saveMap(name);
+					this.writer.appendTag(null, command, parameters);
 				} else if (command.equals("rangeCities")) {
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
@@ -191,14 +201,16 @@ public class CommandParser {
 					int radius = Integer.parseInt(radiusString);
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] parameters = { xString, yString, radiusString, name };
-					this.runner.rangeCities(x, y, radius, name);
+					List<City> cities = this.runner.rangeCities(x, y, radius, name);
+					this.writer.appendTag(command, parameters, cities);
 				} else if (command.equals("nearestCity")) {
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
 					String[] parameters = { xString, yString };
-					this.runner.nearestCity(x, y);
+					City city = this.runner.nearestCity(x, y);
+					this.writer.appendTag(command, parameters, city);
 				}
 			}
 		}

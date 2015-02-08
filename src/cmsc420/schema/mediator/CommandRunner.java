@@ -29,6 +29,7 @@ public class CommandRunner {
 	City deleteCity(String name) { // parameter->name + city (cityunmapped tag)
 		// city unmapped tag if put in prquadtree
 		// otherwise let's just return null
+		// city unmapped tag
 		return null;
 	}
 	
@@ -37,6 +38,7 @@ public class CommandRunner {
 	}
 	
 	List<City> listCities(SortType sortBy) { // citylist = 1+ cities = sorted by sortBy
+		// citylist -> city tags
 		return null;
 	}
 	
@@ -49,6 +51,7 @@ public class CommandRunner {
 	}
 	
 	PRQuadTree printPRQuadTree() { // this one is tricky
+		// gray, black, white tags
 		return null;
 	}
 	
@@ -57,10 +60,12 @@ public class CommandRunner {
 	}
 	
 	List<City> rangeCities(int x, int y, int radius, String name) { // one citylist = multiple cities = asciibetical
+		// citylist -> city tags
 		return null;
 	}
 	
 	City nearestCity(int x, int y) { // single city
+		// city tag
 		return null;
 	}
 }
