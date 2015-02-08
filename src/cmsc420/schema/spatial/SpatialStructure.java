@@ -4,6 +4,4 @@ import cmsc420.schema.City;
 import cmsc420.schema.DataStructure;
 
 public interface SpatialStructure extends DataStructure<City> {
-
-	public void setBounds(float width, float height);
 }

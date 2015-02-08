@@ -16,6 +16,7 @@ import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyListStructure;
 import cmsc420.schema.dictionary.DictionaryStructure;
+import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.xml.XmlUtility;
 
@@ -26,6 +27,7 @@ public class CommandParser {
 	private float spatialWidth;
 	private float spatialHeight;
 	private DictionaryStructure dictionary;
+	private Seedling seed;
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
 	private boolean processed;
@@ -33,13 +35,13 @@ public class CommandParser {
 	
 	// TODO documentation, print success/error, classes for each command???
 
-	public CommandParser(DictionaryStructure dictionary, SpatialStructure spatial, AdjacencyListStructure adjacencyList) {
+	public CommandParser(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj) {
 		this.processed = false;
 		
 		/* initialize data structures */
-		this.dictionary = dictionary;
-		this.spatial = spatial;
-		this.adjacencyList = adjacencyList;
+		this.dictionary = dict;
+		this.seed = seed;
+		this.adjacencyList = adj;
 		
 		/* initialize output XML document */
 		try {
@@ -63,15 +65,15 @@ public class CommandParser {
 	}
 	
 	private void parse() {
-		//
 		Node root = input.getFirstChild(); // root tag from XML document
 		NodeList commands = root.getChildNodes(); // command tags
 		
 
-		/* retrieve spatial attributes */
+		/* retrieve spatial attributes and generate spatial structure */
 		NamedNodeMap attrs = root.getAttributes();
-		spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
-		spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
+		this.spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
+		this.spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
+		this.spatial = this.seed.generate(spatialWidth, spatialHeight);
 
 		/* process each command */
 		for (int i = 0; i < commands.getLength(); i++) {
