@@ -1,5 +1,8 @@
 package cmsc420.schema.adjacencylist;
 
-public interface AdjacencyListStructure {
+import cmsc420.schema.City;
+import cmsc420.schema.DataStructure;
+
+public interface AdjacencyListStructure extends DataStructure<City> {
 
 }
