@@ -36,7 +36,7 @@ public class CommandParser {
 	private Seedling seed;
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
-	
+
 	private CommandRunner runner;
 	private CommandWriter writer;
 
@@ -144,40 +144,60 @@ public class CommandParser {
 				String command = commandNode.getNodeName();
 				NamedNodeMap params = commandNode.getAttributes();
 				if (command.equals("createCity")) {
+					String xString = params.getNamedItem("x").getNodeValue();
+					String yString = params.getNamedItem("y").getNodeValue();
+					String radiusString = params.getNamedItem("radius").getNodeValue();
+					String colorString = params.getNamedItem("color").getNodeValue();
 					String name = params.getNamedItem("name").getNodeValue();
-					int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
-					int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
-					int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
-					CityColor color = CityColor.getCityColor(params.getNamedItem("color").getNodeValue());
+					int x = Integer.parseInt(xString);
+					int y = Integer.parseInt(yString);
+					int radius = Integer.parseInt(radiusString);
+					CityColor color = CityColor.getCityColor(colorString);
+					String[] parameters = { name, xString, yString, radiusString, colorString };
 					this.runner.createCity(name, x, y, radius, color);
 				} else if (command.equals("deleteCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] parameters = { name };
 					this.runner.deleteCity(name);
 				} else if (command.equals("clearAll")) {
+					String[] parameters = {};
 					this.runner.clearAll();
 				} else if (command.equals("listCities")) {
-					SortType sortBy = SortType.getSortType(params.getNamedItem("sortBy").getNodeValue());
+					String sortByString = params.getNamedItem("sortBy").getNodeValue();
+					SortType sortBy = SortType.getSortType(sortByString);
+					String[] parameters = { sortByString };
 					this.runner.listCities(sortBy);
 				} else if (command.equals("mapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] parameters = { name };
 					this.runner.mapCity(name);
 				} else if (command.equals("unmapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] parameters = { name };
 					this.runner.unmapCity(name);
 				} else if (command.equals("printPRQuadtree")) {
+					String parameters[] = {};
 					this.runner.printPRQuadTree();
 				} else if (command.equals("saveMap")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] parameters = {};
 					this.runner.saveMap(name);
 				} else if (command.equals("rangeCities")) {
-					int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
-					int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
-					int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
+					String xString = params.getNamedItem("x").getNodeValue();
+					String yString = params.getNamedItem("y").getNodeValue();
+					String radiusString = params.getNamedItem("radius").getNodeValue();
+					int x = Integer.parseInt(xString);
+					int y = Integer.parseInt(yString);
+					int radius = Integer.parseInt(radiusString);
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] parameters = { xString, yString, radiusString, name };
 					this.runner.rangeCities(x, y, radius, name);
 				} else if (command.equals("nearestCity")) {
-					int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
-					int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
+					String xString = params.getNamedItem("x").getNodeValue();
+					String yString = params.getNamedItem("y").getNodeValue();
+					int x = Integer.parseInt(xString);
+					int y = Integer.parseInt(yString);
+					String[] parameters = { xString, yString };
 					this.runner.nearestCity(x, y);
 				}
 			}

@@ -1,9 +1,13 @@
 package cmsc420.schema.mediator;
 
+import java.util.List;
+
+import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyListStructure;
 import cmsc420.schema.dictionary.DictionaryStructure;
+import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.SpatialStructure;
 
 public class CommandRunner {
@@ -22,16 +26,18 @@ public class CommandRunner {
 		//
 	}
 	
-	void deleteCity(String name) {
-		//
+	City deleteCity(String name) { // parameter->name + city (cityunmapped tag)
+		// city unmapped tag if put in prquadtree
+		// otherwise let's just return null
+		return null;
 	}
 	
 	void clearAll() {
 		//
 	}
 	
-	void listCities(SortType sortBy) {
-		//
+	List<City> listCities(SortType sortBy) { // citylist = 1+ cities = sorted by sortBy
+		return null;
 	}
 	
 	void mapCity(String name) {
@@ -42,19 +48,19 @@ public class CommandRunner {
 		//
 	}
 	
-	void printPRQuadTree() {
-		//
+	PRQuadTree printPRQuadTree() { // this one is tricky
+		return null;
 	}
 	
 	void saveMap(String name) {
-		//
+		//	
 	}
 	
-	void rangeCities(int x, int y, int radius, String name) {
-		//
+	List<City> rangeCities(int x, int y, int radius, String name) { // one citylist = multiple cities = asciibetical
+		return null;
 	}
 	
-	void nearestCity(int x, int y) {
-		//
+	City nearestCity(int x, int y) { // single city
+		return null;
 	}
 }
