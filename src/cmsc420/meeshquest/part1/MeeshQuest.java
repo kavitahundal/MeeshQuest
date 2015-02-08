@@ -16,10 +16,6 @@ import cmsc420.xml.XmlUtility;
 
 public class MeeshQuest {
 
-	private static final String ERROR_TAG = "fatalError";
-	private static final String WIDTH_TAG = "spatialWidth";
-	private static final String HEIGHT_TAG = "spatialHeight";
-
 	public static void main(String[] args) {
 
 		/* XML documents for input and output */
@@ -38,23 +34,47 @@ public class MeeshQuest {
 				
 				/* retrieve spatial attributes */
 				NamedNodeMap atts = root.getAttributes();
-				String width = atts.getNamedItem(WIDTH_TAG).getNodeValue();
-				String height = atts.getNamedItem(HEIGHT_TAG).getNodeValue();
-				int spatialWidth = Integer.parseInt(width);
-				int spatialHeight = Integer.parseInt(height);
+				Node width = atts.getNamedItem("spatialWidth");
+				Node height = atts.getNamedItem("spatialHeight");
+				int spatialWidth = Integer.parseInt(width.getNodeValue());
+				int spatialHeight = Integer.parseInt(height.getNodeValue());
 
 				/* process each command */
 				for (int i = 0; i < commands.getLength(); i++) {
-					Node command = commands.item(i);
-					if (command instanceof Element) {
+					Node commandNode = commands.item(i);
+					if (commandNode instanceof Element) {
 						// read the data stuff
+						String command = commandNode.getNodeName();
+						if (command.equals("createCity")) {
+							//
+						} else if (command.equals("deleteCity")) {
+							//
+						} else if (command.equals("clearAll")) {
+							//
+						} else if (command.equals("listCities")) {
+							//
+						} else if (command.equals("mapCity")) {
+							//
+						} else if (command.equals("unmapCity")) {
+							//
+						} else if (command.equals("printPRQuadtree")) {
+							//
+						} else if (command.equals("saveMap")) {
+							//
+						} else if (command.equals("rangeCities")) {
+							//
+						} else if (command.equals("nearestCity")) {
+							//
+						} else {
+							//
+						}
 					}
 				}
 			} catch (SAXException | IOException | ParserConfigurationException
 					| NumberFormatException e) {
 
 				/* create fatal error tag */
-				Element elt = results.createElement(ERROR_TAG);
+				Element elt = results.createElement("fatalError");
 				results.appendChild(elt);
 			}
 
