@@ -25,67 +25,71 @@ public class MeeshQuest {
 		/* initialize output XML document */
 		try {
 			results = XmlUtility.getDocumentBuilder().newDocument();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace(); // should never occur
+		}
+		/* validate input XML */
+		try {
+			doc = XmlUtility.validateNoNamespace(System.in);
+			Node root = doc.getFirstChild(); // root tag from XML document
+			NodeList commands = root.getChildNodes(); // command tags
+			Element resultsRoot = results.createElement("results");
+			results.appendChild(resultsRoot); // root tag of XML output
 
-			/* validate input XML */
-			try {
-				doc = XmlUtility.validateNoNamespace(System.in);
-				Node root = doc.getFirstChild(); // root tag from XML document
-				NodeList commands = root.getChildNodes(); // command tags
-				Element resultsRoot = results.createElement("results");
-				results.appendChild(resultsRoot); // root tag of XML output
+			/* retrieve spatial attributes */
+			NamedNodeMap attrs = root.getAttributes();
+			int spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
+			int spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
 
-				/* retrieve spatial attributes */
-				NamedNodeMap atts = root.getAttributes();
-				Node width = atts.getNamedItem("spatialWidth");
-				Node height = atts.getNamedItem("spatialHeight");
-				int spatialWidth = Integer.parseInt(width.getNodeValue());
-				int spatialHeight = Integer.parseInt(height.getNodeValue());
-
-				/* process each command */
-				for (int i = 0; i < commands.getLength(); i++) {
-					Node commandNode = commands.item(i);
-					if (commandNode instanceof Element) {
-						String command = commandNode.getNodeName();
-						NamedNodeMap params = commandNode.getAttributes();
-						if (command.equals("createCity")) {
-							// retrieve params
-							// null check them all
-							// undefined error if one is null?
-						} else if (command.equals("deleteCity")) {
-							//
-						} else if (command.equals("clearAll")) {
-							//
-						} else if (command.equals("listCities")) {
-							//
-						} else if (command.equals("mapCity")) {
-							//
-						} else if (command.equals("unmapCity")) {
-							//
-						} else if (command.equals("printPRQuadtree")) {
-							//
-						} else if (command.equals("saveMap")) {
-							//
-						} else if (command.equals("rangeCities")) {
-							//
-						} else if (command.equals("nearestCity")) {
-							//
-						}
+			/* process each command */
+			for (int i = 0; i < commands.getLength(); i++) {
+				Node commandNode = commands.item(i);
+				if (commandNode instanceof Element) {
+					String command = commandNode.getNodeName();
+					NamedNodeMap params = commandNode.getAttributes();
+					if (command.equals("createCity")) {
+						String name = params.getNamedItem("name").getNodeValue();
+						int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
+						int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
+						int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
+						// color
+					} else if (command.equals("deleteCity")) {
+						String name = params.getNamedItem("name").getNodeValue();
+					} else if (command.equals("clearAll")) {
+						// no params
+					} else if (command.equals("listCities")) {
+						// comparator?
+					} else if (command.equals("mapCity")) {
+						String name = params.getNamedItem("name").getNodeValue();
+					} else if (command.equals("unmapCity")) {
+						String name = params.getNamedItem("name").getNodeValue();
+					} else if (command.equals("printPRQuadtree")) {
+						// no params
+					} else if (command.equals("saveMap")) {
+						// is a filename
+						String name = params.getNamedItem("name").getNodeValue();
+					} else if (command.equals("rangeCities")) {
+						int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
+						int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
+						int radius = Integer.parseInt(params.getNamedItem("radius").getNodeValue());
+						// optional filename for save?
+					} else if (command.equals("nearestCity")) {
+						int x = Integer.parseInt(params.getNamedItem("x").getNodeValue());
+						int y = Integer.parseInt(params.getNamedItem("y").getNodeValue());
 					}
 				}
-			} catch (SAXException | IOException | ParserConfigurationException e) {
-
-				/* create fatal error tag */
-				Element elt = results.createElement("fatalError");
-				results.appendChild(elt);
 			}
+		} catch (SAXException | IOException | ParserConfigurationException e) {
 
-			/* print output XML document */
-			try {
-				XmlUtility.print(results);
-			} catch (TransformerException e) {
-				e.printStackTrace(); // should never occur
-			}
-		} catch (ParserConfigurationException e) {
+			/* create fatal error tag */
+			Element elt = results.createElement("fatalError");
+			results.appendChild(elt);
+		}
+
+		/* print output XML document */
+		try {
+			XmlUtility.print(results);
+		} catch (TransformerException e) {
 			e.printStackTrace(); // should never occur
 		}
 
