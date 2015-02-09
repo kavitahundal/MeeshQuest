@@ -99,8 +99,6 @@ public class CommandRunner {
 	}
 
 	List<City> listCities(SortType sortBy) throws NoCitiesToListException {
-		// citylist = 1+ cities = sorted by sortBy
-		// citylist -> city tags
 		if (this.dictionary.size() == 0) {
 			throw new NoCitiesToListException();
 		}
@@ -119,7 +117,8 @@ public class CommandRunner {
 			throw new CityOutOfBoundsException();
 		}
 		this.spatial.add(city);
-		// TODO canvas plus + need to draw graynode quadrants
+		this.addCity(city);
+		// TODO need to draw graynode quadrants
 	}
 
 	void unmapCity(String name) throws NameNotInDictionaryException, CityNotMappedException {
@@ -128,13 +127,11 @@ public class CommandRunner {
 		}
 		City city = this.dictionary.getCity(name);
 		if (!this.spatial.contains(city)) {
-			// param is name of city
 			throw new CityNotMappedException();
 		} else {
-			// remove city
 			this.spatial.remove(city);
-			// canvas plus
-			// TODO
+			this.removeCity(city);
+			// TODO remove quadrant lines?
 		}
 	}
 
@@ -180,5 +177,13 @@ public class CommandRunner {
 
 	void close() {
 		this.canvas.dispose();
+	}
+	
+	void addCity(City city) {
+		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
+	}
+	
+	void removeCity(City city) {
+		this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
 	}
 }

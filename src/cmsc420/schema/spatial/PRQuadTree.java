@@ -70,5 +70,7 @@ public class PRQuadTree implements SpatialStructure {
 		xmlRoot.appendChild(this.root.elementize(doc));
 		return xmlRoot;
 	}
+	
+	// TODO need method to check if last added node was gray
 
 }
