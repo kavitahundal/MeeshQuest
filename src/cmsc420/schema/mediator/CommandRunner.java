@@ -182,7 +182,7 @@ public class CommandRunner {
 		} else {
 			this.spatial.remove(city);
 			this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
-			// TODO remove quadrant lines? + remove circle?
+			// TODO remove quadrant lines
 		}
 	}
 
@@ -253,11 +253,13 @@ public class CommandRunner {
 		if (cities.size() == 0) {
 			throw new NoCitiesExistInRangeException();
 		} else {
-			this.canvas.addCircle(x, y, radius, Color.BLUE, false);
 			if (saveMap != null) {
+				// assuming we only add the circle for this step (and then remove)
+				this.canvas.addCircle(x, y, radius, Color.BLUE, false);
 				this.saveMap(saveMap);
+				this.canvas.removeCircle(x, y, radius, Color.BLUE, false);
 			}
-			return cities;
+			return radius == 0 ? new ArrayList<City>() : cities;
 		}
 	}
 
@@ -265,7 +267,7 @@ public class CommandRunner {
 	 * Will return the name and location of the closest city to the specified
 	 * point in space. To do this correctly, you may want to use an algorithm
 	 * using a PriorityQueue, such as
-	 * www.cs.umd.edu/users/meesh/cmsc420/Notes/neigh or
+	 * www.cs.umd.edu/users/meesh/cmsc420/Notes/neighbornotes/incnear.pdf or
 	 * www.cs.umd.edu/users/meesh/cmsc420/Notes/neighbornotes/incnear2.pdf –
 	 * otherwise, you might not be fast enough.
 	 * 
@@ -279,7 +281,7 @@ public class CommandRunner {
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		}
-		// TODO
+		// TODO get city
 		return null;
 	}
 
