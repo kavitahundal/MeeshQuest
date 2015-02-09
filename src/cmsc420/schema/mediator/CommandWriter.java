@@ -150,8 +150,8 @@ public class CommandWriter {
 	 */
 	private Element mapLocation(City city, Element tag) {
 		tag.setAttribute("name", city.getName());
-		tag.setAttribute("x", Float.toString(city.x));
-		tag.setAttribute("y", Float.toString(city.y));
+		tag.setAttribute("x", Integer.toString((int) city.x));
+		tag.setAttribute("y", Integer.toString((int) city.y));
 		tag.setAttribute("color", city.getColor().toString());
 		tag.setAttribute("radius", Integer.toString(city.getRadius()));
 		return tag;

@@ -16,6 +16,7 @@ public class City extends Float {
 		super(x, y);
 		this.name = name;
 		this.color = color;
+		this.radius = radius;
 	}
 
 	public String getName() {
