@@ -1,5 +1,6 @@
 package cmsc420.schema.mediator;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,8 @@ public class CommandRunner {
 		this.adjacencyList = adj;
 		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
 				(int) this.spatial.getSpatialHeight());
+		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
+				Color.BLACK, false);
 	}
 
 	/**
@@ -67,18 +70,17 @@ public class CommandRunner {
 	}
 
 	City deleteCity(String name) throws CityDoesNotExistException {
-		// parameter->name + city (cityunmapped tag)
-		// city unmapped tag if put in prquadtree
-		// otherwise let's just return null
-		// city unmapped tag
 		if (!this.dictionary.containsName(name)) {
 			throw new CityDoesNotExistException();
 		}
-		// remove city TODO need to *get* city from name
-		if (this.spatial.contains(this.dictionary.getCity(name))) {
-			// remove from spatial
-			// return city
-			return null;
+		City city = this.dictionary.getCity(name);
+		this.dictionary.remove(city);
+		if (this.spatial.contains(city)) {
+			try {
+				this.unmapCity(name);
+			} catch (NameNotInDictionaryException | CityNotMappedException e) {
+			}
+			return city;
 		} else {
 			return null;
 		}
@@ -92,6 +94,8 @@ public class CommandRunner {
 		}
 		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
 				(int) this.spatial.getSpatialHeight());
+		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
+				Color.BLACK, false);
 	}
 
 	List<City> listCities(SortType sortBy) throws NoCitiesToListException {
@@ -118,26 +122,27 @@ public class CommandRunner {
 		if (city.x > this.spatial.getSpatialWidth() || city.y > this.spatial.getSpatialHeight()) {
 			throw new CityOutOfBoundsException();
 		}
-		// add city + canvas plus
-		// TODO check bounds
+		this.spatial.add(city);
+		// TODO canvas plus + need to draw graynode quadrants
 	}
 
 	void unmapCity(String name) throws NameNotInDictionaryException, CityNotMappedException {
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
-		} else if (!this.spatial.contains(this.dictionary.getCity(name))) {
+		}
+		City city = this.dictionary.getCity(name);
+		if (!this.spatial.contains(city)) {
 			// param is name of city
 			throw new CityNotMappedException();
 		} else {
 			// remove city
+			this.spatial.remove(city);
 			// canvas plus
 			// TODO
 		}
 	}
 
 	PRQuadTree printPRQuadTree() throws MapIsEmptyException {
-		// this one is tricky
-		// gray, black, white tags
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		} else {

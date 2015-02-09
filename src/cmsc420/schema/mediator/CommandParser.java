@@ -256,6 +256,7 @@ public class CommandParser {
 				}
 			}
 		}
+		this.runner.close();
 	}
 
 	/**
