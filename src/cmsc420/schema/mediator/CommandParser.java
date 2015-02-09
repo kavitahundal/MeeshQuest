@@ -165,67 +165,75 @@ public class CommandParser {
 					int y = Integer.parseInt(yString);
 					int radius = Integer.parseInt(radiusString);
 					CityColor color = CityColor.getCityColor(colorString);
+					String[] paramNames = { "name", "x", "y", "radius", "color" };
 					String[] parameters = { name, xString, yString, radiusString, colorString };
 					try {
 						this.runner.createCity(name, x, y, radius, color);
-						this.writer.appendTag(null, command, parameters);
+						this.writer.appendTag(null, command, parameters, paramNames);
 					} catch (DuplicateCityNameException | DuplicateCityCoordinatesException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("deleteCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					try {
 						City deleted = this.runner.deleteCity(name);
-						this.writer.appendTagUnmapped(command, parameters, deleted);
+						this.writer.appendTagUnmapped(command, parameters, paramNames, deleted);
 					} catch (CityDoesNotExistException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("clearAll")) {
+					String[] paramNames = {};
 					String[] parameters = {};
 					this.runner.clearAll();
-					this.writer.appendTag(null, command, parameters);
+					this.writer.appendTag(null, command, parameters, paramNames);
 				} else if (command.equals("listCities")) {
 					String sortByString = params.getNamedItem("sortBy").getNodeValue();
 					SortType sortBy = SortType.getSortType(sortByString);
+					String[] paramNames = { "sortBy" };
 					String[] parameters = { sortByString };
 					try {
 						List<City> cities = this.runner.listCities(sortBy);
-						this.writer.appendTag(command, parameters, cities);
+						this.writer.appendTag(command, parameters, paramNames, cities);
 					} catch (NoCitiesToListException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("mapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					try {
 						this.runner.mapCity(name);
-						this.writer.appendTag(null, command, parameters);
+						this.writer.appendTag(null, command, parameters, paramNames);
 					} catch (NameNotInDictionaryException | CityAlreadyMappedException | CityOutOfBoundsException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("unmapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					try {
 						this.runner.unmapCity(name);
-						this.writer.appendTag(null, command, parameters);
+						this.writer.appendTag(null, command, parameters, paramNames);
 					} catch (NameNotInDictionaryException | CityNotMappedException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("printPRQuadtree")) {
+					String[] paramNames = {};
 					String parameters[] = {};
 					try {
 						PRQuadTree tree = this.runner.printPRQuadTree();
-						this.writer.appendTag(command, parameters, tree);
+						this.writer.appendTag(command, parameters, paramNames, tree);
 					} catch (MapIsEmptyException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("saveMap")) {
 					String name = params.getNamedItem("name").getNodeValue();
+					String[] paramNames = {};
 					String[] parameters = {};
 					this.runner.saveMap(name);
-					this.writer.appendTag(null, command, parameters);
+					this.writer.appendTag(null, command, parameters, paramNames);
 				} else if (command.equals("rangeCities")) {
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
@@ -233,25 +241,27 @@ public class CommandParser {
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
 					int radius = Integer.parseInt(radiusString);
-					String name = params.getNamedItem("name").getNodeValue();
+					String name = params.getNamedItem("saveMap").getNodeValue();
+					String[] paramNames = { "x", "y", "radius", "saveMap" };
 					String[] parameters = { xString, yString, radiusString, name };
 					try {
 						List<City> cities = this.runner.rangeCities(x, y, radius, name);
-						this.writer.appendTag(command, parameters, cities);
+						this.writer.appendTag(command, parameters, paramNames, cities);
 					} catch (NoCitiesExistInRangeException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("nearestCity")) {
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
+					String[] paramNames = { "x", "y" };
 					String[] parameters = { xString, yString };
 					try {
 						City city = this.runner.nearestCity(x, y);
-						this.writer.appendTag(command, parameters, city);
+						this.writer.appendTag(command, parameters, paramNames, city);
 					} catch (MapIsEmptyException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				}
 			}
