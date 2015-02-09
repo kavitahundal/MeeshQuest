@@ -14,4 +14,12 @@ public enum SortType {
 			return null;
 		}
 	}
+	
+	public String toString() {
+		if (this.equals(SortType.name)) {
+			return "name";
+		} else {
+			return "coordinate";
+		}
+	}
 }

@@ -30,4 +30,9 @@ public class City extends Float {
 	public int getRadius() {
 		return this.radius;
 	}
+	
+	@Override
+	public String toString() {
+		return this.name + " " + this.x + " " + this.y + " " + this.radius + " " + this.color.toString();
+	}
 }
