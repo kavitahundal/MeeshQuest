@@ -34,7 +34,8 @@ public class CommandRunner {
 		this.dictionary = dict;
 		this.spatial = spatial;
 		this.adjacencyList = adj;
-		this.canvas = new CanvasPlus("MeeshQuest", this.spatial.getSpatialWidth(), this.spatial.getSpatialHeight());
+		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
+				(int) this.spatial.getSpatialHeight());
 	}
 
 	/**
@@ -89,7 +90,8 @@ public class CommandRunner {
 		if (this.adjacencyList != null) {
 			this.adjacencyList = (AdjacencyListStructure) this.adjacencyList.reset();
 		}
-		this.canvas = new CanvasPlus("MeeshQuest", this.spatial.getSpatialWidth(), this.spatial.getSpatialHeight());
+		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
+				(int) this.spatial.getSpatialHeight());
 	}
 
 	List<City> listCities(SortType sortBy) throws NoCitiesToListException {

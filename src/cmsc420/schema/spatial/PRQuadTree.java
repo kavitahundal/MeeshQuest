@@ -6,11 +6,11 @@ import cmsc420.schema.DataStructure;
 public class PRQuadTree implements SpatialStructure {
 	
 	private TreeNode root;
-	private int width;
-	private int height;
+	private float width;
+	private float height;
 	private int size;
 	
-	PRQuadTree(int width, int height) {
+	PRQuadTree(float width, float height) {
 		this.root = new WhiteNode();
 		this.width = width;
 		this.height = height;
@@ -45,12 +45,12 @@ public class PRQuadTree implements SpatialStructure {
 	}
 
 	@Override
-	public int getSpatialWidth() {
+	public float getSpatialWidth() {
 		return this.width;
 	}
 
 	@Override
-	public int getSpatialHeight() {
+	public float getSpatialHeight() {
 		return this.height;
 	}
 
