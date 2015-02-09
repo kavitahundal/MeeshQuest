@@ -20,8 +20,7 @@ public class CommandWriter {
 	CommandWriter() {
 		try {
 			this.output = XmlUtility.getDocumentBuilder().newDocument();
-			this.root = this.output.createElement("results");
-			this.output.appendChild(root); // root tag of XML output
+			this.root = this.output.createElement("results"); // root tag of XML output
 		} catch (ParserConfigurationException e) {
 		}
 	}
@@ -181,6 +180,10 @@ public class CommandWriter {
 		}
 		tag.appendChild(paramTag);
 		return tag; // remember: no output tag!
+	}
+	
+	void close() {
+		this.output.appendChild(root);
 	}
 	
 	void print() {
