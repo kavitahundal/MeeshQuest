@@ -117,7 +117,7 @@ public class CommandRunner {
 			throw new CityOutOfBoundsException();
 		}
 		this.spatial.add(city);
-		this.addCity(city);
+		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
 		// TODO need to draw graynode quadrants
 	}
 
@@ -130,7 +130,7 @@ public class CommandRunner {
 			throw new CityNotMappedException();
 		} else {
 			this.spatial.remove(city);
-			this.removeCity(city);
+			this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
 			// TODO remove quadrant lines?
 		}
 	}
@@ -179,11 +179,4 @@ public class CommandRunner {
 		this.canvas.dispose();
 	}
 	
-	void addCity(City city) {
-		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
-	}
-	
-	void removeCity(City city) {
-		this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
-	}
 }
