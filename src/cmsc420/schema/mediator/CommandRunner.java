@@ -103,12 +103,8 @@ public class CommandRunner {
 		// citylist -> city tags
 		if (this.dictionary.size() == 0) {
 			throw new NoCitiesToListException();
-		} else if (sortBy.equals(SortType.name)) {
-			// TODO how to sort?
-		} else {
-			//
 		}
-		return null;
+		return this.dictionary.listCities(sortBy);
 	}
 
 	void mapCity(String name) throws NameNotInDictionaryException, CityAlreadyMappedException, CityOutOfBoundsException {

@@ -1,11 +1,15 @@
 package cmsc420.schema.dictionary;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.TreeMap;
 
 import cmsc420.schema.City;
 import cmsc420.schema.CityCoordinateComparator;
 import cmsc420.schema.CityNameComparator;
 import cmsc420.schema.DataStructure;
+import cmsc420.schema.SortType;
 
 public class TreeMapDictionary implements DictionaryStructure {
 
@@ -68,5 +72,20 @@ public class TreeMapDictionary implements DictionaryStructure {
 	@Override
 	public City getCity(String name) {
 		return this.nameToCity.get(name);
+	}
+
+	@Override
+	public List<City> listCities(SortType sortBy) {
+		if (sortBy.equals(SortType.name)) {
+			Iterator<String> iter = this.nameToCity.keySet().iterator();
+			List<City> cities = new ArrayList<>();
+			while (iter.hasNext()) {
+				String name = iter.next();
+				cities.add(this.nameToCity.get(name));
+			}
+			return null;
+		} else {
+			return new ArrayList<City>(this.cityToName.keySet());
+		}
 	}
 }
