@@ -241,11 +241,11 @@ public class CommandParser {
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
 					int radius = Integer.parseInt(radiusString);
-					String name = params.getNamedItem("saveMap").getNodeValue();
+					String saveMap = params.getNamedItem("saveMap").getNodeValue();
 					String[] paramNames = { "x", "y", "radius", "saveMap" };
-					String[] parameters = { xString, yString, radiusString, name };
+					String[] parameters = { xString, yString, radiusString, saveMap };
 					try {
-						List<City> cities = this.runner.rangeCities(x, y, radius, name);
+						List<City> cities = this.runner.rangeCities(x, y, radius, saveMap);
 						this.writer.appendTag(command, parameters, paramNames, cities);
 					} catch (NoCitiesExistInRangeException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
