@@ -2,6 +2,9 @@ package cmsc420.schema.spatial;
 
 import java.awt.geom.Point2D;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import cmsc420.schema.City;
 
 public class BlackNode implements TreeNode {
@@ -34,6 +37,19 @@ public class BlackNode implements TreeNode {
 	@Override
 	public TreeNode remove(City city) {
 		return new WhiteNode(this.origin, this.width, this.height);
+	}
+	
+	public City getCity() {
+		return this.city;
+	}
+
+	@Override
+	public Element elementize(Document doc) {
+		Element ele = doc.createElement("black");
+		ele.setAttribute("name", this.city.getName());
+		ele.setAttribute("x", Float.toString(this.city.x));
+		ele.setAttribute("y", Float.toString(this.city.y));
+		return ele;
 	}
 	
 }

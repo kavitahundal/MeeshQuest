@@ -2,6 +2,9 @@ package cmsc420.schema.spatial;
 
 import java.awt.geom.Point2D;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import cmsc420.schema.City;
 
 public class GrayNode implements TreeNode {
@@ -70,5 +73,21 @@ public class GrayNode implements TreeNode {
 			this.occupiedQuadrants--;
 			return this;
 		}
+	}
+
+	@Override
+	public Element elementize(Document doc) {
+		Element ele = doc.createElement("gray");
+		Point2D.Float location = this.location();
+		ele.setAttribute("x", Float.toString(location.x));
+		ele.setAttribute("y", Float.toString(location.y));
+		for (int i = 0; i < this.quadrants.length; i++) {
+			ele.appendChild(this.quadrants[i].elementize(doc));
+		}
+		return ele;
+	}
+	
+	public Point2D.Float location() {
+		return new Point2D.Float(this.origin.x + this.width / 2, this.origin.y + this.height / 2);
 	}
 }

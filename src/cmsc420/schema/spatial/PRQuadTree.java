@@ -2,6 +2,9 @@ package cmsc420.schema.spatial;
 
 import java.awt.geom.Point2D;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import cmsc420.schema.City;
 import cmsc420.schema.DataStructure;
 
@@ -60,6 +63,12 @@ public class PRQuadTree implements SpatialStructure {
 	@Override
 	public float getSpatialHeight() {
 		return this.height;
+	}
+	
+	public Element elementize(Document doc) {
+		Element xmlRoot = doc.createElement("quadtree");
+		xmlRoot.appendChild(this.root.elementize(doc));
+		return xmlRoot;
 	}
 
 }

@@ -60,7 +60,8 @@ public class CommandWriter {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters);
 		Element outputTag = this.output.createElement("output");
-		// TODO
+		Element treeTag = tree.elementize(this.output);
+		outputTag.appendChild(treeTag);
 		tag.appendChild(outputTag);
 		this.output.appendChild(tag);
 	}

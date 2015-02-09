@@ -2,6 +2,9 @@ package cmsc420.schema.spatial;
 
 import java.awt.geom.Point2D;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import cmsc420.schema.City;
 
 public class WhiteNode implements TreeNode {
@@ -29,6 +32,11 @@ public class WhiteNode implements TreeNode {
 	@Override
 	public TreeNode remove(City city) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Element elementize(Document doc) {
+		return doc.createElement("white");
 	}
 	
 	
