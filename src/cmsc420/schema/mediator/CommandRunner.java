@@ -45,8 +45,8 @@ public class CommandRunner {
 	 * Creates a city (a vertex) with the specified name, coordinates, radius,
 	 * and color (the last two attributes will be used in later project parts).
 	 * A city can be successfully created if its name is unique (i.e., there
-	 * isn’t already another city with the same name) and its coordinates are
-	 * also unique (i.e., there isn’t already another city with the same (x, y)
+	 * isn't already another city with the same name) and its coordinates are
+	 * also unique (i.e., there isn't already another city with the same (x, y)
 	 * coordinate). Names are case-sensitive.
 	 * 
 	 * @param name
