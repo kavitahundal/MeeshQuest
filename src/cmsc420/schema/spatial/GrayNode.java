@@ -23,10 +23,10 @@ public class GrayNode implements TreeNode {
 		float dy = this.height / 2;
 		this.occupiedQuadrants = 0;
 		this.quadrants = new TreeNode[4];
-		this.quadrants[0] = new WhiteNode(this.origin, dx, dy);
-		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y), dx, dy);
-		this.quadrants[2] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy);
-		this.quadrants[3] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy);
+		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy);
+		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy);
+		this.quadrants[2] = new WhiteNode(this.origin, dx, dy);
+		this.quadrants[3] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y), dx, dy);
 	}
 
 	@Override
@@ -46,19 +46,18 @@ public class GrayNode implements TreeNode {
 	}
 	
 	private int getQuadrantIndex(City city) {
-		float dx = city.x - this.origin.x;
-		float dy = city.y - this.origin.y;
-		if (dx < this.width) {
-			if (dy < this.height) {
-				return 0;
-			} else {
+		Point2D.Float center = this.location();
+		if (city.x > center.x) {
+			if (city.y > center.y) {
 				return 1;
-			}
-		} else {
-			if (dy < this.height) {
-				return 2;
 			} else {
 				return 3;
+			}
+		} else {
+			if (city.y > center.y) {
+				return 0;
+			} else {
+				return 2;
 			}
 		}
 	}
@@ -79,8 +78,8 @@ public class GrayNode implements TreeNode {
 	public Element elementize(Document doc) {
 		Element ele = doc.createElement("gray");
 		Point2D.Float location = this.location();
-		ele.setAttribute("x", Float.toString(location.x));
-		ele.setAttribute("y", Float.toString(location.y));
+		ele.setAttribute("x", Integer.toString((int) location.x));
+		ele.setAttribute("y", Integer.toString((int) location.y));
 		for (int i = 0; i < this.quadrants.length; i++) {
 			ele.appendChild(this.quadrants[i].elementize(doc));
 		}

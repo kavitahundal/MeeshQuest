@@ -47,8 +47,8 @@ public class BlackNode implements TreeNode {
 	public Element elementize(Document doc) {
 		Element ele = doc.createElement("black");
 		ele.setAttribute("name", this.city.getName());
-		ele.setAttribute("x", Float.toString(this.city.x));
-		ele.setAttribute("y", Float.toString(this.city.y));
+		ele.setAttribute("x", Integer.toString((int) this.city.x));
+		ele.setAttribute("y", Integer.toString((int) this.city.y));
 		return ele;
 	}
 	
