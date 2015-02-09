@@ -20,11 +20,13 @@ public class PRQuadTree implements SpatialStructure {
 	@Override
 	public void add(City city) {
 		//
+		this.root = this.root.add(city);
+		this.size++;
 	}
 
 	@Override
 	public boolean contains(City city) {
-		return false;
+		return this.root.contains(city);
 	}
 
 	@Override
