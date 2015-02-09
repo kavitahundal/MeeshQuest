@@ -265,7 +265,7 @@ public class CommandParser {
 	 * method does nothing if process has net yet been called before.
 	 */
 	public void print() {
-		if (this.processed) {
+		if (!this.processed) {
 			return;
 		}
 		this.writer.print();
