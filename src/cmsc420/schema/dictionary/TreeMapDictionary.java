@@ -83,7 +83,7 @@ public class TreeMapDictionary implements DictionaryStructure {
 				String name = iter.next();
 				cities.add(this.nameToCity.get(name));
 			}
-			return null;
+			return cities;
 		} else {
 			return new ArrayList<City>(this.cityToName.keySet());
 		}
