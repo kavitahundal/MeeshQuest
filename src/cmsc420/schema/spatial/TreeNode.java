@@ -4,6 +4,7 @@ import cmsc420.schema.City;
 
 public interface TreeNode {
 
-	public abstract TreeNode add(City city);
-	public abstract boolean contains(City city);
+	public TreeNode add(City city);
+	public boolean contains(City city);
+	public TreeNode remove(City city);
 }

@@ -30,5 +30,10 @@ public class BlackNode implements TreeNode {
 	public boolean contains(City city) {
 		return city.equals(this.city);
 	}
+
+	@Override
+	public TreeNode remove(City city) {
+		return new WhiteNode(this.origin, this.width, this.height);
+	}
 	
 }

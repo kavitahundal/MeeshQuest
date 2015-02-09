@@ -25,6 +25,11 @@ public class WhiteNode implements TreeNode {
 	public boolean contains(City city) {
 		return false;
 	}
+
+	@Override
+	public TreeNode remove(City city) {
+		throw new UnsupportedOperationException();
+	}
 	
 	
 }

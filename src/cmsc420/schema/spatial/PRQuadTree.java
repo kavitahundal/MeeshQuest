@@ -23,7 +23,6 @@ public class PRQuadTree implements SpatialStructure {
 
 	@Override
 	public void add(City city) {
-		//
 		this.root = this.root.add(city);
 		this.size++;
 	}
@@ -35,7 +34,12 @@ public class PRQuadTree implements SpatialStructure {
 
 	@Override
 	public void remove(City city) {
-		//
+		// precondition: contains city
+		if (this.root instanceof BlackNode) {
+			this.root = new WhiteNode(this.origin, this.width, this.height);
+		} else {
+			this.root.remove(city);
+		}
 	}
 
 	@Override
