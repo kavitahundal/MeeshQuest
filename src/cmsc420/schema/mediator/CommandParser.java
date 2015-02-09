@@ -170,8 +170,7 @@ public class CommandParser {
 						this.runner.createCity(name, x, y, radius, color);
 						this.writer.appendTag(null, command, parameters);
 					} catch (DuplicateCityNameException | DuplicateCityCoordinatesException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				} else if (command.equals("deleteCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
@@ -180,8 +179,7 @@ public class CommandParser {
 						City deleted = this.runner.deleteCity(name);
 						this.writer.appendTagUnmapped(command, parameters, deleted);
 					} catch (CityDoesNotExistException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				} else if (command.equals("clearAll")) {
 					String[] parameters = {};
@@ -195,8 +193,7 @@ public class CommandParser {
 						List<City> cities = this.runner.listCities(sortBy);
 						this.writer.appendTag(command, parameters, cities);
 					} catch (NoCitiesToListException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				} else if (command.equals("mapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
@@ -205,8 +202,7 @@ public class CommandParser {
 						this.runner.mapCity(name);
 						this.writer.appendTag(null, command, parameters);
 					} catch (NameNotInDictionaryException | CityAlreadyMappedException | CityOutOfBoundsException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				} else if (command.equals("unmapCity")) {
 					String name = params.getNamedItem("name").getNodeValue();
@@ -215,18 +211,15 @@ public class CommandParser {
 						this.runner.unmapCity(name);
 						this.writer.appendTag(null, command, parameters);
 					} catch (NameNotInDictionaryException | CityNotMappedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				} else if (command.equals("printPRQuadtree")) {
 					String parameters[] = {};
-					PRQuadTree tree;
 					try {
-						tree = this.runner.printPRQuadTree();
+						PRQuadTree tree = this.runner.printPRQuadTree();
 						this.writer.appendTag(command, parameters, tree);
 					} catch (MapIsEmptyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				} else if (command.equals("saveMap")) {
 					String name = params.getNamedItem("name").getNodeValue();
@@ -246,8 +239,7 @@ public class CommandParser {
 						List<City> cities = this.runner.rangeCities(x, y, radius, name);
 						this.writer.appendTag(command, parameters, cities);
 					} catch (NoCitiesExistInRangeException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				} else if (command.equals("nearestCity")) {
 					String xString = params.getNamedItem("x").getNodeValue();
@@ -259,8 +251,7 @@ public class CommandParser {
 						City city = this.runner.nearestCity(x, y);
 						this.writer.appendTag(command, parameters, city);
 					} catch (MapIsEmptyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						this.writer.appendTag(e.getMessage(), command, parameters);
 					}
 				}
 			}
