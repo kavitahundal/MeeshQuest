@@ -1,20 +1,24 @@
 package cmsc420.schema.spatial;
 
+import java.awt.geom.Point2D;
+
 import cmsc420.schema.City;
 import cmsc420.schema.DataStructure;
 
 public class PRQuadTree implements SpatialStructure {
 	
 	private TreeNode root;
-	private float width;
-	private float height;
+	private final Point2D.Float origin;
+	private final float width;
+	private final float height;
 	private int size;
 	
 	PRQuadTree(float width, float height) {
-		this.root = new WhiteNode();
+		this.origin = new Point2D.Float();
 		this.width = width;
 		this.height = height;
 		this.size = 0;
+		this.root = new WhiteNode(this.origin, this.width, this.height);
 	}
 
 	@Override
