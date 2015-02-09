@@ -247,7 +247,11 @@ public class CommandParser {
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
 					int radius = Integer.parseInt(radiusString);
-					String saveMap = params.getNamedItem("saveMap").getNodeValue();
+					String saveMap = null;
+					try {
+						saveMap = params.getNamedItem("saveMap").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "x", "y", "radius", "saveMap" };
 					String[] parameters = { xString, yString, radiusString, saveMap };
 					try {
