@@ -46,7 +46,7 @@ public class CommandWriter {
 		tag = this.createTag(tag, command, parameters);
 		Element outputTag = this.output.createElement("output");
 		tag.appendChild(outputTag);
-		this.output.appendChild(tag);
+		this.root.appendChild(tag);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class CommandWriter {
 		Element treeTag = tree.elementize(this.output);
 		outputTag.appendChild(treeTag);
 		tag.appendChild(outputTag);
-		this.output.appendChild(tag);
+		this.root.appendChild(tag);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ public class CommandWriter {
 		}
 		outputTag.appendChild(cityList);
 		tag.appendChild(outputTag);
-		this.output.appendChild(tag);
+		this.root.appendChild(tag);
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class CommandWriter {
 		Element outputTag = this.output.createElement("output");
 		outputTag.appendChild(this.mapCity(city));
 		tag.appendChild(outputTag);
-		this.output.appendChild(tag);
+		this.root.appendChild(tag);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ public class CommandWriter {
 			outputTag.appendChild(this.unmapCity(city));
 		}
 		tag.appendChild(outputTag);
-		this.output.appendChild(tag);
+		this.root.appendChild(tag);
 	}
 	
 	/**
