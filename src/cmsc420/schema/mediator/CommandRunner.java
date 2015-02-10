@@ -261,7 +261,7 @@ public class CommandRunner {
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
-		List<String> names = this.spatial.range();
+		List<String> names = this.spatial.range(x, y, radius);
 		Collections.sort(names, new CityNameComparator());
 		if (names.size() == 0) {
 			throw new NoCitiesExistInRangeException();

@@ -103,9 +103,9 @@ public class GrayNode implements TreeNode {
 	}
 
 	@Override
-	public void range(List<String> cities) {
+	public void range(List<String> cities, int x, int y, int radius) {
 		for (int i = 0; i < this.quadrants.length; i++) {
-			this.quadrants[i].range(cities);
+			this.quadrants[i].range(cities, x, y, radius);
 		}
 	}
 }

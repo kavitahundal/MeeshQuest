@@ -48,7 +48,7 @@ public class WhiteNode implements TreeNode {
 	}
 
 	@Override
-	public void range(List<String> cities) {
+	public void range(List<String> cities, int x, int y, int radius) {
 		return;
 	}
 	

@@ -13,5 +13,5 @@ public interface TreeNode {
 	public boolean contains(City city);
 	public TreeNode remove(City city);
 	public Element elementize(Document doc);
-	public void range(List<String> cities);
+	public void range(List<String> cities, int x, int y, int radius);
 }

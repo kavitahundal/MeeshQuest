@@ -80,9 +80,9 @@ public class PRQuadTree implements SpatialStructure {
 	}
 
 	@Override
-	public List<String> range() {
+	public List<String> range(int x, int y, int radius) {
 		List<String> cities = new LinkedList<>();
-		this.root.range(cities);
+		this.root.range(cities, x, y, radius);
 		return cities;
 	}
 

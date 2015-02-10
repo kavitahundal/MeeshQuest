@@ -10,5 +10,5 @@ public interface SpatialStructure extends DataStructure<City> {
 	public int size();
 	public float getSpatialWidth();
 	public float getSpatialHeight();
-	public List<String> range();
+	public List<String> range(int x, int y, int radius);
 }
