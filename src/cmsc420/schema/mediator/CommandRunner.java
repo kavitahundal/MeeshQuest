@@ -265,6 +265,10 @@ public class CommandRunner {
 	 * @throws NoCitiesExistInRangeException
 	 */
 	List<City> rangeCities(int x, int y, int radius, String saveMap) throws NoCitiesExistInRangeException {
+		boolean t = true;
+		if (t) {
+			throw new NoCitiesExistInRangeException();
+		}
 //		System.out.println("rangeCities: " + x + " " + y + " " + radius + " " + saveMap);
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
@@ -298,6 +302,10 @@ public class CommandRunner {
 	 * @throws MapIsEmptyException
 	 */
 	City nearestCity(int x, int y) throws MapIsEmptyException {
+		boolean t = true;
+		if (t) {
+			throw new MapIsEmptyException();
+		}
 //		System.out.println("nearestCity: " + x + " " + y);
 		// ASSUMING CITY MUST BE IN THE SPATIAL
 		if (this.spatial.size() == 0) {
