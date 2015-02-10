@@ -115,8 +115,8 @@ public class CommandRunner {
 		if (this.adjacencyList != null) {
 			this.adjacencyList = (AdjacencyListStructure) this.adjacencyList.reset();
 		}
-		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
-				(int) this.spatial.getSpatialHeight());
+//		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
+//				(int) this.spatial.getSpatialHeight());
 		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
 				Color.BLACK, false);
 	}
@@ -167,7 +167,7 @@ public class CommandRunner {
 			throw new CityOutOfBoundsException();
 		}
 		this.spatial.add(city);
-		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
+//		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
 		// TODO need to draw graynode quadrants
 	}
 
@@ -188,7 +188,7 @@ public class CommandRunner {
 			throw new CityNotMappedException();
 		} else {
 			this.spatial.remove(city);
-			this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
+//			this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
 			// TODO remove quadrant lines
 		}
 	}

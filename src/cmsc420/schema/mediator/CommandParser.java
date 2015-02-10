@@ -31,7 +31,6 @@ import cmsc420.schema.adjacencylist.AdjacencyListStructure;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
-import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.xml.XmlUtility;
 
 /**
@@ -47,7 +46,6 @@ public class CommandParser {
 
 	private DictionaryStructure dictionary;
 	private Seedling seed;
-	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
 
 	private CommandRunner runner;

@@ -1,5 +1,6 @@
 package cmsc420.schema.spatial;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import org.w3c.dom.Document;
@@ -24,6 +25,7 @@ public class WhiteNode implements TreeNode {
 
 	@Override
 	public TreeNode add(City city) {
+		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
 		return new BlackNode(city, this.origin, this.width, this.height, this.canvas);
 		// TODO draw point
 	}

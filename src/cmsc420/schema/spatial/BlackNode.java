@@ -1,5 +1,6 @@
 package cmsc420.schema.spatial;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import org.w3c.dom.Document;
@@ -32,7 +33,7 @@ public class BlackNode implements TreeNode {
 		node.add(this.city);
 		node.add(city);
 		return node;
-		// TODO draw quadrant lines
+		// TODO draw quadrant lines (or do so in gray node constructor)
 	}
 
 	@Override
@@ -42,6 +43,7 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public TreeNode remove(City city) {
+		this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
 		return new WhiteNode(this.origin, this.width, this.height, this.canvas);
 		//TODO remove
 	}
