@@ -63,7 +63,7 @@ public class CommandRunner {
 	 */
 	void createCity(String name, int x, int y, int radius, CityColor color) throws DuplicateCityNameException,
 			DuplicateCityCoordinatesException {
-		System.out.println("create city: " + name + " " + x + " " + y + " " + radius + " " + color.toString());
+//		System.out.println("create city: " + name + " " + x + " " + y + " " + radius + " " + color.toString());
 		City city = new City(name, x, y, color, radius);
 		if (this.dictionary.containsName(name)) {
 			throw new DuplicateCityNameException();
@@ -85,7 +85,7 @@ public class CommandRunner {
 	 * @throws CityDoesNotExistException
 	 */
 	City deleteCity(String name) throws CityDoesNotExistException {
-		System.out.println("deleteCity: " + name);
+//		System.out.println("deleteCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new CityDoesNotExistException();
 		}
@@ -108,7 +108,7 @@ public class CommandRunner {
 	 * it should unilaterally produce a <success> element in the output XML.
 	 */
 	void clearAll() {
-		System.out.println("clearAll");
+//		System.out.println("clearAll");
 		this.dictionary = (DictionaryStructure) this.dictionary.reset();
 		this.spatial = (SpatialStructure) this.spatial.reset();
 		if (this.adjacencyList != null) {
@@ -138,7 +138,7 @@ public class CommandRunner {
 	 * @throws NoCitiesToListException
 	 */
 	List<City> listCities(SortType sortBy) throws NoCitiesToListException {
-		System.out.println("listCities: " + sortBy.toString());
+//		System.out.println("listCities: " + sortBy.toString());
 		if (this.dictionary.size() == 0) {
 			throw new NoCitiesToListException();
 		}
@@ -154,7 +154,7 @@ public class CommandRunner {
 	 * @throws CityOutOfBoundsException
 	 */
 	void mapCity(String name) throws NameNotInDictionaryException, CityAlreadyMappedException, CityOutOfBoundsException {
-		System.out.println("mapCity: " + name);
+//		System.out.println("mapCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
@@ -162,19 +162,19 @@ public class CommandRunner {
 		if (this.spatial.contains(city)) {
 			throw new CityAlreadyMappedException();
 		}
-		if (name.equals("Prague")) {
-			System.out.println("alsdjfa;ouwrehtapuasldkjfhalksdjfhaslkdjfh");
-			System.out.println(city.x);
-			System.out.println(city.y);
-			System.out.println(this.spatial.getSpatialWidth());
-			System.out.println(this.spatial.getSpatialHeight());
-		}
+//		if (name.equals("Prague")) {
+//			System.out.println("alsdjfa;ouwrehtapuasldkjfhalksdjfhaslkdjfh");
+//			System.out.println(city.x);
+//			System.out.println(city.y);
+//			System.out.println(this.spatial.getSpatialWidth());
+//			System.out.println(this.spatial.getSpatialHeight());
+//		}
 		if (city.x > this.spatial.getSpatialWidth() || city.y > this.spatial.getSpatialHeight()) {
 			throw new CityOutOfBoundsException();
 		}
-		System.out.println("adddddddddddddddd");
+//		System.out.println("adddddddddddddddd");
 		this.spatial.add(city);
-		System.out.println("ddddddddaaaaaaaaaaaaaaa");
+//		System.out.println("ddddddddaaaaaaaaaaaaaaa");
 		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
 		// TODO need to draw graynode quadrants
 	}
@@ -187,7 +187,7 @@ public class CommandRunner {
 	 * @throws CityNotMappedException
 	 */
 	void unmapCity(String name) throws NameNotInDictionaryException, CityNotMappedException {
-		System.out.println("unmapCity: " + name);
+//		System.out.println("unmapCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
@@ -209,7 +209,7 @@ public class CommandRunner {
 	 * @throws MapIsEmptyException
 	 */
 	PRQuadTree printPRQuadTree() throws MapIsEmptyException {
-		System.out.println("printPRQuadTree");
+//		System.out.println("printPRQuadTree");
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		} else {
@@ -227,7 +227,7 @@ public class CommandRunner {
 	 * @param name
 	 */
 	void saveMap(String name) {
-		System.out.println("saveMap");
+//		System.out.println("saveMap");
 		try {
 			this.canvas.save(name);
 		} catch (IOException e) {
@@ -265,7 +265,7 @@ public class CommandRunner {
 	 * @throws NoCitiesExistInRangeException
 	 */
 	List<City> rangeCities(int x, int y, int radius, String saveMap) throws NoCitiesExistInRangeException {
-		System.out.println("rangeCities: " + x + " " + y + " " + radius + " " + saveMap);
+//		System.out.println("rangeCities: " + x + " " + y + " " + radius + " " + saveMap);
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
@@ -298,7 +298,7 @@ public class CommandRunner {
 	 * @throws MapIsEmptyException
 	 */
 	City nearestCity(int x, int y) throws MapIsEmptyException {
-		System.out.println("nearestCity: " + x + " " + y);
+//		System.out.println("nearestCity: " + x + " " + y);
 		// ASSUMING CITY MUST BE IN THE SPATIAL
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();

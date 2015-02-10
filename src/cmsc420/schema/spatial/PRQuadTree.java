@@ -83,8 +83,6 @@ public class PRQuadTree implements SpatialStructure {
 	}
 
 	public void print() {
-//		System.out.println(this.width);
-//		System.out.println(this.height);
 		Document results = null;
         
         try {
