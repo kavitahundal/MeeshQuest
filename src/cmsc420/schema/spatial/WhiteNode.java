@@ -25,9 +25,10 @@ public class WhiteNode implements TreeNode {
 
 	@Override
 	public TreeNode add(City city) {
-		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
+		if (this.canvas != null) {
+			this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
+		}
 		return new BlackNode(city, this.origin, this.width, this.height, this.canvas);
-		// TODO draw point
 	}
 
 	@Override

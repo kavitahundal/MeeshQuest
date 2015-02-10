@@ -16,7 +16,7 @@ public class BlackNode implements TreeNode {
 	private final float height;
 	private City city;
 	private CanvasPlus canvas;
-	
+
 	public BlackNode(City city, Point2D.Float origin, float width, float height, CanvasPlus canvas) {
 		this.origin = origin;
 		this.width = width;
@@ -29,11 +29,17 @@ public class BlackNode implements TreeNode {
 	public TreeNode add(City city) {
 		// TODO warning: does adding the same point twice cause problems?
 		GrayNode node = new GrayNode(this.origin, this.width, this.height, this.canvas);
-		// I may need to remove this.city
+		if (this.canvas != null) {
+			this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
+					this.origin.y + this.height / 2, Color.BLACK);
+			this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
+					this.origin.y + this.height, Color.BLACK);
+			this.canvas.removePoint(this.city.getName(), this.city.x, this.city.y, Color.BLACK);
+			// remove this.city because the next command will add it again
+		}
 		node.add(this.city);
 		node.add(city);
 		return node;
-		// TODO draw quadrant lines (or do so in gray node constructor)
 	}
 
 	@Override
@@ -43,11 +49,12 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public TreeNode remove(City city) {
-		this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
+		if (this.canvas != null) {
+			this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
+		}
 		return new WhiteNode(this.origin, this.width, this.height, this.canvas);
-		//TODO remove
 	}
-	
+
 	public City getCity() {
 		return this.city;
 	}
@@ -60,5 +67,5 @@ public class BlackNode implements TreeNode {
 		ele.setAttribute("y", Integer.toString((int) this.city.y));
 		return ele;
 	}
-	
+
 }

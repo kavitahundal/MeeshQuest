@@ -18,7 +18,7 @@ public class PRQuadTree implements SpatialStructure {
 	private int size;
 	private CanvasPlus canvas;
 
-	PRQuadTree(float width, float height, CanvasPlus canvas) {
+	public PRQuadTree(float width, float height, CanvasPlus canvas) {
 		this.origin = new Point2D.Float();
 		this.width = width;
 		this.height = height;

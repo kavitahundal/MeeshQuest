@@ -1,5 +1,6 @@
 package cmsc420.schema.spatial;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import org.w3c.dom.Document;
@@ -26,7 +27,8 @@ public class GrayNode implements TreeNode {
 		this.occupiedQuadrants = 0;
 		this.quadrants = new TreeNode[4];
 		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy, this.canvas);
-		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy, this.canvas);
+		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy,
+				this.canvas);
 		this.quadrants[2] = new WhiteNode(this.origin, dx, dy, this.canvas);
 		this.quadrants[3] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y), dx, dy, this.canvas);
 		this.canvas = canvas;
@@ -47,7 +49,7 @@ public class GrayNode implements TreeNode {
 		int quadrant = this.getQuadrantIndex(city);
 		return this.quadrants[quadrant].contains(city);
 	}
-	
+
 	private int getQuadrantIndex(City city) {
 		Point2D.Float center = this.location();
 		if (city.x > center.x) {
@@ -68,8 +70,13 @@ public class GrayNode implements TreeNode {
 	@Override
 	public TreeNode remove(City city) {
 		if (this.occupiedQuadrants == 1) {
+			if (this.canvas != null) {
+				this.canvas.removeLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
+						this.origin.y + this.height / 2, Color.BLACK);
+				this.canvas.removeLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
+						this.origin.y + this.height, Color.BLACK);
+			}
 			return new WhiteNode(this.origin, this.width, this.height, this.canvas);
-			// TODO remove quadrant lines
 		} else {
 			int quadrant = this.getQuadrantIndex(city);
 			this.quadrants[quadrant] = this.quadrants[quadrant].remove(city);
@@ -89,7 +96,7 @@ public class GrayNode implements TreeNode {
 		}
 		return ele;
 	}
-	
+
 	public Point2D.Float location() {
 		return new Point2D.Float(this.origin.x + this.width / 2, this.origin.y + this.height / 2);
 	}
