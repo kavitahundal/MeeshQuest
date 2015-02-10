@@ -2,6 +2,7 @@ package cmsc420.schema.spatial;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,6 +45,11 @@ public class WhiteNode implements TreeNode {
 	@Override
 	public Element elementize(Document doc) {
 		return doc.createElement("white");
+	}
+
+	@Override
+	public void range(List<String> cities) {
+		return;
 	}
 	
 	

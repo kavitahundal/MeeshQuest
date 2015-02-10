@@ -2,7 +2,8 @@ package cmsc420.schema.mediator;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import cmsc420.drawing.CanvasPlus;
@@ -18,6 +19,7 @@ import cmsc420.exceptions.NoCitiesExistInRangeException;
 import cmsc420.exceptions.NoCitiesToListException;
 import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
+import cmsc420.schema.CityNameComparator;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyListStructure;
 import cmsc420.schema.dictionary.DictionaryStructure;
@@ -119,6 +121,7 @@ public class CommandRunner {
 		// (int) this.spatial.getSpatialHeight());
 		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
 				Color.BLACK, false);
+		// integrate ALL of canvas in quadtree?
 	}
 
 	/**
@@ -167,8 +170,6 @@ public class CommandRunner {
 			throw new CityOutOfBoundsException();
 		}
 		this.spatial.add(city);
-		// this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
-		// TODO need to draw graynode quadrants
 	}
 
 	/**
@@ -188,9 +189,6 @@ public class CommandRunner {
 			throw new CityNotMappedException();
 		} else {
 			this.spatial.remove(city);
-			// this.canvas.removePoint(city.getName(), city.x, city.y,
-			// Color.BLACK);
-			// TODO remove quadrant lines
 		}
 	}
 
@@ -258,26 +256,25 @@ public class CommandRunner {
 	 * @throws NoCitiesExistInRangeException
 	 */
 	List<City> rangeCities(int x, int y, int radius, String saveMap) throws NoCitiesExistInRangeException {
-		boolean t = true;
-		if (t) {
-			throw new NoCitiesExistInRangeException();
-		}
 		// System.out.println("rangeCities: " + x + " " + y + " " + radius + " "
 		// + saveMap);
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
-		List<City> cities = new ArrayList<>();
-		// TODO implement
-		if (cities.size() == 0) {
+		List<String> names = this.spatial.range();
+		Collections.sort(names, new CityNameComparator());
+		if (names.size() == 0) {
 			throw new NoCitiesExistInRangeException();
 		} else {
 			if (saveMap != null) {
-				// assuming we only add the circle for this step (and then
-				// remove)
+				// assuming we temporarily add the circle for this step
 				this.canvas.addCircle(x, y, radius, Color.BLUE, false);
 				this.saveMap(saveMap);
 				this.canvas.removeCircle(x, y, radius, Color.BLUE, false);
+			}
+			List<City> cities = new LinkedList<>();
+			for (String name : names) {
+				cities.add(this.dictionary.getCity(name));
 			}
 			return cities;
 		}
@@ -312,6 +309,7 @@ public class CommandRunner {
 
 	void close() {
 		this.canvas.dispose();
+		// put in quadtree instead?
 	}
 
 }

@@ -2,6 +2,7 @@ package cmsc420.schema.spatial;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -99,5 +100,12 @@ public class GrayNode implements TreeNode {
 
 	public Point2D.Float location() {
 		return new Point2D.Float(this.origin.x + this.width / 2, this.origin.y + this.height / 2);
+	}
+
+	@Override
+	public void range(List<String> cities) {
+		for (int i = 0; i < this.quadrants.length; i++) {
+			this.quadrants[i].range(cities);
+		}
 	}
 }

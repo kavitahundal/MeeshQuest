@@ -1,6 +1,8 @@
 package cmsc420.schema.spatial;
 
 import java.awt.geom.Point2D;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -75,6 +77,13 @@ public class PRQuadTree implements SpatialStructure {
 		Element xmlRoot = doc.createElement("quadtree");
 		xmlRoot.appendChild(this.root.elementize(doc));
 		return xmlRoot;
+	}
+
+	@Override
+	public List<String> range() {
+		List<String> cities = new LinkedList<>();
+		this.root.range(cities);
+		return cities;
 	}
 
 	// public void print() {

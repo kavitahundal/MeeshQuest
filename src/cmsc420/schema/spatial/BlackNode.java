@@ -2,6 +2,7 @@ package cmsc420.schema.spatial;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,6 +67,11 @@ public class BlackNode implements TreeNode {
 		ele.setAttribute("x", Integer.toString((int) this.city.x));
 		ele.setAttribute("y", Integer.toString((int) this.city.y));
 		return ele;
+	}
+
+	@Override
+	public void range(List<String> cities) {
+		cities.add(this.city.getName());
 	}
 
 }

@@ -1,5 +1,7 @@
 package cmsc420.schema;
 
+import java.util.Comparator;
+
 public enum SortType {
 
 	name,
@@ -20,6 +22,14 @@ public enum SortType {
 			return "name";
 		} else {
 			return "coordinate";
+		}
+	}
+	
+	public Comparator<?> comparator() {
+		if (this.equals(SortType.name)) {
+			return new CityNameComparator();
+		} else {
+			return new CityCoordinateComparator();
 		}
 	}
 }

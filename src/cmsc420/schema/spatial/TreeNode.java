@@ -1,5 +1,7 @@
 package cmsc420.schema.spatial;
 
+import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -11,4 +13,5 @@ public interface TreeNode {
 	public boolean contains(City city);
 	public TreeNode remove(City city);
 	public Element elementize(Document doc);
+	public void range(List<String> cities);
 }
