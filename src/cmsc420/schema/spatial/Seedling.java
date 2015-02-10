@@ -1,6 +1,5 @@
 package cmsc420.schema.spatial;
 
-import cmsc420.drawing.CanvasPlus;
 
 /**
  * @author Andrew Liu
@@ -12,5 +11,5 @@ import cmsc420.drawing.CanvasPlus;
  */
 public interface Seedling {
 
-	public SpatialStructure generate(float width, float height, CanvasPlus canvas);
+	public SpatialStructure generate(String name, float width, float height);
 }

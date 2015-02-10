@@ -11,4 +11,8 @@ public interface SpatialStructure extends DataStructure<City> {
 	public float getSpatialWidth();
 	public float getSpatialHeight();
 	public List<String> range(int x, int y, int radius);
+	public void saveMap(String name);
+	public void addCircle(int x, int y, int radius);
+	public void removeCircle(int x, int y, int radius);
+	public void removeCanvas();
 }

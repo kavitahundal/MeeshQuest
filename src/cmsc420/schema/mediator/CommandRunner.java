@@ -36,14 +36,14 @@ public class CommandRunner {
 	private DictionaryStructure dictionary;
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
-	private CanvasPlus canvas;
+//	private CanvasPlus canvas;
 
 	CommandRunner(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj, int width, int height) {
-		this.canvas = new CanvasPlus("MeeshQuest", width, height);
+//		this.canvas = new CanvasPlus("MeeshQuest", width, height);
 		this.dictionary = dict;
-		this.spatial = seed.generate(width, height, this.canvas);
+		this.spatial = seed.generate("MeeshQuest", width, height);
 		this.adjacencyList = adj;
-		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
+//		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
 	}
 
 	/**
@@ -116,11 +116,6 @@ public class CommandRunner {
 		if (this.adjacencyList != null) {
 			this.adjacencyList = (AdjacencyListStructure) this.adjacencyList.reset();
 		}
-		// this.canvas = new CanvasPlus("MeeshQuest", (int)
-		// this.spatial.getSpatialWidth(),
-		// (int) this.spatial.getSpatialHeight());
-		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
-				Color.BLACK, false);
 		// integrate ALL of canvas in quadtree?
 	}
 
@@ -219,11 +214,7 @@ public class CommandRunner {
 	 */
 	void saveMap(String name) {
 		// System.out.println("saveMap");
-		try {
-			this.canvas.save(name);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.spatial.saveMap(name);
 	}
 
 	/**
@@ -268,9 +259,12 @@ public class CommandRunner {
 		} else {
 			if (saveMap != null) {
 				// assuming we temporarily add the circle for this step
-				this.canvas.addCircle(x, y, radius, Color.BLUE, false);
+				// TODO implement in prquadtree
+//				this.canvas.addCircle(x, y, radius, Color.BLUE, false);
+				this.spatial.addCircle(x, y, radius);
 				this.saveMap(saveMap);
-				this.canvas.removeCircle(x, y, radius, Color.BLUE, false);
+//				this.canvas.removeCircle(x, y, radius, Color.BLUE, false);
+				this.spatial.removeCircle(x, y, radius);
 			}
 			List<City> cities = new LinkedList<>();
 			for (String name : names) {
@@ -308,8 +302,9 @@ public class CommandRunner {
 	}
 
 	void close() {
-		this.canvas.dispose();
-		// put in quadtree instead?
+//		this.canvas.dispose();
+		this.spatial.removeCanvas();
+		// TODO put in quadtree instead?
 	}
 
 }
