@@ -1,12 +1,9 @@
 package cmsc420.schema.mediator;
 
-import java.awt.Color;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import cmsc420.drawing.CanvasPlus;
 import cmsc420.exceptions.CityAlreadyMappedException;
 import cmsc420.exceptions.CityDoesNotExistException;
 import cmsc420.exceptions.CityNotMappedException;
@@ -88,20 +85,20 @@ public class CommandRunner {
 	 */
 	City deleteCity(String name) throws CityDoesNotExistException {
 		// System.out.println("deleteCity: " + name);
+		City ret = null;
 		if (!this.dictionary.containsName(name)) {
 			throw new CityDoesNotExistException();
 		}
 		City city = this.dictionary.getCity(name);
-		this.dictionary.remove(city);
 		if (this.spatial.contains(city)) {
 			try {
 				this.unmapCity(name);
 			} catch (NameNotInDictionaryException | CityNotMappedException e) {
 			}
-			return city;
-		} else {
-			return null;
+			ret = city;
 		}
+		this.dictionary.remove(city);
+		return ret;
 	}
 
 	/**
