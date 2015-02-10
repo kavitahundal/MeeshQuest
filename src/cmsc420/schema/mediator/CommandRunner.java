@@ -289,7 +289,7 @@ public class CommandRunner {
 	 * point in space. To do this correctly, you may want to use an algorithm
 	 * using a PriorityQueue, such as
 	 * www.cs.umd.edu/users/meesh/cmsc420/Notes/neighbornotes/incnear.pdf or
-	 * www.cs.umd.edu/users/meesh/cmsc420/Notes/neighbornotes/incnear2.pdf –
+	 * www.cs.umd.edu/users/meesh/cmsc420/Notes/neighbornotes/incnear2.pdf -
 	 * otherwise, you might not be fast enough.
 	 * 
 	 * @param x
