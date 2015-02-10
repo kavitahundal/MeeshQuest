@@ -27,7 +27,6 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public TreeNode add(City city) {
-		// TODO warning: does adding the same point twice cause problems?
 		GrayNode node = new GrayNode(this.origin, this.width, this.height, this.canvas);
 		if (this.canvas != null) {
 			this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
@@ -36,6 +35,7 @@ public class BlackNode implements TreeNode {
 					this.origin.y + this.height, Color.BLACK);
 			this.canvas.removePoint(this.city.getName(), this.city.x, this.city.y, Color.BLACK);
 			// remove this.city because the next command will add it again
+			// based off testing, this doesn't seem necessary
 		}
 		node.add(this.city);
 		node.add(city);

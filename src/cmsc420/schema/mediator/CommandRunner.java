@@ -37,13 +37,11 @@ public class CommandRunner {
 	private CanvasPlus canvas;
 
 	CommandRunner(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj, int width, int height) {
-		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
-				(int) this.spatial.getSpatialHeight());
+		this.canvas = new CanvasPlus("MeeshQuest", width, height);
 		this.dictionary = dict;
 		this.spatial = seed.generate(width, height, this.canvas);
 		this.adjacencyList = adj;
-		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
-				Color.BLACK, false);
+		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
 	}
 
 	/**
@@ -64,7 +62,8 @@ public class CommandRunner {
 	 */
 	void createCity(String name, int x, int y, int radius, CityColor color) throws DuplicateCityNameException,
 			DuplicateCityCoordinatesException {
-//		System.out.println("create city: " + name + " " + x + " " + y + " " + radius + " " + color.toString());
+		// System.out.println("create city: " + name + " " + x + " " + y + " " +
+		// radius + " " + color.toString());
 		City city = new City(name, x, y, color, radius);
 		if (this.dictionary.containsName(name)) {
 			throw new DuplicateCityNameException();
@@ -86,7 +85,7 @@ public class CommandRunner {
 	 * @throws CityDoesNotExistException
 	 */
 	City deleteCity(String name) throws CityDoesNotExistException {
-//		System.out.println("deleteCity: " + name);
+		// System.out.println("deleteCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new CityDoesNotExistException();
 		}
@@ -109,14 +108,15 @@ public class CommandRunner {
 	 * it should unilaterally produce a <success> element in the output XML.
 	 */
 	void clearAll() {
-//		System.out.println("clearAll");
+		// System.out.println("clearAll");
 		this.dictionary = (DictionaryStructure) this.dictionary.reset();
 		this.spatial = (SpatialStructure) this.spatial.reset();
 		if (this.adjacencyList != null) {
 			this.adjacencyList = (AdjacencyListStructure) this.adjacencyList.reset();
 		}
-//		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
-//				(int) this.spatial.getSpatialHeight());
+		// this.canvas = new CanvasPlus("MeeshQuest", (int)
+		// this.spatial.getSpatialWidth(),
+		// (int) this.spatial.getSpatialHeight());
 		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
 				Color.BLACK, false);
 	}
@@ -139,7 +139,7 @@ public class CommandRunner {
 	 * @throws NoCitiesToListException
 	 */
 	List<City> listCities(SortType sortBy) throws NoCitiesToListException {
-//		System.out.println("listCities: " + sortBy.toString());
+		// System.out.println("listCities: " + sortBy.toString());
 		if (this.dictionary.size() == 0) {
 			throw new NoCitiesToListException();
 		}
@@ -155,7 +155,7 @@ public class CommandRunner {
 	 * @throws CityOutOfBoundsException
 	 */
 	void mapCity(String name) throws NameNotInDictionaryException, CityAlreadyMappedException, CityOutOfBoundsException {
-//		System.out.println("mapCity: " + name);
+		// System.out.println("mapCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
@@ -167,7 +167,7 @@ public class CommandRunner {
 			throw new CityOutOfBoundsException();
 		}
 		this.spatial.add(city);
-//		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
+		// this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
 		// TODO need to draw graynode quadrants
 	}
 
@@ -179,7 +179,7 @@ public class CommandRunner {
 	 * @throws CityNotMappedException
 	 */
 	void unmapCity(String name) throws NameNotInDictionaryException, CityNotMappedException {
-//		System.out.println("unmapCity: " + name);
+		// System.out.println("unmapCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
@@ -188,7 +188,8 @@ public class CommandRunner {
 			throw new CityNotMappedException();
 		} else {
 			this.spatial.remove(city);
-//			this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
+			// this.canvas.removePoint(city.getName(), city.x, city.y,
+			// Color.BLACK);
 			// TODO remove quadrant lines
 		}
 	}
@@ -201,7 +202,7 @@ public class CommandRunner {
 	 * @throws MapIsEmptyException
 	 */
 	PRQuadTree printPRQuadTree() throws MapIsEmptyException {
-//		System.out.println("printPRQuadTree");
+		// System.out.println("printPRQuadTree");
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		} else {
@@ -219,7 +220,7 @@ public class CommandRunner {
 	 * @param name
 	 */
 	void saveMap(String name) {
-//		System.out.println("saveMap");
+		// System.out.println("saveMap");
 		try {
 			this.canvas.save(name);
 		} catch (IOException e) {
@@ -261,7 +262,8 @@ public class CommandRunner {
 		if (t) {
 			throw new NoCitiesExistInRangeException();
 		}
-//		System.out.println("rangeCities: " + x + " " + y + " " + radius + " " + saveMap);
+		// System.out.println("rangeCities: " + x + " " + y + " " + radius + " "
+		// + saveMap);
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
@@ -271,7 +273,8 @@ public class CommandRunner {
 			throw new NoCitiesExistInRangeException();
 		} else {
 			if (saveMap != null) {
-				// assuming we only add the circle for this step (and then remove)
+				// assuming we only add the circle for this step (and then
+				// remove)
 				this.canvas.addCircle(x, y, radius, Color.BLUE, false);
 				this.saveMap(saveMap);
 				this.canvas.removeCircle(x, y, radius, Color.BLUE, false);
@@ -298,7 +301,7 @@ public class CommandRunner {
 		if (t) {
 			throw new MapIsEmptyException();
 		}
-//		System.out.println("nearestCity: " + x + " " + y);
+		// System.out.println("nearestCity: " + x + " " + y);
 		// ASSUMING CITY MUST BE IN THE SPATIAL
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();

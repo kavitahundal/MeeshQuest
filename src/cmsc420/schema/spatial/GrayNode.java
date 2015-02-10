@@ -25,13 +25,13 @@ public class GrayNode implements TreeNode {
 		float dx = this.width / 2;
 		float dy = this.height / 2;
 		this.occupiedQuadrants = 0;
+		this.canvas = canvas;
 		this.quadrants = new TreeNode[4];
 		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy, this.canvas);
 		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy,
 				this.canvas);
 		this.quadrants[2] = new WhiteNode(this.origin, dx, dy, this.canvas);
 		this.quadrants[3] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y), dx, dy, this.canvas);
-		this.canvas = canvas;
 	}
 
 	@Override
