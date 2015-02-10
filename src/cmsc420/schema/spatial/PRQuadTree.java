@@ -24,7 +24,7 @@ public class PRQuadTree implements SpatialStructure {
 		this.height = height;
 		this.size = 0;
 		this.canvas = canvas;
-		this.root = new WhiteNode(this.origin, this.width, this.height);
+		this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
 	}
 
 	@Override
@@ -42,10 +42,11 @@ public class PRQuadTree implements SpatialStructure {
 	public void remove(City city) {
 		// precondition: contains city
 		if (this.root instanceof BlackNode) {
-			this.root = new WhiteNode(this.origin, this.width, this.height);
+			this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
 		} else {
 			this.root.remove(city);
 		}
+		// TODO canvas remove (in if block)
 	}
 
 	@Override

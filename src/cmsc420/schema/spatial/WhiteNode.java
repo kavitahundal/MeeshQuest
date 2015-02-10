@@ -15,15 +15,17 @@ public class WhiteNode implements TreeNode {
 	private final float height;
 	private CanvasPlus canvas;
 	
-	public WhiteNode(Point2D.Float origin, float width, float height) {
+	public WhiteNode(Point2D.Float origin, float width, float height, CanvasPlus canvas) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
+		this.canvas = canvas;
 	}
 
 	@Override
 	public TreeNode add(City city) {
-		return new BlackNode(city, this.origin, this.width, this.height);
+		return new BlackNode(city, this.origin, this.width, this.height, this.canvas);
+		// TODO draw point
 	}
 
 	@Override

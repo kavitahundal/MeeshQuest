@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 
 public class GrayNode implements TreeNode {
@@ -14,8 +15,9 @@ public class GrayNode implements TreeNode {
 	private final float height;
 	private TreeNode[] quadrants;
 	private int occupiedQuadrants;
+	private CanvasPlus canvas;
 
-	public GrayNode(Point2D.Float origin, float width, float height) {
+	public GrayNode(Point2D.Float origin, float width, float height, CanvasPlus canvas) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
@@ -23,10 +25,11 @@ public class GrayNode implements TreeNode {
 		float dy = this.height / 2;
 		this.occupiedQuadrants = 0;
 		this.quadrants = new TreeNode[4];
-		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy);
-		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy);
-		this.quadrants[2] = new WhiteNode(this.origin, dx, dy);
-		this.quadrants[3] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y), dx, dy);
+		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy, this.canvas);
+		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy, this.canvas);
+		this.quadrants[2] = new WhiteNode(this.origin, dx, dy, this.canvas);
+		this.quadrants[3] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y), dx, dy, this.canvas);
+		this.canvas = canvas;
 	}
 
 	@Override
@@ -65,7 +68,8 @@ public class GrayNode implements TreeNode {
 	@Override
 	public TreeNode remove(City city) {
 		if (this.occupiedQuadrants == 1) {
-			return new WhiteNode(this.origin, this.width, this.height);
+			return new WhiteNode(this.origin, this.width, this.height, this.canvas);
+			// TODO remove quadrant lines
 		} else {
 			int quadrant = this.getQuadrantIndex(city);
 			this.quadrants[quadrant] = this.quadrants[quadrant].remove(city);

@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 
 public class BlackNode implements TreeNode {
@@ -13,20 +14,25 @@ public class BlackNode implements TreeNode {
 	private final float width;
 	private final float height;
 	private City city;
+	private CanvasPlus canvas;
 	
-	public BlackNode(City city, Point2D.Float origin, float width, float height) {
+	public BlackNode(City city, Point2D.Float origin, float width, float height, CanvasPlus canvas) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.city = city;
+		this.canvas = canvas;
 	}
 
 	@Override
 	public TreeNode add(City city) {
-		GrayNode node = new GrayNode(this.origin, this.width, this.height);
+		// TODO warning: does adding the same point twice cause problems?
+		GrayNode node = new GrayNode(this.origin, this.width, this.height, this.canvas);
+		// I may need to remove this.city
 		node.add(this.city);
 		node.add(city);
 		return node;
+		// TODO draw quadrant lines
 	}
 
 	@Override
@@ -36,7 +42,8 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public TreeNode remove(City city) {
-		return new WhiteNode(this.origin, this.width, this.height);
+		return new WhiteNode(this.origin, this.width, this.height, this.canvas);
+		//TODO remove
 	}
 	
 	public City getCity() {
