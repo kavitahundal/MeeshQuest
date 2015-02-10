@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 
 public class WhiteNode implements TreeNode {
@@ -12,6 +13,7 @@ public class WhiteNode implements TreeNode {
 	private final Point2D.Float origin;
 	private final float width;
 	private final float height;
+	private CanvasPlus canvas;
 	
 	public WhiteNode(Point2D.Float origin, float width, float height) {
 		this.origin = origin;

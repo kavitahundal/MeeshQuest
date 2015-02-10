@@ -146,8 +146,8 @@ public class CommandParser {
 		NamedNodeMap attrs = root.getAttributes();
 		int spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
 		int spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
-		this.spatial = this.seed.generate(spatialWidth, spatialHeight);
-		this.runner = new CommandRunner(this.dictionary, this.spatial, this.adjacencyList);
+//		this.spatial = this.seed.generate(this.spatialWidth, this.spatialHeight);
+		this.runner = new CommandRunner(this.dictionary, this.seed, this.adjacencyList, spatialWidth, spatialHeight);
 
 		/* process each command */
 		for (int i = 0; i < commands.getLength(); i++) {

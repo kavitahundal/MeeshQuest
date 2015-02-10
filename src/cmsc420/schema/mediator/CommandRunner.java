@@ -22,6 +22,7 @@ import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyListStructure;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.PRQuadTree;
+import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 
 /**
@@ -33,14 +34,14 @@ public class CommandRunner {
 	private DictionaryStructure dictionary;
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
-	CanvasPlus canvas;
+	private CanvasPlus canvas;
 
-	CommandRunner(DictionaryStructure dict, SpatialStructure spatial, AdjacencyListStructure adj) {
-		this.dictionary = dict;
-		this.spatial = spatial;
-		this.adjacencyList = adj;
+	CommandRunner(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj, int width, int height) {
 		this.canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
 				(int) this.spatial.getSpatialHeight());
+		this.dictionary = dict;
+		this.spatial = seed.generate(width, height, this.canvas);
+		this.adjacencyList = adj;
 		this.canvas.addRectangle(0, 0, (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(),
 				Color.BLACK, false);
 	}
@@ -162,19 +163,10 @@ public class CommandRunner {
 		if (this.spatial.contains(city)) {
 			throw new CityAlreadyMappedException();
 		}
-//		if (name.equals("Prague")) {
-//			System.out.println("alsdjfa;ouwrehtapuasldkjfhalksdjfhaslkdjfh");
-//			System.out.println(city.x);
-//			System.out.println(city.y);
-//			System.out.println(this.spatial.getSpatialWidth());
-//			System.out.println(this.spatial.getSpatialHeight());
-//		}
 		if (city.x > this.spatial.getSpatialWidth() || city.y > this.spatial.getSpatialHeight()) {
 			throw new CityOutOfBoundsException();
 		}
-//		System.out.println("adddddddddddddddd");
 		this.spatial.add(city);
-//		System.out.println("ddddddddaaaaaaaaaaaaaaa");
 		this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
 		// TODO need to draw graynode quadrants
 	}
