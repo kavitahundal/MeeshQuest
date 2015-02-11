@@ -53,14 +53,14 @@ public class GrayNode implements TreeNode {
 
 	private int getQuadrantIndex(City city) {
 		Point2D.Float center = this.location();
-		if (city.x > center.x) {
+		if (city.x >= center.x) {
 			if (city.y > center.y) {
 				return 1;
 			} else {
 				return 3;
 			}
 		} else {
-			if (city.y > center.y) {
+			if (city.y >= center.y) {
 				return 0;
 			} else {
 				return 2;
