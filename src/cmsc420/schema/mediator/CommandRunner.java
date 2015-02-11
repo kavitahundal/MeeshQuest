@@ -38,14 +38,11 @@ public class CommandRunner {
 	private DictionaryStructure dictionary;
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
-//	private CanvasPlus canvas;
 
 	CommandRunner(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj, int width, int height) {
-//		this.canvas = new CanvasPlus("MeeshQuest", width, height);
 		this.dictionary = dict;
 		this.spatial = seed.generate("MeeshQuest", width, height);
 		this.adjacencyList = adj;
-//		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
 	}
 
 	/**
@@ -251,7 +248,6 @@ public class CommandRunner {
 	List<City> rangeCities(int x, int y, int radius, String saveMap) throws NoCitiesExistInRangeException {
 		// System.out.println("rangeCities: " + x + " " + y + " " + radius + " "
 		// + saveMap);
-		// TODO suspected null element in return list
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
@@ -268,7 +264,11 @@ public class CommandRunner {
 			List<City> cities = new LinkedList<>();
 			for (String name : names) {
 				cities.add(this.dictionary.getCity(name));
-				// TODO mapping suspected to return null :(
+//				City temp = this.dictionary.getCity(name);
+//				if (temp != null) {
+//					cities.add(temp);
+//				}
+				// TODO mapping confirmed to return null :(
 			}
 			return cities;
 		}
@@ -309,9 +309,7 @@ public class CommandRunner {
 	}
 
 	void close() {
-//		this.canvas.dispose();
 		this.spatial.removeCanvas();
-		// TODO put in quadtree instead?
 	}
 
 }
