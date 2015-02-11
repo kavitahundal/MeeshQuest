@@ -254,7 +254,9 @@ public class CommandParser {
 					String[] paramNames = { "x", "y", "radius", "saveMap" };
 					String[] parameters = { xString, yString, radiusString, saveMap };
 					try {
+						// TODO suspected null pointer here
 						List<City> cities = this.runner.rangeCities(x, y, radius, saveMap);
+						// TODO suspected null pointer here
 						this.writer.appendTag(command, parameters, paramNames, cities);
 					} catch (NoCitiesExistInRangeException e) {
 						// System.out.println(e.getMessage());

@@ -246,6 +246,7 @@ public class CommandRunner {
 	List<City> rangeCities(int x, int y, int radius, String saveMap) throws NoCitiesExistInRangeException {
 		// System.out.println("rangeCities: " + x + " " + y + " " + radius + " "
 		// + saveMap);
+		// TODO suspected null element in return list
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
@@ -255,17 +256,14 @@ public class CommandRunner {
 			throw new NoCitiesExistInRangeException();
 		} else {
 			if (saveMap != null) {
-				// assuming we temporarily add the circle for this step
-				// TODO implement in prquadtree
-//				this.canvas.addCircle(x, y, radius, Color.BLUE, false);
 				this.spatial.addCircle(x, y, radius);
 				this.saveMap(saveMap);
-//				this.canvas.removeCircle(x, y, radius, Color.BLUE, false);
 				this.spatial.removeCircle(x, y, radius);
 			}
 			List<City> cities = new LinkedList<>();
 			for (String name : names) {
 				cities.add(this.dictionary.getCity(name));
+				// TODO mapping suspected to return null :(
 			}
 			return cities;
 		}
