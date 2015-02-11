@@ -3,6 +3,7 @@ package cmsc420.schema.mediator;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import cmsc420.exceptions.CityAlreadyMappedException;
 import cmsc420.exceptions.CityDoesNotExistException;
@@ -16,13 +17,17 @@ import cmsc420.exceptions.NoCitiesExistInRangeException;
 import cmsc420.exceptions.NoCitiesToListException;
 import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
+import cmsc420.schema.CityDistanceComparator;
 import cmsc420.schema.CityNameComparator;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyListStructure;
 import cmsc420.schema.dictionary.DictionaryStructure;
+import cmsc420.schema.spatial.BlackNode;
+import cmsc420.schema.spatial.GrayNode;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
+import cmsc420.schema.spatial.TreeNode;
 
 /**
  * @author Andrew
@@ -283,17 +288,24 @@ public class CommandRunner {
 	 * @throws MapIsEmptyException
 	 */
 	City nearestCity(int x, int y) throws MapIsEmptyException {
-		boolean t = true;
-		if (t) {
-			throw new MapIsEmptyException();
-		}
 		// System.out.println("nearestCity: " + x + " " + y);
 		// ASSUMING CITY MUST BE IN THE SPATIAL
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		}
-		// TODO get city
-		return null;
+		PriorityQueue<City> queue = new PriorityQueue<>(new CityDistanceComparator(x, y));
+		this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot());
+		return queue.peek();
+	}
+	
+	private void fillQueue(PriorityQueue<City> queue, TreeNode node) {
+		if (node instanceof BlackNode) {
+			queue.add(((BlackNode) node).getCity());
+		} else if (node instanceof GrayNode) {
+			for (TreeNode child : ((GrayNode) node).getChildren()) {
+				this.fillQueue(queue, child);
+			}
+		}
 	}
 
 	void close() {

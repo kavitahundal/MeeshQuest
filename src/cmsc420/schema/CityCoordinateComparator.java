@@ -6,7 +6,6 @@ public class CityCoordinateComparator implements Comparator<City> {
 
 	@Override
 	public int compare(City o1, City o2) {
-		// TODO Auto-generated method stub
 		if (o1.x == o2.x) {
 			if (o1.y == o2.y) {
 				return 0;

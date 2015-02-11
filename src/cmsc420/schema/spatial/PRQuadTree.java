@@ -116,6 +116,10 @@ public class PRQuadTree implements SpatialStructure {
 		this.canvas = null;
 		this.root = null;
 	}
+	
+	public TreeNode getRoot() {
+		return this.root;
+	}
 
 	// public void print() {
 	// Document results = null;

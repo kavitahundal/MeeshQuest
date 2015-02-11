@@ -2,7 +2,9 @@ package cmsc420.schema.spatial;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -107,5 +109,13 @@ public class GrayNode implements TreeNode {
 		for (int i = 0; i < this.quadrants.length; i++) {
 			this.quadrants[i].range(cities, x, y, radius);
 		}
+	}
+	
+	public Set<TreeNode> getChildren() {
+		Set<TreeNode> quads = new HashSet<>();
+		for (TreeNode q : this.quadrants) {
+			quads.add(q);
+		}
+		return quads;
 	}
 }
