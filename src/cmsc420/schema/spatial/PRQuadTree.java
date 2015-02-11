@@ -31,7 +31,6 @@ public class PRQuadTree implements SpatialStructure {
 		this.size = 0;
 		this.canvas = new CanvasPlus("MeeshQuest", (int) width, (int) height);
 		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
-//		this.canvas = canvas;
 		this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
 	}
 
