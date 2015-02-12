@@ -18,7 +18,6 @@ public class GrayNode implements TreeNode {
 	private final float width;
 	private final float height;
 	private TreeNode[] quadrants;
-	// private int occupiedQuadrants;
 	private CanvasPlus canvas;
 
 	public GrayNode(Point2D.Float origin, float width, float height, CanvasPlus canvas) {
@@ -27,7 +26,6 @@ public class GrayNode implements TreeNode {
 		this.height = height;
 		float dx = this.width / 2;
 		float dy = this.height / 2;
-		// this.occupiedQuadrants = 0;
 		this.canvas = canvas;
 		this.quadrants = new TreeNode[4];
 		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy, this.canvas);
@@ -40,9 +38,6 @@ public class GrayNode implements TreeNode {
 	@Override
 	public TreeNode add(City city) {
 		int quadrant = this.getQuadrantIndex(city);
-		// if (this.quadrants[quadrant] instanceof WhiteNode) {
-		// this.occupiedQuadrants++;
-		// }
 		this.quadrants[quadrant] = this.quadrants[quadrant].add(city);
 		return this;
 	}
@@ -97,43 +92,6 @@ public class GrayNode implements TreeNode {
 		} else {
 			return this;
 		}
-		// this.occupiedQuadrants--;
-		// if (this.occupiedQuadrants < 2) {
-		// if (this.canvas != null) {
-		// this.canvas.removeLine(this.origin.x, this.origin.y + this.height /
-		// 2, this.origin.x + this.width,
-		// this.origin.y + this.height / 2, Color.BLACK);
-		// this.canvas.removeLine(this.origin.x + this.width / 2, this.origin.y,
-		// this.origin.x + this.width / 2,
-		// this.origin.y + this.height, Color.BLACK);
-		// }
-		// if (this.occupiedQuadrants == 0) {
-		// return new WhiteNode(this.origin, this.width, this.height,
-		// this.canvas);
-		// } else { // this.occupiedQuadrants == 1
-		// for (TreeNode q : this.quadrants) {
-		// // return the only occupied quadrant as the black node
-		// if (q instanceof BlackNode) {
-		// return new BlackNode(((BlackNode) q).getCity(), this.origin,
-		// this.width, this.height,
-		// this.canvas);
-		// } else if (q instanceof GrayNode) {
-		// if (this.canvas != null) {
-		// this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2,
-		// this.origin.x
-		// + this.width, this.origin.y + this.height / 2, Color.BLACK);
-		// this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y,
-		// this.origin.x
-		// + this.width / 2, this.origin.y + this.height, Color.BLACK);
-		// }
-		// return this;
-		// }
-		// }
-		// throw new UnsupportedOperationException(); // will never happen
-		// }
-		// } else {
-		// return this;
-		// }
 	}
 
 	@Override

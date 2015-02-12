@@ -115,7 +115,6 @@ public class CommandRunner {
 		if (this.adjacencyList != null) {
 			this.adjacencyList = (AdjacencyListStructure) this.adjacencyList.reset();
 		}
-		// integrate ALL of canvas in quadtree?
 	}
 
 	/**
@@ -264,11 +263,6 @@ public class CommandRunner {
 			List<City> cities = new LinkedList<>();
 			for (String name : names) {
 				cities.add(this.dictionary.getCity(name));
-//				City temp = this.dictionary.getCity(name);
-//				if (temp != null) {
-//					cities.add(temp);
-//				}
-				// TODO mapping confirmed to return null :(
 			}
 			return cities;
 		}

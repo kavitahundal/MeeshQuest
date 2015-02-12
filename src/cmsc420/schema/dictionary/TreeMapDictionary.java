@@ -23,7 +23,7 @@ public class TreeMapDictionary implements DictionaryStructure {
 
 	@Override
 	public void add(City city) {
-		// TODO what if coordinates are the same?
+		// equals should only check coords
 		this.nameToCity.put(city.getName(), city);
 		this.cityToName.put(city, city.getName());
 	}

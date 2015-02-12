@@ -139,6 +139,4 @@ public class PRQuadTree implements SpatialStructure {
 //	 }
 //	 }
 
-	// TODO need method to check if last added node was gray
-
 }
