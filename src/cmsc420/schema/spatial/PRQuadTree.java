@@ -53,7 +53,6 @@ public class PRQuadTree implements SpatialStructure {
 		} else {
 			this.root.remove(city);
 		}
-		// TODO canvas remove (in if block)
 	}
 
 	@Override
@@ -120,25 +119,25 @@ public class PRQuadTree implements SpatialStructure {
 		return this.root;
 	}
 
-	// public void print() {
-	// Document results = null;
-	//
-	// try {
-	// results = XmlUtility.getDocumentBuilder().newDocument();
-	// } catch (ParserConfigurationException e1) {
-	// e1.printStackTrace(); // should never have an error
-	// }
-	//
-	// // add nodes
-	// results.appendChild(this.elementize(results));
-	//
-	// try {
-	// XmlUtility.print(results);
-	// } catch (TransformerException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
+//	 public void print() {
+//	 Document results = null;
+//	
+//	 try {
+//	 results = XmlUtility.getDocumentBuilder().newDocument();
+//	 } catch (ParserConfigurationException e1) {
+//	 e1.printStackTrace(); // should never have an error
+//	 }
+//	
+//	 // add nodes
+//	 results.appendChild(this.elementize(results));
+//	
+//	 try {
+//	 XmlUtility.print(results);
+//	 } catch (TransformerException e) {
+//	 // TODO Auto-generated catch block
+//	 e.printStackTrace();
+//	 }
+//	 }
 
 	// TODO need method to check if last added node was gray
 

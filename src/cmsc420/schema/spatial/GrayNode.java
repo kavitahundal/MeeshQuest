@@ -18,7 +18,7 @@ public class GrayNode implements TreeNode {
 	private final float width;
 	private final float height;
 	private TreeNode[] quadrants;
-	private int occupiedQuadrants;
+	// private int occupiedQuadrants;
 	private CanvasPlus canvas;
 
 	public GrayNode(Point2D.Float origin, float width, float height, CanvasPlus canvas) {
@@ -27,7 +27,7 @@ public class GrayNode implements TreeNode {
 		this.height = height;
 		float dx = this.width / 2;
 		float dy = this.height / 2;
-		this.occupiedQuadrants = 0;
+		// this.occupiedQuadrants = 0;
 		this.canvas = canvas;
 		this.quadrants = new TreeNode[4];
 		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy, this.canvas);
@@ -40,9 +40,9 @@ public class GrayNode implements TreeNode {
 	@Override
 	public TreeNode add(City city) {
 		int quadrant = this.getQuadrantIndex(city);
-		if (this.quadrants[quadrant] instanceof WhiteNode) {
-			this.occupiedQuadrants++;
-		}
+		// if (this.quadrants[quadrant] instanceof WhiteNode) {
+		// this.occupiedQuadrants++;
+		// }
 		this.quadrants[quadrant] = this.quadrants[quadrant].add(city);
 		return this;
 	}
@@ -72,20 +72,68 @@ public class GrayNode implements TreeNode {
 
 	@Override
 	public TreeNode remove(City city) {
-		if (this.occupiedQuadrants == 1) {
+		int quadrant = this.getQuadrantIndex(city);
+		this.quadrants[quadrant] = this.quadrants[quadrant].remove(city);
+		TreeNode quad = null;
+		int occupiedQuadrants = 0;
+		for (TreeNode q : this.quadrants) {
+			if (!(q instanceof WhiteNode)) {
+				occupiedQuadrants++;
+				quad = q;
+			}
+		}
+		if (occupiedQuadrants < 2 && !(quad instanceof GrayNode)) {
 			if (this.canvas != null) {
 				this.canvas.removeLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
 						this.origin.y + this.height / 2, Color.BLACK);
 				this.canvas.removeLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
 						this.origin.y + this.height, Color.BLACK);
 			}
-			return new WhiteNode(this.origin, this.width, this.height, this.canvas);
+			if (occupiedQuadrants == 0) {
+				return new WhiteNode(this.origin, this.width, this.height, this.canvas);
+			} else {
+				return new BlackNode(((BlackNode) quad).getCity(), this.origin, this.width, this.height, this.canvas);
+			}
 		} else {
-			int quadrant = this.getQuadrantIndex(city);
-			this.quadrants[quadrant] = this.quadrants[quadrant].remove(city);
-			this.occupiedQuadrants--;
 			return this;
 		}
+		// this.occupiedQuadrants--;
+		// if (this.occupiedQuadrants < 2) {
+		// if (this.canvas != null) {
+		// this.canvas.removeLine(this.origin.x, this.origin.y + this.height /
+		// 2, this.origin.x + this.width,
+		// this.origin.y + this.height / 2, Color.BLACK);
+		// this.canvas.removeLine(this.origin.x + this.width / 2, this.origin.y,
+		// this.origin.x + this.width / 2,
+		// this.origin.y + this.height, Color.BLACK);
+		// }
+		// if (this.occupiedQuadrants == 0) {
+		// return new WhiteNode(this.origin, this.width, this.height,
+		// this.canvas);
+		// } else { // this.occupiedQuadrants == 1
+		// for (TreeNode q : this.quadrants) {
+		// // return the only occupied quadrant as the black node
+		// if (q instanceof BlackNode) {
+		// return new BlackNode(((BlackNode) q).getCity(), this.origin,
+		// this.width, this.height,
+		// this.canvas);
+		// } else if (q instanceof GrayNode) {
+		// if (this.canvas != null) {
+		// this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2,
+		// this.origin.x
+		// + this.width, this.origin.y + this.height / 2, Color.BLACK);
+		// this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y,
+		// this.origin.x
+		// + this.width / 2, this.origin.y + this.height, Color.BLACK);
+		// }
+		// return this;
+		// }
+		// }
+		// throw new UnsupportedOperationException(); // will never happen
+		// }
+		// } else {
+		// return this;
+		// }
 	}
 
 	@Override
@@ -110,7 +158,7 @@ public class GrayNode implements TreeNode {
 			this.quadrants[i].range(cities, x, y, radius);
 		}
 	}
-	
+
 	public Set<TreeNode> getChildren() {
 		Set<TreeNode> quads = new HashSet<>();
 		for (TreeNode q : this.quadrants) {
