@@ -159,7 +159,7 @@ public class CommandRunner {
 		if (this.spatial.contains(city)) {
 			throw new CityAlreadyMappedException();
 		}
-		if (city.x > this.spatial.getSpatialWidth() || city.y > this.spatial.getSpatialHeight()) {
+		if (city.x >= this.spatial.getSpatialWidth() || city.y >= this.spatial.getSpatialHeight()) {
 			throw new CityOutOfBoundsException();
 		}
 		this.spatial.add(city);
