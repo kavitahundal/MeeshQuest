@@ -78,7 +78,6 @@ public class CommandWriter {
 		Element outputTag = this.output.createElement("output");
 		Element cityList = this.output.createElement("cityList");
 		for (City city : cities) {
-			// TODO cities is null?
 			cityList.appendChild(this.mapCity(city));
 		}
 		outputTag.appendChild(cityList);
