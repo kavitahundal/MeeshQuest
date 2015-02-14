@@ -71,7 +71,8 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public void range(List<String> cities, int x, int y, int radius) {
-		if (this.city.getDistance(x, y) <= radius) {
+//		if (this.city.getDistance(x, y) <= radius) {
+		if (this.city.distance(x, y) <= radius) {
 			cities.add(this.city.getName());
 		}
 	}

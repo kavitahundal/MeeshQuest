@@ -31,11 +31,11 @@ public class City extends Float {
 		return this.radius;
 	}
 	
-	public float getDistance(int x, int y) {
-		float dx = this.x - x;
-		float dy = this.y - y;
-		return (float) Math.sqrt(dx * dx + dy * dy);
-	}
+//	public float getDistance(int x, int y) {
+//		float dx = this.x - x;
+//		float dy = this.y - y;
+//		return (float) Math.sqrt(dx * dx + dy * dy);
+//	}
 	
 	@Override
 	public String toString() {
