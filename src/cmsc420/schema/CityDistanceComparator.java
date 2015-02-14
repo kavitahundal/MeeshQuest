@@ -14,8 +14,8 @@ public class CityDistanceComparator implements Comparator<City> {
 
 	@Override
 	public int compare(City arg0, City arg1) {
-		float firstDist = arg1.getDistance(x, y);
-		float secondDist = arg0.getDistance(x, y);
+		float firstDist = (float) arg1.distance(x, y);
+		float secondDist = (float) arg0.distance(x, y);
 		if (firstDist > secondDist) {
 			return -1;
 		} else if (secondDist > firstDist) {
