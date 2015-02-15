@@ -159,7 +159,8 @@ public class CommandRunner {
 		if (this.spatial.contains(city)) {
 			throw new CityAlreadyMappedException();
 		}
-		if (city.x >= this.spatial.getSpatialWidth() || city.y >= this.spatial.getSpatialHeight()) {
+		if (city.x >= this.spatial.getSpatialWidth() || city.y >= this.spatial.getSpatialHeight() || city.x < 0
+				|| city.y < 0) {
 			throw new CityOutOfBoundsException();
 		}
 		this.spatial.add(city);
@@ -291,7 +292,7 @@ public class CommandRunner {
 		this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot());
 		return queue.peek();
 	}
-	
+
 	private void fillQueue(PriorityQueue<City> queue, TreeNode node) {
 		if (node instanceof BlackNode) {
 			queue.add(((BlackNode) node).getCity());
