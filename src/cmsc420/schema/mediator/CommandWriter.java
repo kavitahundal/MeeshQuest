@@ -186,6 +186,10 @@ public class CommandWriter {
 		return tag; // remember: no output tag!
 	}
 	
+	void undefinedError() {
+		this.root.appendChild(this.output.createElement("undefinedError"));
+	}
+	
 	void close() {
 		this.output.appendChild(root);
 	}

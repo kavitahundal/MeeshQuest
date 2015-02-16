@@ -276,6 +276,8 @@ public class CommandParser {
 						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
+				} else {
+					this.writer.undefinedError();
 				}
 			}
 		}
