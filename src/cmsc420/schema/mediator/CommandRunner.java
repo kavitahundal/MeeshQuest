@@ -290,7 +290,15 @@ public class CommandRunner {
 		}
 		PriorityQueue<City> queue = new PriorityQueue<>(new CityDistanceComparator(x, y));
 		this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot());
-		return queue.peek();
+		City nearest = queue.poll();
+		while (queue.peek() != null && queue.peek().distance(x, y) <= nearest.distance(x, y)) {
+			City temp = queue.poll();
+			if (temp.getName().compareTo(nearest.getName()) < 0) {
+				nearest = temp;
+			}
+		}
+		return nearest;
+//		return queue.peek();
 	}
 
 	private void fillQueue(PriorityQueue<City> queue, TreeNode node) {
