@@ -30,7 +30,7 @@ import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.schema.spatial.TreeNode;
 
 /**
- * @author Andrew
+ * @author Andrew Liu
  *
  */
 public class CommandRunner {

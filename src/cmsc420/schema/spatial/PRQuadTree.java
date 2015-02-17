@@ -13,6 +13,12 @@ import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 import cmsc420.schema.DataStructure;
 
+/**
+ * A PR Quadtree data structure.
+ * 
+ * @author Andrew Liu
+ *
+ */
 public class PRQuadTree implements SpatialStructure {
 
 	private TreeNode root;
@@ -23,13 +29,23 @@ public class PRQuadTree implements SpatialStructure {
 	private CanvasPlus canvas;
 	private String name;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param name
+	 *            the name of the canvas
+	 * @param width
+	 *            the width of the tree
+	 * @param height
+	 *            the height of the tree
+	 */
 	public PRQuadTree(String name, float width, float height) {
 		this.name = name;
 		this.origin = new Point2D.Float();
 		this.width = width;
 		this.height = height;
 		this.size = 0;
-		this.canvas = new CanvasPlus("MeeshQuest", (int) width, (int) height);
+		this.canvas = new CanvasPlus(name, (int) width, (int) height);
 		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
 		this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
 	}
@@ -57,7 +73,6 @@ public class PRQuadTree implements SpatialStructure {
 
 	@Override
 	public DataStructure<City> reset() {
-		// TODO make sure getName() return title (aka title == name)
 		return new PRQuadTree(this.name, this.width, this.height);
 	}
 
@@ -76,6 +91,13 @@ public class PRQuadTree implements SpatialStructure {
 		return this.height;
 	}
 
+	/**
+	 * Returns the tree as an XML element.
+	 * 
+	 * @param doc
+	 *            the XML document to generate elements
+	 * @return the as an XML element
+	 */
 	public Element elementize(Document doc) {
 		Element xmlRoot = doc.createElement("quadtree");
 		xmlRoot.appendChild(this.root.elementize(doc));
@@ -109,34 +131,18 @@ public class PRQuadTree implements SpatialStructure {
 
 	@Override
 	public void removeCanvas() {
-		// TODO Auto-generated method stub
 		this.canvas.dispose();
 		this.canvas = null;
 		this.root = null;
 	}
-	
+
+	/**
+	 * Gets the root of this tree.
+	 * 
+	 * @return the root node
+	 */
 	public TreeNode getRoot() {
 		return this.root;
 	}
-
-//	 public void print() {
-//	 Document results = null;
-//	
-//	 try {
-//	 results = XmlUtility.getDocumentBuilder().newDocument();
-//	 } catch (ParserConfigurationException e1) {
-//	 e1.printStackTrace(); // should never have an error
-//	 }
-//	
-//	 // add nodes
-//	 results.appendChild(this.elementize(results));
-//	
-//	 try {
-//	 XmlUtility.print(results);
-//	 } catch (TransformerException e) {
-//	 // TODO Auto-generated catch block
-//	 e.printStackTrace();
-//	 }
-//	 }
 
 }

@@ -12,6 +12,13 @@ import org.w3c.dom.Element;
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 
+/**
+ * A TreeNode that represents an inner node that has four children that
+ * represents the four quadrants within the region of this node.
+ *
+ * @author Andrew Liu
+ *
+ */
 public class GrayNode implements TreeNode {
 
 	private final Point2D.Float origin;
@@ -20,6 +27,18 @@ public class GrayNode implements TreeNode {
 	private TreeNode[] quadrants;
 	private CanvasPlus canvas;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param origin
+	 *            the lowest value corner of the node's region
+	 * @param width
+	 *            the width of this node's region
+	 * @param height
+	 *            the height of this node's region
+	 * @param canvas
+	 *            the drawing canvas of the structure
+	 */
 	public GrayNode(Point2D.Float origin, float width, float height, CanvasPlus canvas) {
 		this.origin = origin;
 		this.width = width;
@@ -106,6 +125,11 @@ public class GrayNode implements TreeNode {
 		return ele;
 	}
 
+	/**
+	 * Gets the spatial center of the node's region.
+	 * 
+	 * @return the center of the region
+	 */
 	public Point2D.Float location() {
 		return new Point2D.Float(this.origin.x + this.width / 2, this.origin.y + this.height / 2);
 	}
@@ -117,6 +141,11 @@ public class GrayNode implements TreeNode {
 		}
 	}
 
+	/**
+	 * Gets the set of children nodes of this node.
+	 * 
+	 * @return the children nodes
+	 */
 	public Set<TreeNode> getChildren() {
 		Set<TreeNode> quads = new HashSet<>();
 		for (TreeNode q : this.quadrants) {

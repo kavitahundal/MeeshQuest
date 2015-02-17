@@ -11,11 +11,21 @@ import cmsc420.schema.CityNameComparator;
 import cmsc420.schema.DataStructure;
 import cmsc420.schema.SortType;
 
+/**
+ * A dictionary that stores cities using TreeMaps as an internal mapping
+ * structure.
+ * 
+ * @author Andrew Liu
+ *
+ */
 public class TreeMapDictionary implements DictionaryStructure {
 
 	private TreeMap<String, City> nameToCity;
 	private TreeMap<City, String> cityToName;
 
+	/**
+	 * Default constructor.
+	 */
 	public TreeMapDictionary() {
 		this.nameToCity = new TreeMap<>(new CityNameComparator());
 		this.cityToName = new TreeMap<>(new CityCoordinateComparator());
@@ -58,7 +68,7 @@ public class TreeMapDictionary implements DictionaryStructure {
 		this.cityToName.remove(this.nameToCity.get(name));
 		this.nameToCity.remove(name);
 	}
-	
+
 	@Override
 	public int size() {
 		return this.nameToCity.size();
