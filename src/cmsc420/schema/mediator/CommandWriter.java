@@ -44,7 +44,9 @@ public class CommandWriter {
 		Element tag = this.initiateTag(errorType);
 		tag = this.createTag(tag, command, parameters, paramNames);
 		Element outputTag = this.output.createElement("output");
-		tag.appendChild(outputTag);
+		if (errorType == null) {
+			tag.appendChild(outputTag);
+		}
 		this.root.appendChild(tag);
 	}
 	
