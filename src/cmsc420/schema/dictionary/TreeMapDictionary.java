@@ -33,7 +33,6 @@ public class TreeMapDictionary implements DictionaryStructure {
 
 	@Override
 	public void add(City city) {
-		// equals should only check coords
 		this.nameToCity.put(city.getName(), city);
 		this.cityToName.put(city, city.getName());
 	}
@@ -50,21 +49,18 @@ public class TreeMapDictionary implements DictionaryStructure {
 
 	@Override
 	public boolean containsCoordinates(City city) {
+		// only checks coordinates (equals method is not overwritten)
 		return this.cityToName.containsKey(city);
-		// equals for city must only check coords!!!
-		// in other words, don't override equals :)
 	}
 
 	@Override
 	public void remove(City city) {
-		// precondition: contains returns true
 		this.nameToCity.remove(city.getName());
 		this.cityToName.remove(city);
 	}
 
 	@Override
 	public void remove(String name) {
-		// precondition: contains returns true
 		this.cityToName.remove(this.nameToCity.get(name));
 		this.nameToCity.remove(name);
 	}
@@ -94,7 +90,7 @@ public class TreeMapDictionary implements DictionaryStructure {
 				cities.add(this.nameToCity.get(name));
 			}
 			return cities;
-		} else {
+		} else { // already lexicographically sorted
 			return new ArrayList<City>(this.cityToName.keySet());
 		}
 	}

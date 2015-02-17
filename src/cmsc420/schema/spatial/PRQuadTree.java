@@ -63,8 +63,7 @@ public class PRQuadTree implements SpatialStructure {
 
 	@Override
 	public void remove(City city) {
-		// precondition: contains city
-		if (this.root instanceof BlackNode) {
+		if (this.root instanceof BlackNode) { // empty the tree
 			this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
 		} else {
 			this.root = this.root.remove(city);
@@ -100,14 +99,14 @@ public class PRQuadTree implements SpatialStructure {
 	 */
 	public Element elementize(Document doc) {
 		Element xmlRoot = doc.createElement("quadtree");
-		xmlRoot.appendChild(this.root.elementize(doc));
+		xmlRoot.appendChild(this.root.elementize(doc)); // recursive call
 		return xmlRoot;
 	}
 
 	@Override
 	public List<String> range(int x, int y, int radius) {
 		List<String> cities = new LinkedList<>();
-		this.root.range(cities, x, y, radius);
+		this.root.range(cities, x, y, radius); // recursive call
 		return cities;
 	}
 

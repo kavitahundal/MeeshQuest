@@ -25,13 +25,6 @@ public class BlackNode implements TreeNode {
 	private CanvasPlus canvas;
 
 	/**
-	 * @param city
-	 * @param origin
-	 * @param width
-	 * @param height
-	 * @param canvas
-	 */
-	/**
 	 * Constructor.
 	 * 
 	 * @param city
@@ -55,18 +48,16 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public TreeNode add(City city) {
-		GrayNode node = new GrayNode(this.origin, this.width, this.height, this.canvas);
+		GrayNode node = new GrayNode(this.origin, this.width, this.height, this.canvas); // partition
 		if (this.canvas != null) {
 			this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
 					this.origin.y + this.height / 2, Color.BLACK);
 			this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
 					this.origin.y + this.height, Color.BLACK);
 			this.canvas.removePoint(this.city.getName(), this.city.x, this.city.y, Color.BLACK);
-			// remove this.city because the next command will add it again
-			// based off testing, this doesn't seem necessary
 		}
-		node.add(this.city);
-		node.add(city);
+		node.add(this.city); // add the old node that was removed
+		node.add(city); // add the new node
 		return node;
 	}
 
@@ -103,7 +94,6 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public void range(List<String> cities, int x, int y, int radius) {
-		// if (this.city.getDistance(x, y) <= radius) {
 		if (this.city.distance(x, y) <= radius) {
 			cities.add(this.city.getName());
 		}

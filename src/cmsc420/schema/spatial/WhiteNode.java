@@ -57,7 +57,7 @@ public class WhiteNode implements TreeNode {
 
 	@Override
 	public TreeNode remove(City city) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); // no city to remove
 	}
 
 	@Override

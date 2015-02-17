@@ -88,7 +88,9 @@ public class CommandRunner {
 	 */
 	void createCity(String name, int x, int y, int radius, CityColor color) throws DuplicateCityNameException,
 			DuplicateCityCoordinatesException {
-		City city = new City(name, x, y, color, radius);
+		City city = new City(name, x, y, color, radius); // create city
+
+		/* check for exceptions */
 		if (this.dictionary.containsName(name)) {
 			throw new DuplicateCityNameException();
 		} else if (this.dictionary.containsCoordinates(city)) {
@@ -112,13 +114,17 @@ public class CommandRunner {
 	 */
 	City deleteCity(String name) throws CityDoesNotExistException {
 		City ret = null;
+
+		/* check for exceptions */
 		if (!this.dictionary.containsName(name)) {
 			throw new CityDoesNotExistException();
 		}
+
+		/* get city to remove */
 		City city = this.dictionary.getCity(name);
 		if (this.spatial.contains(city)) {
 			try {
-				this.unmapCity(name);
+				this.unmapCity(name); // unmap city if in spatial
 			} catch (NameNotInDictionaryException | CityNotMappedException e) {
 			}
 			ret = city;
@@ -179,10 +185,15 @@ public class CommandRunner {
 	 *             an exception if the city's coordinates are invalid
 	 */
 	void mapCity(String name) throws NameNotInDictionaryException, CityAlreadyMappedException, CityOutOfBoundsException {
+		/* check for exceptions */
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
+
+		/* get city to map */
 		City city = this.dictionary.getCity(name);
+
+		/* check for exceptions */
 		if (this.spatial.contains(city)) {
 			throw new CityAlreadyMappedException();
 		}
@@ -204,10 +215,15 @@ public class CommandRunner {
 	 *             an exception if the city has not been mapped
 	 */
 	void unmapCity(String name) throws NameNotInDictionaryException, CityNotMappedException {
+		/* check for exceptions */
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
+
+		/* get city to unmap */
 		City city = this.dictionary.getCity(name);
+
+		/* check for exceptions */
 		if (!this.spatial.contains(city)) {
 			throw new CityNotMappedException();
 		} else {
@@ -224,6 +240,7 @@ public class CommandRunner {
 	 *             an exception if no cities are mapped
 	 */
 	PRQuadTree printPRQuadTree() throws MapIsEmptyException {
+		/* check for exceptions */
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		} else {
@@ -280,19 +297,26 @@ public class CommandRunner {
 	 *             an exception if there are no cities within the search area
 	 */
 	List<City> rangeCities(int x, int y, int radius, String saveMap) throws NoCitiesExistInRangeException {
+		/* check for exceptions */
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
+
+		/* get cities within range */
 		List<String> names = this.spatial.range(x, y, radius);
 		Collections.sort(names, new CityNameComparator());
+
+		/* check for exceptions */
 		if (names.size() == 0) {
 			throw new NoCitiesExistInRangeException();
 		} else {
-			if (saveMap != null) {
+			if (saveMap != null) { // saving map
 				this.spatial.addCircle(x, y, radius);
 				this.saveMap(saveMap);
 				this.spatial.removeCircle(x, y, radius);
 			}
+
+			/* converting list of names to list of cities */
 			List<City> cities = new LinkedList<>();
 			for (String name : names) {
 				cities.add(this.dictionary.getCity(name));
@@ -319,12 +343,17 @@ public class CommandRunner {
 	 *             an exception if there are no cities mapped
 	 */
 	City nearestCity(int x, int y) throws MapIsEmptyException {
+		/* check for exceptions */
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		}
+
+		/* fill priority queue with cities based off proximity */
 		PriorityQueue<City> queue = new PriorityQueue<>(new CityDistanceComparator(x, y));
 		this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot());
 		City nearest = queue.poll();
+
+		/* getting lexicographically first city in case of ties */
 		while (queue.peek() != null && queue.peek().distance(x, y) <= nearest.distance(x, y)) {
 			City temp = queue.poll();
 			if (temp.getName().compareTo(nearest.getName()) < 0) {
@@ -336,10 +365,10 @@ public class CommandRunner {
 
 	private void fillQueue(PriorityQueue<City> queue, TreeNode node) {
 		if (node instanceof BlackNode) {
-			queue.add(((BlackNode) node).getCity());
+			queue.add(((BlackNode) node).getCity()); // add city
 		} else if (node instanceof GrayNode) {
 			for (TreeNode child : ((GrayNode) node).getChildren()) {
-				this.fillQueue(queue, child);
+				this.fillQueue(queue, child); // add children nodes
 			}
 		}
 	}

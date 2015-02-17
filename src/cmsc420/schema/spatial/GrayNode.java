@@ -47,6 +47,8 @@ public class GrayNode implements TreeNode {
 		float dy = this.height / 2;
 		this.canvas = canvas;
 		this.quadrants = new TreeNode[4];
+
+		/* setting boundaries for the quadrants */
 		this.quadrants[0] = new WhiteNode(new Point2D.Float(this.origin.x, this.origin.y + dy), dx, dy, this.canvas);
 		this.quadrants[1] = new WhiteNode(new Point2D.Float(this.origin.x + dx, this.origin.y + dy), dx, dy,
 				this.canvas);
@@ -90,19 +92,27 @@ public class GrayNode implements TreeNode {
 		this.quadrants[quadrant] = this.quadrants[quadrant].remove(city);
 		TreeNode quad = null;
 		int occupiedQuadrants = 0;
+
+		/* find number of non-white quadrants */
 		for (TreeNode q : this.quadrants) {
 			if (!(q instanceof WhiteNode)) {
 				occupiedQuadrants++;
-				quad = q;
+				quad = q; // get instance of occupied quadrant
 			}
 		}
+
+		/* check if this (gray) node needs to change */
 		if (occupiedQuadrants < 2 && !(quad instanceof GrayNode)) {
+
+			/* remove quadrant partitions on canvas */
 			if (this.canvas != null) {
 				this.canvas.removeLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
 						this.origin.y + this.height / 2, Color.BLACK);
 				this.canvas.removeLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
 						this.origin.y + this.height, Color.BLACK);
 			}
+
+			/* check if zero or one city is left */
 			if (occupiedQuadrants == 0) {
 				return new WhiteNode(this.origin, this.width, this.height, this.canvas);
 			} else {
@@ -119,6 +129,8 @@ public class GrayNode implements TreeNode {
 		Point2D.Float location = this.location();
 		ele.setAttribute("x", Integer.toString((int) location.x));
 		ele.setAttribute("y", Integer.toString((int) location.y));
+		
+		/* recursive call on the children nodes */
 		for (int i = 0; i < this.quadrants.length; i++) {
 			ele.appendChild(this.quadrants[i].elementize(doc));
 		}

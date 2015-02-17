@@ -24,7 +24,6 @@ public class CommandWriter {
 		try {
 			this.output = XmlUtility.getDocumentBuilder().newDocument();
 			this.root = this.output.createElement("results"); // root tag of XML
-																// output
 		} catch (ParserConfigurationException e) {
 		}
 	}
@@ -54,7 +53,7 @@ public class CommandWriter {
 		tag = this.createTag(tag, command, parameters, paramNames);
 		Element outputTag = this.output.createElement("output");
 		if (errorType == null) {
-			tag.appendChild(outputTag);
+			tag.appendChild(outputTag); // error tags have no output child tag
 		}
 		this.root.appendChild(tag);
 	}
@@ -75,7 +74,7 @@ public class CommandWriter {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames);
 		Element outputTag = this.output.createElement("output");
-		Element treeTag = tree.elementize(this.output);
+		Element treeTag = tree.elementize(this.output); // XML version of tree
 		outputTag.appendChild(treeTag);
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
@@ -98,6 +97,8 @@ public class CommandWriter {
 		tag = this.createTag(tag, command, parameters, paramNames);
 		Element outputTag = this.output.createElement("output");
 		Element cityList = this.output.createElement("cityList");
+
+		/* appending city XML nodes */
 		for (City city : cities) {
 			cityList.appendChild(this.mapCity(city));
 		}
@@ -119,11 +120,10 @@ public class CommandWriter {
 	 *            the city to output
 	 */
 	void appendTag(String command, String[] parameters, String[] paramNames, City city) {
-		// precond: city not null
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames);
 		Element outputTag = this.output.createElement("output");
-		outputTag.appendChild(this.mapCity(city));
+		outputTag.appendChild(this.mapCity(city)); // append city node
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
@@ -145,6 +145,8 @@ public class CommandWriter {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames);
 		Element outputTag = this.output.createElement("output");
+
+		/* append all city nodes */
 		if (city != null) {
 			outputTag.appendChild(this.unmapCity(city));
 		}
@@ -154,12 +156,12 @@ public class CommandWriter {
 
 	private Element mapCity(City city) {
 		Element tag = this.output.createElement("city");
-		return this.mapLocation(city, tag);
+		return this.mapLocation(city, tag); // append city XML
 	}
 
 	private Element unmapCity(City city) {
 		Element tag = this.output.createElement("cityUnmapped");
-		return this.mapLocation(city, tag);
+		return this.mapLocation(city, tag); // append city XML
 	}
 
 	private Element mapLocation(City city, Element tag) {
@@ -168,7 +170,7 @@ public class CommandWriter {
 		tag.setAttribute("y", Integer.toString((int) city.y));
 		tag.setAttribute("color", city.getColor().toString());
 		tag.setAttribute("radius", Integer.toString(city.getRadius()));
-		return tag;
+		return tag; // XML element with the city
 	}
 
 	private Element initiateTag(String errorType) {
@@ -179,14 +181,14 @@ public class CommandWriter {
 			tag = this.output.createElement("error");
 			tag.setAttribute("type", errorType);
 		}
-		return tag;
+		return tag; // return tag with success or error
 	}
 
 	private Element createTag(Element tag, String command, String[] parameters, String[] paramNames) {
-		Element commandTag = this.output.createElement("command");
+		Element commandTag = this.output.createElement("command"); // command tag
 		commandTag.setAttribute("name", command);
 		tag.appendChild(commandTag);
-		Element paramTag = this.output.createElement("parameters");
+		Element paramTag = this.output.createElement("parameters"); // parameter tag
 		for (int i = 0; i < parameters.length; i++) {
 			if (parameters[i] == null) {
 				continue; // for optional parameters
