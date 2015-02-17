@@ -2,6 +2,14 @@ package cmsc420.schema;
 
 import java.util.Comparator;
 
+/**
+ * A comparator that compares the coordinates of cities. A lower x coordinate
+ * grants precedence. If the x coordinates are equal, then the lower y
+ * coordinate grants precedence.
+ * 
+ * @author Andrew Liu
+ *
+ */
 public class CityCoordinateComparator implements Comparator<City> {
 
 	@Override

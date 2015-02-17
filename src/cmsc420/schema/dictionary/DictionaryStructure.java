@@ -6,6 +6,12 @@ import cmsc420.schema.City;
 import cmsc420.schema.DataStructure;
 import cmsc420.schema.SortType;
 
+/**
+ * An interface representing a dictionary data structure.
+ * 
+ * @author Andrew
+ *
+ */
 public interface DictionaryStructure extends DataStructure<City> {
 	
 	public boolean containsName(String name);

@@ -2,6 +2,13 @@ package cmsc420.schema;
 
 import java.util.Comparator;
 
+/**
+ * A comparator that compares the lexicographical ranking of the names of
+ * cities.
+ * 
+ * @author Andrew Liu
+ *
+ */
 public class CityNameComparator implements Comparator<String> {
 
 	@Override

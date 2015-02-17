@@ -2,11 +2,25 @@ package cmsc420.schema;
 
 import java.util.Comparator;
 
+/**
+ * A comparator to compare the relative distances of two cities from a given
+ * coordinate.
+ * 
+ * @author Andrew Liu
+ *
+ */
 public class CityDistanceComparator implements Comparator<City> {
-	
+
 	private int x;
 	private int y;
-	
+
+	/**
+	 * A constructor that gives the coordinate to act as the point to calculate
+	 * distance for each city.
+	 * 
+	 * @param width
+	 * @param height
+	 */
 	public CityDistanceComparator(int width, int height) {
 		this.x = width;
 		this.y = height;
