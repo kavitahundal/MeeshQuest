@@ -51,7 +51,7 @@ public class PRQuadTree implements SpatialStructure {
 		if (this.root instanceof BlackNode) {
 			this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
 		} else {
-			this.root.remove(city);
+			this.root = this.root.remove(city);
 		}
 	}
 
