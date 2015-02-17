@@ -16,15 +16,19 @@ public class CommandWriter {
 
 	private Document output;
 	private Element root;
-	
+
+	/**
+	 * Constructor. Creates the output XML document.
+	 */
 	CommandWriter() {
 		try {
 			this.output = XmlUtility.getDocumentBuilder().newDocument();
-			this.root = this.output.createElement("results"); // root tag of XML output
+			this.root = this.output.createElement("results"); // root tag of XML
+																// output
 		} catch (ParserConfigurationException e) {
 		}
 	}
-	
+
 	void fatalError() {
 		try {
 			this.output = XmlUtility.getDocumentBuilder().newDocument();
@@ -32,13 +36,18 @@ public class CommandWriter {
 		} catch (ParserConfigurationException e) {
 		}
 	}
-	
+
 	/**
-	 * append generic success or error
+	 * Appends the XML output of a generic command.
 	 * 
 	 * @param errorType
+	 *            the error type (null if success)
 	 * @param command
+	 *            the command processed
 	 * @param parameters
+	 *            the values of the parameters of the command
+	 * @param paramNames
+	 *            the names of the parameters of the command
 	 */
 	void appendTag(String errorType, String command, String[] parameters, String[] paramNames) {
 		Element tag = this.initiateTag(errorType);
@@ -49,13 +58,18 @@ public class CommandWriter {
 		}
 		this.root.appendChild(tag);
 	}
-	
+
 	/**
-	 * append print success
+	 * Appends the XML output of a printing of a PR Quadtree.
 	 * 
 	 * @param command
+	 *            the command processed
 	 * @param parameters
+	 *            the values of the parameters of the command
+	 * @param paramNames
+	 *            the names of the parameters of the command
 	 * @param tree
+	 *            the PR Quadtree to print
 	 */
 	void appendTag(String command, String[] parameters, String[] paramNames, PRQuadTree tree) {
 		Element tag = this.initiateTag(null);
@@ -66,13 +80,18 @@ public class CommandWriter {
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
-	
+
 	/**
-	 * append citylist success
+	 * Appends the XML output of a command that outputs a list of cities.
 	 * 
 	 * @param command
+	 *            the command processed
 	 * @param parameters
+	 *            the values of the parameters of the command
+	 * @param paramNames
+	 *            the names of the parameters of the command
 	 * @param cities
+	 *            the list of cities to output
 	 */
 	void appendTag(String command, String[] parameters, String[] paramNames, List<City> cities) {
 		Element tag = this.initiateTag(null);
@@ -86,13 +105,18 @@ public class CommandWriter {
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
-	
+
 	/**
-	 * append city success
+	 * Appends the XML output of a command that outputs a single city.
 	 * 
 	 * @param command
+	 *            the command processed
 	 * @param parameters
+	 *            the values of the parameters of the command
+	 * @param paramNames
+	 *            the names of the parameters of the command
 	 * @param city
+	 *            the city to output
 	 */
 	void appendTag(String command, String[] parameters, String[] paramNames, City city) {
 		// precond: city not null
@@ -103,13 +127,19 @@ public class CommandWriter {
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
-	
+
 	/**
-	 * append delete unmap city success
+	 * Appends the XML output of a command where cities may be unmapped as a
+	 * side effect of running the command.
 	 * 
 	 * @param command
+	 *            the command processed
 	 * @param parameters
+	 *            the values of the parameters of the command
+	 * @param paramNames
+	 *            the names of the parameters of the command
 	 * @param city
+	 *            the city that was unmapped (null if no city was unmapped)
 	 */
 	void appendTagUnmapped(String command, String[] parameters, String[] paramNames, City city) {
 		Element tag = this.initiateTag(null);
@@ -121,36 +151,17 @@ public class CommandWriter {
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
-	
-	/**
-	 * create city element
-	 * 
-	 * @param city
-	 * @return
-	 */
+
 	private Element mapCity(City city) {
 		Element tag = this.output.createElement("city");
 		return this.mapLocation(city, tag);
 	}
-	
-	/**
-	 * create city element with different tag name
-	 * 
-	 * @param city
-	 * @return
-	 */
+
 	private Element unmapCity(City city) {
 		Element tag = this.output.createElement("cityUnmapped");
 		return this.mapLocation(city, tag);
 	}
-	
-	/**
-	 * create city element with any tag name
-	 * 
-	 * @param city
-	 * @param tag
-	 * @return
-	 */
+
 	private Element mapLocation(City city, Element tag) {
 		tag.setAttribute("name", city.getName());
 		tag.setAttribute("x", Integer.toString((int) city.x));
@@ -159,7 +170,7 @@ public class CommandWriter {
 		tag.setAttribute("radius", Integer.toString(city.getRadius()));
 		return tag;
 	}
-	
+
 	private Element initiateTag(String errorType) {
 		Element tag;
 		if (errorType == null) {
@@ -170,7 +181,7 @@ public class CommandWriter {
 		}
 		return tag;
 	}
-	
+
 	private Element createTag(Element tag, String command, String[] parameters, String[] paramNames) {
 		Element commandTag = this.output.createElement("command");
 		commandTag.setAttribute("name", command);
@@ -185,17 +196,26 @@ public class CommandWriter {
 			paramTag.appendChild(param);
 		}
 		tag.appendChild(paramTag);
-		return tag; // remember: no output tag!
+		return tag;
 	}
-	
+
+	/**
+	 * Prints an undefined error tag to the XML output.
+	 */
 	void undefinedError() {
 		this.root.appendChild(this.output.createElement("undefinedError"));
 	}
-	
+
+	/**
+	 * Concludes the XML output by appending the root node to the XML document.
+	 */
 	void close() {
 		this.output.appendChild(root);
 	}
-	
+
+	/**
+	 * Prints the XML document.
+	 */
 	void print() {
 		try {
 			XmlUtility.print(this.output);

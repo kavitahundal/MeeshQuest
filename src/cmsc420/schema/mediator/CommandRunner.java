@@ -30,6 +30,9 @@ import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.schema.spatial.TreeNode;
 
 /**
+ * This class represents the collection of data structures used to run the
+ * commands specified by the XML schema.
+ * 
  * @author Andrew Liu
  *
  */
@@ -39,6 +42,20 @@ public class CommandRunner {
 	private SpatialStructure spatial;
 	private AdjacencyListStructure adjacencyList;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param dict
+	 *            the dictionary structure
+	 * @param seed
+	 *            the seedling for the spatial structure
+	 * @param adj
+	 *            the adjacency list
+	 * @param width
+	 *            the width of the spatial structure
+	 * @param height
+	 *            the height of the spatial structure
+	 */
 	CommandRunner(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj, int width, int height) {
 		this.dictionary = dict;
 		this.spatial = seed.generate("MeeshQuest", width, height);
@@ -54,17 +71,23 @@ public class CommandRunner {
 	 * coordinate). Names are case-sensitive.
 	 * 
 	 * @param name
+	 *            the name of the city
 	 * @param x
+	 *            the x coordinate of the city
 	 * @param y
+	 *            the y coordinate of the city
 	 * @param radius
+	 *            the radius of the city
 	 * @param color
+	 *            the color of the city
 	 * @throws DuplicateCityNameException
+	 *             an exception if the dictionary already contains the city name
 	 * @throws DuplicateCityCoordinatesException
+	 *             an exception if the dictionary already contains the city
+	 *             coordinates
 	 */
 	void createCity(String name, int x, int y, int radius, CityColor color) throws DuplicateCityNameException,
 			DuplicateCityCoordinatesException {
-		// System.out.println("create city: " + name + " " + x + " " + y + " " +
-		// radius + " " + color.toString());
 		City city = new City(name, x, y, color, radius);
 		if (this.dictionary.containsName(name)) {
 			throw new DuplicateCityNameException();
@@ -82,11 +105,12 @@ public class CommandRunner {
 	 * from the PR quadtree first, and then deleted.
 	 * 
 	 * @param name
-	 * @return
+	 *            the name of the city to delete
+	 * @return the deleted city
 	 * @throws CityDoesNotExistException
+	 *             an exception if the city to delete is not in the dictionary
 	 */
 	City deleteCity(String name) throws CityDoesNotExistException {
-		// System.out.println("deleteCity: " + name);
 		City ret = null;
 		if (!this.dictionary.containsName(name)) {
 			throw new CityDoesNotExistException();
@@ -109,7 +133,6 @@ public class CommandRunner {
 	 * it should unilaterally produce a <success> element in the output XML.
 	 */
 	void clearAll() {
-		// System.out.println("clearAll");
 		this.dictionary = (DictionaryStructure) this.dictionary.reset();
 		this.spatial = (SpatialStructure) this.spatial.reset();
 		if (this.adjacencyList != null) {
@@ -131,11 +154,12 @@ public class CommandRunner {
 	 * 1 (1 or more) cities in the dictionary.
 	 * 
 	 * @param sortBy
-	 * @return
+	 *            the sorting method
+	 * @return the list of cities in the dictionary
 	 * @throws NoCitiesToListException
+	 *             an exception if there are no cities in the dictionary
 	 */
 	List<City> listCities(SortType sortBy) throws NoCitiesToListException {
-		// System.out.println("listCities: " + sortBy.toString());
 		if (this.dictionary.size() == 0) {
 			throw new NoCitiesToListException();
 		}
@@ -146,12 +170,15 @@ public class CommandRunner {
 	 * Inserts the named city into the spatial map.
 	 * 
 	 * @param name
+	 *            the name of the city to map
 	 * @throws NameNotInDictionaryException
+	 *             an exception if the name is not in the dictionary
 	 * @throws CityAlreadyMappedException
+	 *             an exception if the city has already been mapped
 	 * @throws CityOutOfBoundsException
+	 *             an exception if the city's coordinates are invalid
 	 */
 	void mapCity(String name) throws NameNotInDictionaryException, CityAlreadyMappedException, CityOutOfBoundsException {
-		// System.out.println("mapCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
@@ -170,11 +197,13 @@ public class CommandRunner {
 	 * Removes the named city from the spatial map.
 	 * 
 	 * @param name
+	 *            the city to unmap
 	 * @throws NameNotInDictionaryException
+	 *             an exception if the city does not exist in the dictionary
 	 * @throws CityNotMappedException
+	 *             an exception if the city has not been mapped
 	 */
 	void unmapCity(String name) throws NameNotInDictionaryException, CityNotMappedException {
-		// System.out.println("unmapCity: " + name);
 		if (!this.dictionary.containsName(name)) {
 			throw new NameNotInDictionaryException();
 		}
@@ -190,11 +219,11 @@ public class CommandRunner {
 	 * Prints the PR quadtree. Since PR quadtrees are deterministic, your XML
 	 * should match exactly the primary input/output.
 	 * 
-	 * @return
+	 * @return the PR Quadtree
 	 * @throws MapIsEmptyException
+	 *             an exception if no cities are mapped
 	 */
 	PRQuadTree printPRQuadTree() throws MapIsEmptyException {
-		// System.out.println("printPRQuadTree");
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		} else {
@@ -210,9 +239,9 @@ public class CommandRunner {
 	 * discussed there too.
 	 * 
 	 * @param name
+	 *            the name of the file to save to
 	 */
 	void saveMap(String name) {
-		// System.out.println("saveMap");
 		this.spatial.saveMap(name);
 	}
 
@@ -239,15 +268,18 @@ public class CommandRunner {
 	 * the spatial map.
 	 * 
 	 * @param x
+	 *            the x coordinate of the center of the search area
 	 * @param y
+	 *            the y coordinate of the center of the search area
 	 * @param radius
+	 *            the radius of the search area
 	 * @param saveMap
-	 * @return
+	 *            the name of the file to save to (null if there is no saving)
+	 * @return the list of cities with in the search area
 	 * @throws NoCitiesExistInRangeException
+	 *             an exception if there are no cities within the search area
 	 */
 	List<City> rangeCities(int x, int y, int radius, String saveMap) throws NoCitiesExistInRangeException {
-		// System.out.println("rangeCities: " + x + " " + y + " " + radius + " "
-		// + saveMap);
 		if (radius == 0) {
 			throw new NoCitiesExistInRangeException();
 		}
@@ -278,13 +310,15 @@ public class CommandRunner {
 	 * otherwise, you might not be fast enough.
 	 * 
 	 * @param x
+	 *            the x coordinate of the search point
 	 * @param y
-	 * @return
+	 *            the y coordinate of the search point
+	 * @return the nearest city (or the lexicographical first of the nearest
+	 *         cities)
 	 * @throws MapIsEmptyException
+	 *             an exception if there are no cities mapped
 	 */
 	City nearestCity(int x, int y) throws MapIsEmptyException {
-		// System.out.println("nearestCity: " + x + " " + y);
-		// ASSUMING CITY MUST BE IN THE SPATIAL
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
 		}
@@ -298,7 +332,6 @@ public class CommandRunner {
 			}
 		}
 		return nearest;
-//		return queue.peek();
 	}
 
 	private void fillQueue(PriorityQueue<City> queue, TreeNode node) {
@@ -311,6 +344,9 @@ public class CommandRunner {
 		}
 	}
 
+	/**
+	 * Clears the canvas of the spatial structure.F
+	 */
 	void close() {
 		this.spatial.removeCanvas();
 	}

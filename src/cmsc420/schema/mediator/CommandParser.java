@@ -34,7 +34,7 @@ import cmsc420.schema.spatial.Seedling;
 import cmsc420.xml.XmlUtility;
 
 /**
- * 
+ * The main mediator object that reads and processes the XML directives.
  * 
  * @author Andrew Liu
  *
@@ -43,11 +43,9 @@ public class CommandParser {
 
 	private Document input;
 	private boolean processed;
-
 	private DictionaryStructure dictionary;
 	private Seedling seed;
 	private AdjacencyListStructure adjacencyList;
-
 	private CommandRunner runner;
 	private CommandWriter writer;
 
@@ -134,7 +132,8 @@ public class CommandParser {
 	}
 
 	/**
-	 * process input
+	 * Parses the XML input, runs the commands, and writes the output to an XML
+	 * document.
 	 */
 	private void parse() {
 		Node root = this.input.getFirstChild(); // root tag from XML document
@@ -170,7 +169,6 @@ public class CommandParser {
 						this.runner.createCity(name, x, y, radius, color);
 						this.writer.appendTag(null, command, parameters, paramNames);
 					} catch (DuplicateCityNameException | DuplicateCityCoordinatesException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("deleteCity")) {
@@ -181,7 +179,6 @@ public class CommandParser {
 						City deleted = this.runner.deleteCity(name);
 						this.writer.appendTagUnmapped(command, parameters, paramNames, deleted);
 					} catch (CityDoesNotExistException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("clearAll")) {
@@ -198,7 +195,6 @@ public class CommandParser {
 						List<City> cities = this.runner.listCities(sortBy);
 						this.writer.appendTag(command, parameters, paramNames, cities);
 					} catch (NoCitiesToListException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("mapCity")) {
@@ -209,7 +205,6 @@ public class CommandParser {
 						this.runner.mapCity(name);
 						this.writer.appendTag(null, command, parameters, paramNames);
 					} catch (NameNotInDictionaryException | CityAlreadyMappedException | CityOutOfBoundsException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("unmapCity")) {
@@ -220,7 +215,6 @@ public class CommandParser {
 						this.runner.unmapCity(name);
 						this.writer.appendTag(null, command, parameters, paramNames);
 					} catch (NameNotInDictionaryException | CityNotMappedException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("printPRQuadtree")) {
@@ -230,7 +224,6 @@ public class CommandParser {
 						PRQuadTree tree = this.runner.printPRQuadTree();
 						this.writer.appendTag(command, parameters, paramNames, tree);
 					} catch (MapIsEmptyException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("saveMap")) {
@@ -254,12 +247,9 @@ public class CommandParser {
 					String[] paramNames = { "x", "y", "radius", "saveMap" };
 					String[] parameters = { xString, yString, radiusString, saveMap };
 					try {
-						// TODO suspected null pointer here
 						List<City> cities = this.runner.rangeCities(x, y, radius, saveMap);
-						// TODO suspected null pointer here
 						this.writer.appendTag(command, parameters, paramNames, cities);
 					} catch (NoCitiesExistInRangeException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("nearestCity")) {
@@ -273,7 +263,6 @@ public class CommandParser {
 						City city = this.runner.nearestCity(x, y);
 						this.writer.appendTag(command, parameters, paramNames, city);
 					} catch (MapIsEmptyException e) {
-						// System.out.println(e.getMessage());
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else {
