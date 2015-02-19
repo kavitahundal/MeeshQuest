@@ -3,33 +3,22 @@ package cmsc420.schema.dictionary;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.SortedMap;
 
 import cmsc420.schema.City;
-import cmsc420.schema.CityCoordinateComparator;
-import cmsc420.schema.CityNameComparator;
-import cmsc420.schema.DataStructure;
 import cmsc420.schema.SortType;
 
 /**
- * A dictionary that stores cities using TreeMaps as an internal mapping
+ * A dictionary that stores cities using SortedMaps as an internal mapping
  * structure.
  * 
  * @author Andrew Liu
  *
  */
-public class TreeMapDictionary implements DictionaryStructure {
+public abstract class SortedMapDictionary implements DictionaryStructure {
 
-	private TreeMap<String, City> nameToCity;
-	private TreeMap<City, String> cityToName;
-
-	/**
-	 * Default constructor.
-	 */
-	public TreeMapDictionary() {
-		this.nameToCity = new TreeMap<>(new CityNameComparator());
-		this.cityToName = new TreeMap<>(new CityCoordinateComparator());
-	}
+	protected SortedMap<String, City> nameToCity;
+	protected SortedMap<City, String> cityToName;
 
 	@Override
 	public void add(City city) {
@@ -68,11 +57,6 @@ public class TreeMapDictionary implements DictionaryStructure {
 	@Override
 	public int size() {
 		return this.nameToCity.size();
-	}
-
-	@Override
-	public DataStructure<City> reset() {
-		return new TreeMapDictionary();
 	}
 
 	@Override
