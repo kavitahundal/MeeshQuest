@@ -9,7 +9,7 @@
 <project name="MeeshQuest Buildfile" default="all" basedir=".">
 	
 	<property name="prog.name" value="meeshquest.jar" />
-	<property name="submit.name" value="meeshquest-part1-submission_aliu1.jar" />
+	<property name="submit.name" value="meeshquest-part2-submission_aliu1.jar" />
 
 	<!-- Stuff that goes in the test-setup JAR -->
 
@@ -28,7 +28,7 @@
 	<target name="test">
 		<jar destfile="${prog.name}" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="cmsc420.meeshquest.part1.MeeshQuest"/>
+				<attribute name="Main-Class" value="cmsc420.meeshquest.part2.MeeshQuest"/>
                 <attribute name="Class-Path" value="."/>
 			</manifest>
 			<fileset dir="bin" />
