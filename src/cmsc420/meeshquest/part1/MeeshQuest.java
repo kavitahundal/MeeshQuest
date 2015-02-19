@@ -1,5 +1,8 @@
 package cmsc420.meeshquest.part1;
 
+import cmsc420.schema.dictionary.TreeMapDictionary;
+import cmsc420.schema.mediator.CommandParser;
+import cmsc420.schema.spatial.PRQuadTreeSeedling;
 
 /**
  * Driver class for MeeshQuest Part 1.
@@ -10,6 +13,8 @@ package cmsc420.meeshquest.part1;
 public class MeeshQuest {
 
 	public static void main(String[] args) {
-		cmsc420.meeshquest.part2.MeeshQuest.main(null);
+		CommandParser mediator = new CommandParser(new TreeMapDictionary(), new PRQuadTreeSeedling(), null);
+		mediator.process();
+		mediator.print();
 	}
 }
