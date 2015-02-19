@@ -11,7 +11,6 @@ import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
-import cmsc420.schema.DataStructure;
 
 /**
  * A PR Quadtree data structure.
@@ -19,9 +18,9 @@ import cmsc420.schema.DataStructure;
  * @author Andrew Liu
  *
  */
-public class PRQuadTree implements SpatialStructure {
+public class PRQuadTree<T> {
 
-	private TreeNode root;
+	private TreeNode<T> root;
 	private final Point2D.Float origin;
 	private final float width;
 	private final float height;

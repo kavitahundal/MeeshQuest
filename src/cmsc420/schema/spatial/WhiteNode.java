@@ -8,7 +8,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
-import cmsc420.schema.City;
+import cmsc420.schema.element;
 
 /**
  * A TreeNode that acts as a leaf that does not contain any cities.
@@ -16,58 +16,26 @@ import cmsc420.schema.City;
  * @author Andrew Liu
  *
  */
-public class WhiteNode implements TreeNode {
+public class WhiteNode<T> implements TreeNode<T> {
 
-	private final Point2D.Float origin;
-	private final float width;
-	private final float height;
-	private CanvasPlus canvas;
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param origin
-	 *            the lowest value corner of the node's region
-	 * @param width
-	 *            width of this node
-	 * @param height
-	 *            height of this node
-	 * @param canvas
-	 *            the drawing canvas of the structure
-	 */
-	public WhiteNode(Point2D.Float origin, float width, float height, CanvasPlus canvas) {
-		this.origin = origin;
-		this.width = width;
-		this.height = height;
-		this.canvas = canvas;
+	public static final WhiteNode SINGLETON = new WhiteNode();
+	
+	private WhiteNode() {
 	}
 
 	@Override
-	public TreeNode add(City city) {
-		if (this.canvas != null) {
-			this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
-		}
-		return new BlackNode(city, this.origin, this.width, this.height, this.canvas);
+	public TreeNode<T> add(T element) {
+		return new BlackNode<T>(element);
 	}
 
 	@Override
-	public boolean contains(City city) {
+	public boolean contains(T element) {
 		return false;
 	}
 
 	@Override
-	public TreeNode remove(City city) {
-		throw new UnsupportedOperationException(); // no city to remove
-	}
-
-	@Override
-	public Element elementize(Document doc) {
-		return doc.createElement("white");
-	}
-
-	@Override
-	public void range(List<String> cities, int x, int y, int radius) {
-		return;
+	public TreeNode<T> remove(T element) {
+		throw new UnsupportedOperationException(); // no element to remove
 	}
 
 }
