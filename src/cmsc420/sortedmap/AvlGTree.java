@@ -3,6 +3,7 @@ package cmsc420.sortedmap;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedMap;
 
@@ -10,9 +11,11 @@ public class AvlGTree<K,V> implements SortedMap<K, V> {
 
 	private int size;
 	private Comparator<K> comp;
+	private Entry<K,V> root;
 
 	public AvlGTree(Comparator<K> comp) {
 		this.comp = comp;
+		this.root = null;
 	}
 
 	@Override
@@ -52,8 +55,9 @@ public class AvlGTree<K,V> implements SortedMap<K, V> {
 
 	@Override
 	public void putAll(Map<? extends K, ? extends V> arg0) {
-		// TODO Auto-generated method stub
-
+		for (K key : arg0.keySet()) {
+			this.put(key, arg0.get(key));
+		}
 	}
 
 	@Override
@@ -79,6 +83,9 @@ public class AvlGTree<K,V> implements SortedMap<K, V> {
 
 	@Override
 	public K firstKey() {
+		if (this.size == 0) {
+			throw new NoSuchElementException();
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -95,6 +102,9 @@ public class AvlGTree<K,V> implements SortedMap<K, V> {
 
 	@Override
 	public K lastKey() {
+		if (this.size == 0) {
+			throw new NoSuchElementException();
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -116,25 +126,27 @@ public class AvlGTree<K,V> implements SortedMap<K, V> {
 	}
 	
 	static class Entry<K, V> implements Map.Entry<K,V> {
+		
+		K key;
+		V value;
 
 		@Override
 		public K getKey() {
-			// TODO Auto-generated method stub
-			return null;
+			return this.key;
 		}
 
 		@Override
 		public V getValue() {
-			// TODO Auto-generated method stub
-			return null;
+			return this.value;
 		}
 
 		@Override
 		public V setValue(V value) {
-			// TODO Auto-generated method stub
-			return null;
+			V oldValue = this.value;
+			this.value = value;
+			return oldValue;
 		}
-		//
+
 	}
 
 }
