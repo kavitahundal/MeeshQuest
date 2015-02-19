@@ -15,6 +15,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 	private Entry<K, V> root;
 
 	public AvlGTree(final Comparator<? super K> comp, final int g) {
+		this.size = 0;
 		this.comp = comp;
 		this.g = g;
 		this.root = null;
@@ -207,6 +208,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		V value;
 		Entry<K, V> left;
 		Entry<K, V> right;
+		// add height variable?
 
 		public Entry(K key, V value) {
 			this.key = key;
@@ -219,6 +221,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		}
 
 		@Override
+		
 		public V getValue() {
 			return this.value;
 		}
