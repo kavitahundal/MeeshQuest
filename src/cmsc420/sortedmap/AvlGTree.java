@@ -112,7 +112,90 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 	}
 
 	private void addAux(Entry<K, V> entry, Entry<K, V> toAdd) {
-		// TODO implement -- need to keep avl-ness
+		if (this.comp.compare(toAdd.key, entry.key) < 0) {
+			if (entry.left == null) {
+				entry.left = toAdd;
+			} else {
+				this.addAux(entry.left, toAdd);
+			}
+		} else { // this.comp.compare(toAdd.key, entry.key) < 0
+			if (entry.right == null) {
+				entry.right = toAdd;
+			} else {
+				this.addAux(entry.right, toAdd);
+			}
+		}
+		this.balanceCheck(entry);
+	}
+	
+	private void balanceCheck(Entry<K, V> entry) {
+		int balanceFactor = this.balanceFactor(entry);
+		if (Math.abs(balanceFactor) > this.g) {
+			if (balanceFactor > 0) {
+				// left x case
+				if (balanceFactor(entry.left) < 0) {
+					// left right case
+					Entry<K, V> child = entry.left;
+					Entry<K, V> grandChild = child.right;
+					child.right = grandChild.left;
+					grandChild.left = child;
+					entry.left = grandChild;
+				}
+				// left left case
+				Entry<K, V> child = entry.left;
+				Entry<K, V> grandChild = child.left;
+				this.swapData(entry, child);
+				entry.left = grandChild;
+				child.left = child.right;
+				child.right = entry.right;
+				entry.right = child;
+				this.updateHeight(entry);
+				this.updateHeight(child);
+				this.updateHeight(grandChild);
+			} else {
+				// right x case
+				if (balanceFactor(entry.right) > 0) {
+					// right left case
+					Entry<K, V> child = entry.right;
+					Entry<K, V> grandChild = child.right;
+					child.left = grandChild.right;
+					grandChild.right = child;
+					entry.right = grandChild;
+				}
+				// right right case
+				Entry<K, V> child = entry.right;
+				Entry<K, V> grandChild = child.right;
+				this.swapData(entry, child);
+				entry.right = grandChild;
+				child.right = child.left;
+				child.left = entry.left;
+				entry.left = child;
+				this.updateHeight(entry);
+				this.updateHeight(child);
+				this.updateHeight(grandChild);
+			}
+		}
+	}
+	
+	private void swapData(Entry<K, V> first, Entry<K, V> second) {
+		K tempKey = first.key;
+		V tempVal = first.value;
+		first.key = second.key;
+		first.value = second.value;
+		second.key = tempKey;
+		second.value = tempVal;
+	}
+	
+	private int height(Entry<K, V> entry) {
+		return entry == null ? 0 : entry.height;
+	}
+	
+	private void updateHeight(Entry<K, V> entry) {
+		entry.height = Math.max(height(entry.left), height(entry.right));
+	}
+	
+	private int balanceFactor(Entry<K, V> entry) {
+		return height(entry.left) - height(entry.right);
 	}
 
 	@Override
@@ -208,11 +291,12 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		V value;
 		Entry<K, V> left;
 		Entry<K, V> right;
-		// add height variable?
+		int height;
 
 		public Entry(K key, V value) {
 			this.key = key;
 			this.value = value;
+			this.height = 1;
 		}
 
 		@Override
