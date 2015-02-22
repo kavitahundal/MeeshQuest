@@ -2,6 +2,7 @@ package cmsc420.sortedmap;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -226,8 +227,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		// TODO Auto-generated method stub
-		return null;
+		return new EntrySet(this);
 	}
 
 	@Override
@@ -421,8 +421,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Set<java.util.Map.Entry<K, V>> entrySet() {
-			// TODO Auto-generated method stub
-			return null;
+			return new EntrySet(this);
 		}
 
 		@Override
@@ -491,6 +490,101 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			throw new UnsupportedOperationException();
 		}
 
+	}
+	
+	class EntrySet implements Set<java.util.Map.Entry<K, V>> {
+		
+		private SortedMap<K, V> wrapper;
+		
+		EntrySet(SortedMap<K, V> wrapper) {
+			this.wrapper = wrapper;
+		}
+
+		@Override
+		public boolean add(java.util.Map.Entry<K, V> e) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean addAll(Collection<? extends java.util.Map.Entry<K, V>> c) {
+			boolean ret = false;
+			for (java.util.Map.Entry<K, V> entry : c) {
+				ret = ret || this.add(entry);
+			}
+			return ret;
+		}
+
+		@Override
+		public void clear() {
+			this.wrapper.clear();
+		}
+
+		@Override
+		public boolean contains(Object o) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean containsAll(Collection<?> c) {
+			for (Object entry : c) {
+				if (!this.contains(entry)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return this.wrapper.size() == 0;
+		}
+
+		@Override
+		public Iterator<java.util.Map.Entry<K, V>> iterator() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean remove(Object o) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean removeAll(Collection<?> c) {
+			boolean ret = false;
+			for (Object entry : c) {
+				ret = ret || this.remove(entry);
+			}
+			return ret;
+		}
+
+		@Override
+		public boolean retainAll(Collection<?> c) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public int size() {
+			return this.wrapper.size();
+		}
+
+		@Override
+		public Object[] toArray() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <T> T[] toArray(T[] a) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		//
 	}
 
 }
