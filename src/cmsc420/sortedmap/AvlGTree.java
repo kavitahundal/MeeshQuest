@@ -227,7 +227,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		return new EntrySet(this);
+		return new EntrySet<K, V>(this);
 	}
 
 	@Override
@@ -272,7 +272,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		if (comp.compare(arg0, arg1) > 0) {
 			throw new IllegalArgumentException();
 		}
-		return new AvlSubMap(this, arg0, arg1);
+		return new AvlSubMap<K, V>(this, arg0, arg1);
 	}
 
 	@Override
@@ -322,7 +322,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	}
 
-	class AvlSubMap implements SortedMap<K, V> {
+	static class AvlSubMap<K, V> implements SortedMap<K, V> {
 
 		private AvlGTree<K, V> wrapper;
 		private K lowerBound;
@@ -421,7 +421,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Set<java.util.Map.Entry<K, V>> entrySet() {
-			return new EntrySet(this);
+			return new EntrySet<K, V>(this);
 		}
 
 		@Override
@@ -470,14 +470,14 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			if (arg0 == null || arg1 == null) {
 				throw new NullPointerException();
 			}
-			if (comp.compare(arg0, arg1) > 0) {
+			if (this.wrapper.comp.compare(arg0, arg1) > 0) {
 				throw new IllegalArgumentException();
 			}
 			K lower = this.wrapper.comparator().compare(this.lowerBound, arg0) > 0 ? this.lowerBound
 					: arg0;
 			K upper = this.wrapper.comparator().compare(this.upperBound, arg1) < 0 ? this.upperBound
 					: arg1;
-			return new AvlSubMap(this.wrapper, lower, upper);
+			return new AvlSubMap<K, V>(this.wrapper, lower, upper);
 		}
 
 		@Override
@@ -492,7 +492,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	}
 	
-	class EntrySet implements Set<java.util.Map.Entry<K, V>> {
+	static class EntrySet<K, V> implements Set<java.util.Map.Entry<K, V>> {
 		
 		private SortedMap<K, V> wrapper;
 		
