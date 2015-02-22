@@ -491,8 +491,12 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public boolean add(java.util.Map.Entry<K, V> e) {
-			// TODO Auto-generated method stub
-			return false;
+			if (this.contains(e)) {
+				return false;
+			} else {
+				this.wrapper.put(e.getKey(), e.getValue());
+				return true;
+			}
 		}
 
 		@Override
@@ -537,14 +541,30 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Iterator<java.util.Map.Entry<K, V>> iterator() {
-			// TODO Auto-generated method stub
-			return null;
+			return new Iterator<java.util.Map.Entry<K, V>>() {
+
+				@Override
+				public boolean hasNext() {
+					// TODO Auto-generated method stub
+					return false;
+				}
+
+				@Override
+				public java.util.Map.Entry<K, V> next() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+				
+				@Override
+				public void remove() {
+					// TODO implement
+				}
+			};
 		}
 
 		@Override
 		public boolean remove(Object o) {
-			// TODO Auto-generated method stub
-			return false;
+			return this.wrapper.remove(((Map.Entry<?, ?>) o).getKey(), ((Map.Entry<?, ?>) o).getValue());
 		}
 
 		@Override
@@ -558,8 +578,16 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public boolean retainAll(Collection<?> c) {
-			// TODO Auto-generated method stub
-			return false;
+			boolean ret = false;
+			Iterator<java.util.Map.Entry<K, V>> iter = this.iterator();
+			while (iter.hasNext()) {
+				Map.Entry<K, V> next = iter.next();
+				if (!c.contains(next)) {
+					iter.remove();
+					ret = true;
+				}
+			}
+			return ret;
 		}
 
 		@Override
@@ -573,8 +601,15 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			return null;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public <T> T[] toArray(T[] a) {
+			if (a == null) {
+				throw new NullPointerException();
+			}
+			if (a.length < this.size()) {
+				a = (T[]) new Object[this.size()];
+			}
 			// TODO Auto-generated method stub
 			return null;
 		}
