@@ -68,8 +68,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		} else if (entry.value.equals(value)) {
 			return true;
 		} else {
-			return this.containsValueAux(entry.left, value)
-					|| this.containsValueAux(entry.right, value);
+			return this.containsValueAux(entry.left, value) || this.containsValueAux(entry.right, value);
 		}
 	}
 
@@ -272,7 +271,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		if (comp.compare(arg0, arg1) > 0) {
 			throw new IllegalArgumentException();
 		}
-		return new AvlSubMap<K, V>(this, arg0, arg1);
+		return new AvlSubMap(arg0, arg1);
 	}
 
 	@Override
@@ -322,54 +321,50 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	}
 
-	static class AvlSubMap<K, V> implements SortedMap<K, V> {
+	class AvlSubMap implements SortedMap<K, V> {
 
-		private AvlGTree<K, V> wrapper;
 		private K lowerBound;
 		private K upperBound;
 		private int size;
 
-		AvlSubMap(AvlGTree<K, V> wrapper, K lowerBound, K upperBound) {
-			this.wrapper = wrapper;
+		AvlSubMap(K lowerBound, K upperBound) {
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;
-			this.size = this.calculateSize(this.wrapper.root);
+			this.size = this.calculateSize(AvlGTree.this.root);
 		}
 
 		private int calculateSize(AvlGTree.Entry<K, V> entry) {
 			if (entry == null) {
 				return 0;
 			}
-			return this.calculateSize(entry.left)
-					+ this.calculateSize(entry.right) + 1;
+			return this.calculateSize(entry.left) + this.calculateSize(entry.right) + 1;
 		}
 
 		private boolean inBounds(Object arg0) {
 			@SuppressWarnings("unchecked")
 			K key = (K) arg0;
-			return this.wrapper.comparator().compare(this.lowerBound, key) <= 0
-					&& this.wrapper.comparator().compare(key, this.upperBound) < 0;
+			return AvlGTree.this.comp.compare(this.lowerBound, key) <= 0
+					&& AvlGTree.this.comp.compare(key, this.upperBound) < 0;
 		}
 
 		@Override
 		public void clear() {
-			this.wrapper.clear();
+			AvlGTree.this.clear(); // clear only the subset - for part 3
 		}
 
 		@Override
 		public boolean containsKey(Object arg0) {
-			return this.inBounds(arg0) ? this.wrapper.containsKey(arg0) : false;
+			return this.inBounds(arg0) ? AvlGTree.this.containsKey(arg0) : false;
 		}
 
 		@Override
 		public boolean containsValue(Object arg0) {
-			return this.inBounds(arg0) ? this.wrapper.containsValue(arg0)
-					: false;
+			return this.inBounds(arg0) ? AvlGTree.this.containsValue(arg0) : false;
 		}
 
 		@Override
 		public V get(Object arg0) {
-			return this.inBounds(arg0) ? this.wrapper.get(arg0) : null;
+			return this.inBounds(arg0) ? AvlGTree.this.get(arg0) : null;
 		}
 
 		@Override
@@ -382,14 +377,14 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			if (arg0 == null || arg1 == null) {
 				throw new NullPointerException();
 			}
-			AvlGTree.Entry<K, V> entry = this.wrapper.findEntry(arg0);
+			AvlGTree.Entry<K, V> entry = AvlGTree.this.findEntry(arg0);
 			if (entry != null) {
 				V ret = entry.value;
 				entry.value = arg1;
 				return ret;
 			} else {
 				this.size++;
-				this.wrapper.put(arg0, arg1);
+				AvlGTree.this.put(arg0, arg1);
 				return null;
 			}
 		}
@@ -416,7 +411,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Comparator<? super K> comparator() {
-			return this.wrapper.comparator();
+			return AvlGTree.this.comparator();
 		}
 
 		@Override
@@ -426,17 +421,15 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public K firstKey() {
-			if (this.wrapper.root == null) {
+			if (AvlGTree.this.root == null) {
 				throw new NoSuchElementException();
 			}
-			return this.firstKeyAux(this.wrapper.root);
+			return this.firstKeyAux(AvlGTree.this.root);
 		}
 
 		private K firstKeyAux(AvlGTree.Entry<K, V> entry) {
-			return entry.left == null
-					|| this.wrapper.comp.compare(entry.left.key,
-							this.lowerBound) < 0 ? entry.key : this
-					.firstKeyAux(entry.left);
+			return entry.left == null || AvlGTree.this.comp.compare(entry.left.key, this.lowerBound) < 0 ? entry.key
+					: this.firstKeyAux(entry.left);
 
 		}
 
@@ -452,17 +445,15 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public K lastKey() {
-			if (this.wrapper.root == null) {
+			if (AvlGTree.this.root == null) {
 				throw new NoSuchElementException();
 			}
-			return this.lastKeyAux(this.wrapper.root);
+			return this.lastKeyAux(AvlGTree.this.root);
 		}
 
 		private K lastKeyAux(AvlGTree.Entry<K, V> entry) {
-			return entry.right == null
-					|| this.wrapper.comp.compare(entry.right.key,
-							this.upperBound) > 0 ? entry.key : this
-					.lastKeyAux(entry.right);
+			return entry.right == null || AvlGTree.this.comp.compare(entry.right.key, this.upperBound) > 0 ? entry.key
+					: this.lastKeyAux(entry.right);
 		}
 
 		@Override
@@ -470,14 +461,12 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			if (arg0 == null || arg1 == null) {
 				throw new NullPointerException();
 			}
-			if (this.wrapper.comp.compare(arg0, arg1) > 0) {
+			if (AvlGTree.this.comp.compare(arg0, arg1) > 0) {
 				throw new IllegalArgumentException();
 			}
-			K lower = this.wrapper.comparator().compare(this.lowerBound, arg0) > 0 ? this.lowerBound
-					: arg0;
-			K upper = this.wrapper.comparator().compare(this.upperBound, arg1) < 0 ? this.upperBound
-					: arg1;
-			return new AvlSubMap<K, V>(this.wrapper, lower, upper);
+			K lower = AvlGTree.this.comparator().compare(this.lowerBound, arg0) > 0 ? this.lowerBound : arg0;
+			K upper = AvlGTree.this.comparator().compare(this.upperBound, arg1) < 0 ? this.upperBound : arg1;
+			return AvlGTree.this.subMap(lower, upper);
 		}
 
 		@Override
@@ -491,11 +480,11 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		}
 
 	}
-	
+
 	static class EntrySet<K, V> implements Set<java.util.Map.Entry<K, V>> {
-		
+
 		private SortedMap<K, V> wrapper;
-		
+
 		EntrySet(SortedMap<K, V> wrapper) {
 			this.wrapper = wrapper;
 		}
@@ -520,10 +509,15 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			this.wrapper.clear();
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public boolean contains(Object o) {
-			// TODO Auto-generated method stub
-			return false;
+			if (!(o instanceof java.util.Map.Entry<?, ?>)) {
+				return false;
+			}
+			Object key = ((java.util.Map.Entry<?, ?>) o).getKey();
+			Object value = ((java.util.Map.Entry<?, ?>) o).getValue();
+			return value == null ? false : ((V) value).equals(this.wrapper.get(key));
 		}
 
 		@Override
