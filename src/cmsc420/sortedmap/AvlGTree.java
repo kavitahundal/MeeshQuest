@@ -67,7 +67,8 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		} else if (entry.value.equals(value)) {
 			return true;
 		} else {
-			return this.containsValueAux(entry.left, value) || this.containsValueAux(entry.right, value);
+			return this.containsValueAux(entry.left, value)
+					|| this.containsValueAux(entry.right, value);
 		}
 	}
 
@@ -314,7 +315,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			this.value = value;
 			return oldValue;
 		}
-		
+
 		public int yes() {
 			return 45;
 		}
@@ -334,12 +335,13 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			this.upperBound = upperBound;
 			this.size = this.calculateSize(this.wrapper.root);
 		}
-		
+
 		private int calculateSize(AvlGTree.Entry<K, V> entry) {
 			if (entry == null) {
 				return 0;
 			}
-			return this.calculateSize(entry.left) + this.calculateSize(entry.right) + 1;
+			return this.calculateSize(entry.left)
+					+ this.calculateSize(entry.right) + 1;
 		}
 
 		private boolean inBounds(Object arg0) {
@@ -361,7 +363,8 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public boolean containsValue(Object arg0) {
-			return this.inBounds(arg0) ? this.wrapper.containsValue(arg0) : false;
+			return this.inBounds(arg0) ? this.wrapper.containsValue(arg0)
+					: false;
 		}
 
 		@Override
@@ -376,21 +379,19 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public V put(K arg0, V arg1) {
-//			if (arg0 == null || arg1 == null) {
-//				throw new NullPointerException();
-//			}
-//			AvlGTree.Entry<K, V> entry = this.wrapper.findEntry(arg0);
-//			if (entry != null) {
-//				V ret = entry.value;
-//				entry.value = arg1;
-//				return ret;
-//			} else {
-//				this.size++;
-//				this.add(new AvlGTree.Entry<K, V>(arg0, arg1));
-//				return null;
-//			}
-			// TODO
-			return null;
+			if (arg0 == null || arg1 == null) {
+				throw new NullPointerException();
+			}
+			AvlGTree.Entry<K, V> entry = this.wrapper.findEntry(arg0);
+			if (entry != null) {
+				V ret = entry.value;
+				entry.value = arg1;
+				return ret;
+			} else {
+				this.size++;
+				this.wrapper.put(arg0, arg1);
+				return null;
+			}
 		}
 
 		@Override
@@ -426,8 +427,18 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public K firstKey() {
-			// TODO Auto-generated method stub
-			return null;
+			if (this.wrapper.root == null) {
+				throw new NoSuchElementException();
+			}
+			return this.firstKeyAux(this.wrapper.root);
+		}
+
+		private K firstKeyAux(AvlGTree.Entry<K, V> entry) {
+			return entry.left == null
+					|| this.wrapper.comp.compare(entry.left.key,
+							this.lowerBound) < 0 ? entry.key : this
+					.firstKeyAux(entry.left);
+
 		}
 
 		@Override
@@ -442,8 +453,17 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public K lastKey() {
-			// TODO Auto-generated method stub
-			return null;
+			if (this.wrapper.root == null) {
+				throw new NoSuchElementException();
+			}
+			return this.lastKeyAux(this.wrapper.root);
+		}
+
+		private K lastKeyAux(AvlGTree.Entry<K, V> entry) {
+			return entry.right == null
+					|| this.wrapper.comp.compare(entry.right.key,
+							this.upperBound) > 0 ? entry.key : this
+					.lastKeyAux(entry.right);
 		}
 
 		@Override
@@ -454,8 +474,10 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			if (comp.compare(arg0, arg1) > 0) {
 				throw new IllegalArgumentException();
 			}
-			K lower = this.wrapper.comparator().compare(this.lowerBound, arg0) > 0 ? this.lowerBound : arg0;
-			K upper = this.wrapper.comparator().compare(this.upperBound, arg1) < 0 ? this.upperBound : arg1;
+			K lower = this.wrapper.comparator().compare(this.lowerBound, arg0) > 0 ? this.lowerBound
+					: arg0;
+			K upper = this.wrapper.comparator().compare(this.upperBound, arg1) < 0 ? this.upperBound
+					: arg1;
 			return new AvlSubMap(this.wrapper, lower, upper);
 		}
 
