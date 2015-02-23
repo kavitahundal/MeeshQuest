@@ -27,7 +27,7 @@ import cmsc420.exceptions.NoCitiesToListException;
 import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
-import cmsc420.schema.adjacencylist.AdjacencyListStructure;
+import cmsc420.schema.adjacencylist.AdjacencyList;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
@@ -45,7 +45,7 @@ public class CommandParser {
 	private boolean processed;
 	private DictionaryStructure dictionary;
 	private Seedling seed;
-	private AdjacencyListStructure adjacencyList;
+	private AdjacencyList<City> adjacencyList;
 	private CommandRunner runner;
 	private CommandWriter writer;
 
@@ -60,7 +60,7 @@ public class CommandParser {
 	 * @param adj
 	 *            adjacency list data structure
 	 */
-	public CommandParser(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj) {
+	public CommandParser(DictionaryStructure dict, Seedling seed, AdjacencyList<City> adj) {
 		this.processed = false;
 
 		/* initialize data structures */

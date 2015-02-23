@@ -20,7 +20,7 @@ import cmsc420.schema.CityColor;
 import cmsc420.schema.CityDistanceComparator;
 import cmsc420.schema.CityNameComparator;
 import cmsc420.schema.SortType;
-import cmsc420.schema.adjacencylist.AdjacencyListStructure;
+import cmsc420.schema.adjacencylist.AdjacencyList;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.BlackNode;
 import cmsc420.schema.spatial.GrayNode;
@@ -40,7 +40,7 @@ public class CommandRunner {
 
 	private DictionaryStructure dictionary;
 	private SpatialStructure spatial;
-	private AdjacencyListStructure adjacencyList;
+	private AdjacencyList<City> adjacencyList;
 
 	/**
 	 * Constructor.
@@ -56,7 +56,7 @@ public class CommandRunner {
 	 * @param height
 	 *            the height of the spatial structure
 	 */
-	CommandRunner(DictionaryStructure dict, Seedling seed, AdjacencyListStructure adj, int width, int height) {
+	CommandRunner(DictionaryStructure dict, Seedling seed, AdjacencyList<City> adj, int width, int height) {
 		this.dictionary = dict;
 		this.spatial = seed.generate("MeeshQuest", width, height);
 		this.adjacencyList = adj;
@@ -142,7 +142,7 @@ public class CommandRunner {
 		this.dictionary = (DictionaryStructure) this.dictionary.reset();
 		this.spatial = (SpatialStructure) this.spatial.reset();
 		if (this.adjacencyList != null) {
-			this.adjacencyList = (AdjacencyListStructure) this.adjacencyList.reset();
+			this.adjacencyList.clear();
 		}
 	}
 
