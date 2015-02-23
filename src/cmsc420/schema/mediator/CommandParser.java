@@ -103,7 +103,7 @@ public class CommandParser {
 			return;
 		}
 		this.processed = true;
-		
+
 		/* validate XML and then parse */
 		try {
 			this.input = XmlUtility.validateNoNamespace(xmlStream);
@@ -127,7 +127,7 @@ public class CommandParser {
 			return;
 		}
 		this.processed = true;
-		
+
 		/* validate XML and then parse */
 		try {
 			this.input = XmlUtility.validateNoNamespace(xmlFile);
@@ -158,14 +158,14 @@ public class CommandParser {
 				String command = commandNode.getNodeName();
 				NamedNodeMap params = commandNode.getAttributes();
 				if (command.equals("createCity")) {
-					
+
 					/* get parameters */
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
 					String radiusString = params.getNamedItem("radius").getNodeValue();
 					String colorString = params.getNamedItem("color").getNodeValue();
 					String name = params.getNamedItem("name").getNodeValue();
-					
+
 					/* parse parameters */
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
@@ -197,7 +197,7 @@ public class CommandParser {
 					this.runner.clearAll();
 					this.writer.appendTag(null, command, parameters, paramNames);
 				} else if (command.equals("listCities")) {
-					
+
 					/* get parameters */
 					String sortByString = params.getNamedItem("sortBy").getNodeValue();
 					SortType sortBy = SortType.getSortType(sortByString);
@@ -210,7 +210,7 @@ public class CommandParser {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("mapCity")) {
-					
+
 					/* get parameters */
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] paramNames = { "name" };
@@ -243,7 +243,7 @@ public class CommandParser {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("saveMap")) {
-					
+
 					/* get parameters */
 					String name = params.getNamedItem("name").getNodeValue();
 					String[] paramNames = { "name" };
@@ -251,12 +251,12 @@ public class CommandParser {
 					this.runner.saveMap(name);
 					this.writer.appendTag(null, command, parameters, paramNames);
 				} else if (command.equals("rangeCities")) {
-					
+
 					/* get parameters */
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
 					String radiusString = params.getNamedItem("radius").getNodeValue();
-					
+
 					/* get parameters */
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
@@ -275,7 +275,7 @@ public class CommandParser {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("nearestCity")) {
-					
+
 					/* get parameters */
 					String xString = params.getNamedItem("x").getNodeValue();
 					String yString = params.getNamedItem("y").getNodeValue();
