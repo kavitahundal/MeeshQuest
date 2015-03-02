@@ -24,10 +24,12 @@ import cmsc420.schema.adjacencylist.AdjacencyList;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.BlackNode;
 import cmsc420.schema.spatial.GrayNode;
+import cmsc420.schema.spatial.PMQuadTree;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.schema.spatial.TreeNode;
+import cmsc420.sortedmap.AvlGTree;
 
 /**
  * This class represents the collection of data structures used to run the
@@ -378,6 +380,46 @@ public class CommandRunner {
 	 */
 	void close() {
 		this.spatial.removeCanvas();
+	}
+	
+	AvlGTree<?, ?> printAvlTree() { // TODO generics
+		return null;
+	}
+	
+	void mapRoad(String start, String end) {
+		// startPointDoesNotExist
+		// endPointDoesNotExist
+		// startEqualsEnd
+		// startOrEndIsIsolated
+		// roadAlreadyMapped
+		// roadOutOfBounds
+	}
+	
+	PMQuadTree printPMQuadtree() {
+		return null;
+	}
+	
+	void rangeRoads(int x, int y, int radius, String saveMap) {
+		// noRoadsExistInRange
+	}
+	
+	void nearestIsolatedCity(int x, int y) {
+		// cityNotFound
+	}
+	
+	void nearestRoad(int x, int y) {
+		// roadNotFound
+	}
+	
+	void nearestCityToRoad(String start, String end) {
+		// roadIsNotMapped
+		// noOtherCitiesMapped
+	}
+	
+	void shortestPath(String start, String end) {
+		// nonExistentStart
+		// nonExistentEnd
+		// noPathExists
 	}
 
 }
