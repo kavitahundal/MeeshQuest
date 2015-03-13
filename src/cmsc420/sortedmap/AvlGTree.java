@@ -3,6 +3,8 @@ package cmsc420.sortedmap;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -226,7 +228,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		return new EntrySet<K, V>(this);
+		return new EntrySet(this);
 	}
 
 	@Override
@@ -297,7 +299,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			this.value = value;
 			this.height = 1;
 		}
-		
+
 		public Entry(Map.Entry<K, V> copy) {
 			this.key = copy.getKey();
 			this.value = copy.getValue();
@@ -417,7 +419,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Set<java.util.Map.Entry<K, V>> entrySet() {
-			return new EntrySet<K, V>(this);
+			return new EntrySet(this);
 		}
 
 		@Override
@@ -482,7 +484,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	}
 
-	static class EntrySet<K, V> implements Set<java.util.Map.Entry<K, V>> {
+	class EntrySet implements Set<java.util.Map.Entry<K, V>> {
 
 		private SortedMap<K, V> wrapper;
 
@@ -542,18 +544,20 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Iterator<java.util.Map.Entry<K, V>> iterator() {
-			return new Iterator<java.util.Map.Entry<K, V>>() {				
+			return new Iterator<java.util.Map.Entry<K, V>>() {
+				
+				Object[] entries = EntrySet.this.toArray();
+				int index = 0;
 
 				@Override
 				public boolean hasNext() {
-					// TODO Auto-generated method stub
-					return false;
+					return this.index >= this.entries.length;
 				}
 
+				@SuppressWarnings("unchecked")
 				@Override
 				public java.util.Map.Entry<K, V> next() {
-					// TODO Auto-generated method stub
-					return null;
+					return (java.util.Map.Entry<K, V>) this.entries[index++];
 				}
 			};
 		}
@@ -593,6 +597,14 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Object[] toArray() {
+			// to check if the AVL tree or subtree called this entry set
+			List<Entry<K, V>> entries = new LinkedList<Entry<K, V>>();
+			if (this.wrapper instanceof AvlGTree) {
+				this.generateList(entries, AvlGTree.this.root);
+			} else {
+				this.generateList(entries, AvlGTree.this.root);
+			}
+			
 			int index = 0;
 			Object[] arr = new Object[this.size()];
 			Iterator<java.util.Map.Entry<K, V>> iter = this.iterator();
@@ -600,6 +612,15 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 				arr[index++] = new Entry<K, V>(iter.next());
 			}
 			return arr;
+		}
+		
+		private void generateList(List<Entry<K, V>> list, Entry<K, V> entry) {
+			if (entry == null || list == null) {
+				return;
+			}
+			this.generateList(list, entry.left);
+			list.add(entry);
+			this.generateList(list, entry.right);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -622,7 +643,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			}
 			return a;
 		}
-		
+
 	}
 
 }
