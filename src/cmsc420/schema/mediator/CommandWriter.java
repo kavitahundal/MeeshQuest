@@ -48,9 +48,9 @@ public class CommandWriter {
 	 * @param paramNames
 	 *            the names of the parameters of the command
 	 */
-	void appendTag(String errorType, String command, String[] parameters, String[] paramNames) {
+	void appendTag(String errorType, String command, String[] parameters, String[] paramNames, String id) {
 		Element tag = this.initiateTag(errorType);
-		tag = this.createTag(tag, command, parameters, paramNames);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 		if (errorType == null) {
 			tag.appendChild(outputTag); // error tags have no output child tag
@@ -70,9 +70,9 @@ public class CommandWriter {
 	 * @param tree
 	 *            the PR Quadtree to print
 	 */
-	void appendTag(String command, String[] parameters, String[] paramNames, PRQuadTree tree) {
+	void appendTag(String command, String[] parameters, String[] paramNames, PRQuadTree tree, String id) {
 		Element tag = this.initiateTag(null);
-		tag = this.createTag(tag, command, parameters, paramNames);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 		Element treeTag = tree.elementize(this.output); // XML version of tree
 		outputTag.appendChild(treeTag);
@@ -92,9 +92,9 @@ public class CommandWriter {
 	 * @param cities
 	 *            the list of cities to output
 	 */
-	void appendTag(String command, String[] parameters, String[] paramNames, List<City> cities) {
+	void appendTag(String command, String[] parameters, String[] paramNames, List<City> cities, String id) {
 		Element tag = this.initiateTag(null);
-		tag = this.createTag(tag, command, parameters, paramNames);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 		Element cityList = this.output.createElement("cityList");
 
@@ -119,9 +119,9 @@ public class CommandWriter {
 	 * @param city
 	 *            the city to output
 	 */
-	void appendTag(String command, String[] parameters, String[] paramNames, City city) {
+	void appendTag(String command, String[] parameters, String[] paramNames, City city, String id) {
 		Element tag = this.initiateTag(null);
-		tag = this.createTag(tag, command, parameters, paramNames);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 		outputTag.appendChild(this.mapCity(city)); // append city node
 		tag.appendChild(outputTag);
@@ -141,9 +141,9 @@ public class CommandWriter {
 	 * @param city
 	 *            the city that was unmapped (null if no city was unmapped)
 	 */
-	void appendTagUnmapped(String command, String[] parameters, String[] paramNames, City city) {
+	void appendTagUnmapped(String command, String[] parameters, String[] paramNames, City city, String id) {
 		Element tag = this.initiateTag(null);
-		tag = this.createTag(tag, command, parameters, paramNames);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 
 		/* append all city nodes */
@@ -184,10 +184,14 @@ public class CommandWriter {
 		return tag; // return tag with success or error
 	}
 
-	private Element createTag(Element tag, String command, String[] parameters, String[] paramNames) {
+	private Element createTag(Element tag, String command, String[] parameters, String[] paramNames, String id) {
 		Element commandTag = this.output.createElement("command"); // command tag
 		commandTag.setAttribute("name", command);
+		if (id != null) {
+			commandTag.setAttribute("id", id);
+		}
 		tag.appendChild(commandTag);
+		
 		Element paramTag = this.output.createElement("parameters"); // parameter tag
 		for (int i = 0; i < parameters.length; i++) {
 			if (parameters[i] == null) {

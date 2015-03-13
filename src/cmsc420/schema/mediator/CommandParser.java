@@ -181,9 +181,9 @@ public class CommandParser {
 					try {
 						this.runner.createCity(name, x, y, radius, color);
 						// TODO add id to appendTag
-						this.writer.appendTag(null, command, parameters, paramNames);
+						this.writer.appendTag(null, command, parameters, paramNames, id);
 					} catch (DuplicateCityNameException | DuplicateCityCoordinatesException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("deleteCity")) {
 
@@ -198,9 +198,9 @@ public class CommandParser {
 					String[] parameters = { name };
 					try {
 						City deleted = this.runner.deleteCity(name);
-						this.writer.appendTagUnmapped(command, parameters, paramNames, deleted);
+						this.writer.appendTagUnmapped(command, parameters, paramNames, deleted, id);
 					} catch (CityDoesNotExistException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("clearAll")) {
 					String id = null;
@@ -211,7 +211,7 @@ public class CommandParser {
 					String[] paramNames = {};
 					String[] parameters = {};
 					this.runner.clearAll();
-					this.writer.appendTag(null, command, parameters, paramNames);
+					this.writer.appendTag(null, command, parameters, paramNames, id);
 				} else if (command.equals("listCities")) {
 
 					/* get parameters */
@@ -226,9 +226,9 @@ public class CommandParser {
 					String[] parameters = { sortByString };
 					try {
 						List<City> cities = this.runner.listCities(sortBy);
-						this.writer.appendTag(command, parameters, paramNames, cities);
+						this.writer.appendTag(command, parameters, paramNames, cities, id);
 					} catch (NoCitiesToListException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("mapCity")) {
 
@@ -243,9 +243,9 @@ public class CommandParser {
 					String[] parameters = { name };
 					try {
 						this.runner.mapCity(name);
-						this.writer.appendTag(null, command, parameters, paramNames);
+						this.writer.appendTag(null, command, parameters, paramNames, id);
 					} catch (NameNotInDictionaryException | CityAlreadyMappedException | CityOutOfBoundsException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("unmapCity")) {
 
@@ -260,9 +260,9 @@ public class CommandParser {
 					String[] parameters = { name };
 					try {
 						this.runner.unmapCity(name);
-						this.writer.appendTag(null, command, parameters, paramNames);
+						this.writer.appendTag(null, command, parameters, paramNames, id);
 					} catch (NameNotInDictionaryException | CityNotMappedException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("printPRQuadtree")) {
 					String id = null;
@@ -274,9 +274,9 @@ public class CommandParser {
 					String parameters[] = {};
 					try {
 						PRQuadTree tree = this.runner.printPRQuadTree();
-						this.writer.appendTag(command, parameters, paramNames, tree);
+						this.writer.appendTag(command, parameters, paramNames, tree, id);
 					} catch (MapIsEmptyException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("saveMap")) {
 
@@ -290,7 +290,7 @@ public class CommandParser {
 					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					this.runner.saveMap(name);
-					this.writer.appendTag(null, command, parameters, paramNames);
+					this.writer.appendTag(null, command, parameters, paramNames, id);
 				} else if (command.equals("rangeCities")) {
 
 					/* get parameters */
@@ -316,9 +316,9 @@ public class CommandParser {
 					String[] parameters = { xString, yString, radiusString, saveMap };
 					try {
 						List<City> cities = this.runner.rangeCities(x, y, radius, saveMap);
-						this.writer.appendTag(command, parameters, paramNames, cities);
+						this.writer.appendTag(command, parameters, paramNames, cities, id);
 					} catch (NoCitiesExistInRangeException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("nearestCity")) {
 
@@ -336,9 +336,9 @@ public class CommandParser {
 					String[] parameters = { xString, yString };
 					try {
 						City city = this.runner.nearestCity(x, y);
-						this.writer.appendTag(command, parameters, paramNames, city);
+						this.writer.appendTag(command, parameters, paramNames, city, id);
 					} catch (MapIsEmptyException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("printAvlTree")) {
 					//
