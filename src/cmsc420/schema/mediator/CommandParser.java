@@ -171,10 +171,16 @@ public class CommandParser {
 					int y = Integer.parseInt(yString);
 					int radius = Integer.parseInt(radiusString);
 					CityColor color = CityColor.getCityColor(colorString);
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "name", "x", "y", "radius", "color" };
 					String[] parameters = { name, xString, yString, radiusString, colorString };
 					try {
 						this.runner.createCity(name, x, y, radius, color);
+						// TODO add id to appendTag
 						this.writer.appendTag(null, command, parameters, paramNames);
 					} catch (DuplicateCityNameException | DuplicateCityCoordinatesException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
@@ -183,6 +189,11 @@ public class CommandParser {
 
 					/* get parameters */
 					String name = params.getNamedItem("name").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					try {
@@ -192,6 +203,11 @@ public class CommandParser {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("clearAll")) {
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = {};
 					String[] parameters = {};
 					this.runner.clearAll();
@@ -201,6 +217,11 @@ public class CommandParser {
 					/* get parameters */
 					String sortByString = params.getNamedItem("sortBy").getNodeValue();
 					SortType sortBy = SortType.getSortType(sortByString);
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "sortBy" };
 					String[] parameters = { sortByString };
 					try {
@@ -213,6 +234,11 @@ public class CommandParser {
 
 					/* get parameters */
 					String name = params.getNamedItem("name").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					try {
@@ -225,6 +251,11 @@ public class CommandParser {
 
 					/* get parameters */
 					String name = params.getNamedItem("name").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					try {
@@ -234,6 +265,11 @@ public class CommandParser {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
 				} else if (command.equals("printPRQuadtree")) {
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = {};
 					String parameters[] = {};
 					try {
@@ -246,6 +282,11 @@ public class CommandParser {
 
 					/* get parameters */
 					String name = params.getNamedItem("name").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "name" };
 					String[] parameters = { name };
 					this.runner.saveMap(name);
@@ -266,6 +307,11 @@ public class CommandParser {
 						saveMap = params.getNamedItem("saveMap").getNodeValue();
 					} catch (NullPointerException e) {
 					}
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "x", "y", "radius", "saveMap" };
 					String[] parameters = { xString, yString, radiusString, saveMap };
 					try {
@@ -281,6 +327,11 @@ public class CommandParser {
 					String yString = params.getNamedItem("y").getNodeValue();
 					int x = Integer.parseInt(xString);
 					int y = Integer.parseInt(yString);
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
 					String[] paramNames = { "x", "y" };
 					String[] parameters = { xString, yString };
 					try {
@@ -289,6 +340,22 @@ public class CommandParser {
 					} catch (MapIsEmptyException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames);
 					}
+				} else if (command.equals("printAvlTree")) {
+					//
+				} else if (command.equals("mapRoad")) {
+					//
+				} else if (command.equals("printPMQuadTree")) {
+					//
+				} else if (command.equals("rangeRoads")) {
+					//
+				} else if (command.equals("nearestIsolatedCity")) {
+					//
+				} else if (command.equals("nearestRoad")) {
+					//
+				} else if (command.equals("nearestCityToRoad")) {
+					//
+				} else if (command.equals("shortestPath")) {
+					//
 				} else {
 					this.writer.undefinedError();
 				}
