@@ -18,7 +18,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 	public AvlGTree(final Comparator<? super K> comp, final int g) {
 		this.size = 0;
 		this.comp = comp;
-		this.g = g;
+		this.g = g >= 1 ? g : 1;
 		this.root = null;
 	}
 
@@ -297,6 +297,11 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			this.value = value;
 			this.height = 1;
 		}
+		
+		public Entry(Map.Entry<K, V> copy) {
+			this.key = copy.getKey();
+			this.value = copy.getValue();
+		}
 
 		@Override
 		public K getKey() {
@@ -313,10 +318,6 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			V oldValue = this.value;
 			this.value = value;
 			return oldValue;
-		}
-
-		public int yes() {
-			return 45;
 		}
 
 	}
@@ -541,7 +542,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Iterator<java.util.Map.Entry<K, V>> iterator() {
-			return new Iterator<java.util.Map.Entry<K, V>>() {
+			return new Iterator<java.util.Map.Entry<K, V>>() {				
 
 				@Override
 				public boolean hasNext() {
@@ -553,11 +554,6 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 				public java.util.Map.Entry<K, V> next() {
 					// TODO Auto-generated method stub
 					return null;
-				}
-				
-				@Override
-				public void remove() {
-					// TODO implement
 				}
 			};
 		}
@@ -597,8 +593,13 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 		@Override
 		public Object[] toArray() {
-			// TODO Auto-generated method stub
-			return null;
+			int index = 0;
+			Object[] arr = new Object[this.size()];
+			Iterator<java.util.Map.Entry<K, V>> iter = this.iterator();
+			while (iter.hasNext()) {
+				arr[index++] = new Entry<K, V>(iter.next());
+			}
+			return arr;
 		}
 
 		@SuppressWarnings("unchecked")
@@ -610,8 +611,16 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			if (a.length < this.size()) {
 				a = (T[]) new Object[this.size()];
 			}
-			// TODO Auto-generated method stub
-			return null;
+			int index = 0;
+			Iterator<java.util.Map.Entry<K, V>> iter = this.iterator();
+			while (iter.hasNext()) {
+				try {
+					a[index++] = (T) new Entry<K, V>(iter.next());
+				} catch (ClassCastException e) {
+					throw new ArrayStoreException();
+				}
+			}
+			return a;
 		}
 		
 	}
