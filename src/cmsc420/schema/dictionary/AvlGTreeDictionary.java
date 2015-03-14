@@ -30,4 +30,8 @@ public class AvlGTreeDictionary extends SortedMapDictionary {
 	public DataStructure<City> reset() {
 		return new AvlGTreeDictionary(this.g);
 	}
+	
+	public AvlGTree<String, City> getPrintingTree() {
+		return (AvlGTree<String, City>) this.nameToCity;
+	}
 }

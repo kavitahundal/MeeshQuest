@@ -21,6 +21,7 @@ import cmsc420.schema.CityDistanceComparator;
 import cmsc420.schema.CityNameComparator;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyList;
+import cmsc420.schema.dictionary.AvlGTreeDictionary;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.BlackNode;
 import cmsc420.schema.spatial.GrayNode;
@@ -70,7 +71,8 @@ public class CommandRunner {
 	 * A city can be successfully created if its name is unique (i.e., there
 	 * isn't already another city with the same name) and its coordinates are
 	 * also unique (i.e., there isn't already another city with the same (x, y)
-	 * coordinate). Names are case-sensitive.
+	 * coordinate), and the coordinates are non-negative integers. Names are
+	 * case-sensitive.
 	 * 
 	 * @param name
 	 *            the name of the city
@@ -136,9 +138,10 @@ public class CommandRunner {
 	}
 
 	/**
-	 * Resets all of the structures including the PR Quadtree, clearing them.
-	 * This has the effect of removing every city. This command cannot fail, so
-	 * it should unilaterally produce a <success> element in the output XML.
+	 * Resets all of the structures including the PM Quadtree, clearing them.
+	 * This has the effect of removing every city and every road. This command
+	 * cannot fail, so it should unilaterally produce a <success> element in the
+	 * output XML.
 	 */
 	void clearAll() {
 		this.dictionary = (DictionaryStructure) this.dictionary.reset();
@@ -155,7 +158,7 @@ public class CommandRunner {
 	 * or by coordinate, as per the sortBy attribute in the listCities command,
 	 * whose two legal values are name and coordinate. The ordering by name is
 	 * asciibetical according to the java.lang.String.compareTo() method, and
-	 * the ordering by coordinate is discussed in the spec. To reiterate,
+	 * the ordering by coordinate is discussed in the Part 1 spec. To reiterate,
 	 * coordinate ordering is done by comparing x values first; for cities with
 	 * the same x value, one city is less than another city if its y value is
 	 * less than the other. This command is only successful if there is at least
@@ -175,7 +178,7 @@ public class CommandRunner {
 	}
 
 	/**
-	 * Inserts the named city into the spatial map.
+	 * Inserts the named city into the spatial map. // TODO check changes
 	 * 
 	 * @param name
 	 *            the name of the city to map
@@ -255,7 +258,7 @@ public class CommandRunner {
 	 * correct name. It should match our image file: same dimensions, same
 	 * cities, same colors, same partitions, etc. How to keep track of your
 	 * graphic map is discussed in the previous section. Printing it out is
-	 * discussed there too.
+	 * discussed there too. TODO check changes
 	 * 
 	 * @param name
 	 *            the name of the file to save to
@@ -381,11 +384,11 @@ public class CommandRunner {
 	void close() {
 		this.spatial.removeCanvas();
 	}
-	
-	AvlGTree<?, ?> printAvlTree() { // TODO generics
-		return null;
+
+	AvlGTree<String, City> printAvlTree() {
+		return ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
 	}
-	
+
 	void mapRoad(String start, String end) {
 		// startPointDoesNotExist
 		// endPointDoesNotExist
@@ -394,29 +397,29 @@ public class CommandRunner {
 		// roadAlreadyMapped
 		// roadOutOfBounds
 	}
-	
+
 	PMQuadTree printPMQuadtree() {
-		return null;
+		return (PMQuadTree) this.spatial;
 	}
-	
+
 	void rangeRoads(int x, int y, int radius, String saveMap) {
 		// noRoadsExistInRange
 	}
-	
+
 	void nearestIsolatedCity(int x, int y) {
 		// cityNotFound
 	}
-	
+
 	void nearestRoad(int x, int y) {
 		// roadNotFound
 	}
-	
+
 	void nearestCityToRoad(String start, String end) {
 		// roadIsNotMapped
 		// noOtherCitiesMapped
 	}
-	
-	void shortestPath(String start, String end) {
+
+	void shortestPath(String start, String end, String saveMap, String saveHTML) {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists

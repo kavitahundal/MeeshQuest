@@ -3,6 +3,7 @@ package cmsc420.schema.dictionary;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 
 import cmsc420.schema.City;
@@ -67,14 +68,15 @@ public abstract class SortedMapDictionary implements DictionaryStructure {
 	@Override
 	public List<City> listCities(SortType sortBy) {
 		if (sortBy.equals(SortType.name)) {
-			Iterator<String> iter = this.nameToCity.keySet().iterator();
+			Iterator<Entry<String, City>> iter = this.nameToCity.entrySet().iterator();
 			List<City> cities = new ArrayList<>();
 			while (iter.hasNext()) {
-				String name = iter.next();
+				String name = iter.next().getKey();
 				cities.add(this.nameToCity.get(name));
 			}
 			return cities;
 		} else { // already lexicographically sorted
+			// TODO fix
 			return new ArrayList<City>(this.cityToName.keySet());
 		}
 	}
