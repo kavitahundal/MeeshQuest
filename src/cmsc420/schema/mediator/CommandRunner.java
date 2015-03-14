@@ -348,6 +348,7 @@ public class CommandRunner {
 	 *             an exception if there are no cities mapped
 	 */
 	City nearestCity(int x, int y) throws MapIsEmptyException {
+		// TODO nearest city connected via road
 		/* check for exceptions */
 		if (this.spatial.size() == 0) {
 			throw new MapIsEmptyException();
@@ -355,7 +356,7 @@ public class CommandRunner {
 
 		/* fill priority queue with cities based off proximity */
 		PriorityQueue<City> queue = new PriorityQueue<>(new CityDistanceComparator(x, y));
-		this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot());
+		this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot()); // TODO support PM
 		City nearest = queue.poll();
 
 		/* getting lexicographically first city in case of ties */

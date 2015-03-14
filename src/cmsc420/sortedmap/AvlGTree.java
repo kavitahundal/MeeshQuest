@@ -604,14 +604,20 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			} else {
 				this.generateList(entries, AvlGTree.this.root);
 			}
-			
-			int index = 0;
 			Object[] arr = new Object[this.size()];
-			Iterator<java.util.Map.Entry<K, V>> iter = this.iterator();
-			while (iter.hasNext()) {
-				arr[index++] = new Entry<K, V>(iter.next());
+			int index = 0;
+			for (Entry<K, V> e : entries) {
+				arr[index++] = e;
 			}
 			return arr;
+			
+//			int index = 0;
+//			Object[] arr = new Object[this.size()];
+//			Iterator<java.util.Map.Entry<K, V>> iter = this.iterator();
+//			while (iter.hasNext()) {
+//				arr[index++] = new Entry<K, V>(iter.next());
+//			}
+//			return arr;
 		}
 		
 		private void generateList(List<Entry<K, V>> list, Entry<K, V> entry) {
