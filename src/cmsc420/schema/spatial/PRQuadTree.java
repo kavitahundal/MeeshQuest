@@ -144,4 +144,9 @@ public class PRQuadTree implements SpatialStructure {
 		return this.root;
 	}
 
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
 }
