@@ -86,4 +86,8 @@ public interface SpatialStructure extends DataStructure<City> {
 	 * Destroys the canvas within the spatial structure.
 	 */
 	public void removeCanvas();
+	
+	public default void addRoad() {
+		throw new UnsupportedOperationException();
+	}
 }

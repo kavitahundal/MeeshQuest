@@ -25,11 +25,11 @@ import cmsc420.schema.dictionary.AvlGTreeDictionary;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.BlackNode;
 import cmsc420.schema.spatial.GrayNode;
-import cmsc420.schema.spatial.PMQuadTree;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.schema.spatial.TreeNode;
+import cmsc420.schema.spatial.PM.PMQuadTree;
 import cmsc420.sortedmap.AvlGTree;
 
 /**
