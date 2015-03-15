@@ -24,17 +24,16 @@ public abstract class PMQuadTree implements SpatialStructure {
 		this.name = name;
 		this.width = width;
 		this.height = height;
-		// TODO initialize root
 		this.origin = new Point2D.Float();
 		this.size = 0;
 		this.canvas = new CanvasPlus(name, (int) width, (int) height);
 		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
+		this.root = new PMWhiteNode(this.origin, this.width, this.height, this.canvas, this.validator);
 	}
 
 	@Override
 	public void add(City element) {
-		// TODO Auto-generated method stub
-		
+		this.root.addCity(element);
 	}
 
 	@Override
@@ -45,8 +44,7 @@ public abstract class PMQuadTree implements SpatialStructure {
 
 	@Override
 	public void remove(City element) {
-		// TODO Auto-generated method stub
-		
+		// TODO implement in part 3
 	}
 
 	@Override
@@ -97,9 +95,9 @@ public abstract class PMQuadTree implements SpatialStructure {
 	
 	@Override
 	public void addRoad(City city1, City city2) {
-		// add city1
-		// add city 2
-		// add the line
+		this.add(city1);
+		this.add(city2);
+		this.root.addRoad(city1, city2);
 	}
 	
 	@Override

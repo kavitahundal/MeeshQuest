@@ -4,7 +4,6 @@ import java.awt.geom.Point2D;
 
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
-import cmsc420.schema.spatial.TreeNode;
 
 public class PMGrayNode implements PMNode {
 
@@ -13,12 +12,14 @@ public class PMGrayNode implements PMNode {
 	private final int height;
 	private PMNode[] quadrants;
 	private CanvasPlus canvas;
+	private Validator validator;
 	
-	public PMGrayNode(Point2D.Float origin, int width, int height, CanvasPlus canvas) {
+	public PMGrayNode(Point2D.Float origin, int width, int height, CanvasPlus canvas, Validator validator) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
 		this.canvas = canvas;
+		this.validator = validator;
 		this.quadrants = new PMNode[4];
 		// set individual quads
 	}
