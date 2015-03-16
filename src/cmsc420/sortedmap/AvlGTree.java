@@ -189,7 +189,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 				if (balanceFactor(entry.right) > 0) {
 					// right left case
 					Entry<K, V> child = entry.right;
-					Entry<K, V> grandChild = child.right;
+					Entry<K, V> grandChild = child.left;
 					child.left = grandChild.right;
 					grandChild.right = child;
 					entry.right = grandChild;

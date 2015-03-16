@@ -403,7 +403,7 @@ public class CommandRunner {
 
 	private void fillQueue(PriorityQueue<City> queue, PMNode node, boolean isolated) {
 		if (node instanceof PMBlackNode) {
-			City city = ((BlackNode) node).getCity();
+			City city = ((PMBlackNode) node).getCity();
 			// if city isn't null and is isolated, add
 			if (city != null && this.adjacencyList.isIsolated(city) == isolated) {
 				queue.add(city);
