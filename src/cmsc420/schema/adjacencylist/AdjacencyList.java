@@ -1,16 +1,21 @@
 package cmsc420.schema.adjacencylist;
 
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class AdjacencyList<T> {
+public class AdjacencyList<T> implements Iterable<T[]> {
 
 	private TreeMap<T, TreeSet<T>> map;
 	private Comparator<T> comp;
+	private int size;
 
 	public AdjacencyList(Comparator<T> comp) {
+		this.size = 0;
 		this.comp = comp;
 		this.map = new TreeMap<>(this.comp);
 	}
@@ -26,7 +31,10 @@ public class AdjacencyList<T> {
 			destSet = new TreeSet<>(this.comp);
 			this.map.put(source, destSet);
 		}
-		destSet.add(destination);
+		if (!destSet.contains(destination)) {
+			destSet.add(destination);
+			this.size++;
+		}
 	}
 
 	public void clear() {
@@ -40,7 +48,8 @@ public class AdjacencyList<T> {
 
 	public void removeDirectedEdge(T source, T destination) {
 		TreeSet<T> destSet = this.map.get(source);
-		if (destSet != null) {
+		if (destSet != null && destSet.contains(destination)) {
+			this.size--;
 			destSet.remove(destination);
 		}
 	}
@@ -57,4 +66,46 @@ public class AdjacencyList<T> {
 	public Set<T> neighbors(T source) {
 		return this.map.get(source);
 	}
+	
+	public int size() {
+		return this.size;
+	}
+
+	@Override
+	public Iterator<T[]> iterator() {
+		return new Iterator<T[]>() {
+			
+			Iterator<T[]> wrapper;
+			
+			{
+				List<T[]> elements = new LinkedList<>();
+				Iterator<T> sources = AdjacencyList.this.map.keySet().iterator();
+				while (sources.hasNext()) {
+					T source = sources.next();
+					Iterator<T> destinations = AdjacencyList.this.neighbors(source).iterator();
+					while (destinations.hasNext()) {
+						T destination = destinations.next();
+						@SuppressWarnings("unchecked")
+						T[] element = (T[]) new Object[2];
+						element[0] = source;
+						element[1] = destination;
+						elements.add(element);
+					}
+				}
+				this.wrapper = elements.iterator();
+			}
+
+			@Override
+			public boolean hasNext() {
+				return this.wrapper.hasNext();
+			}
+
+			@Override
+			public T[] next() {
+				return this.wrapper.next();
+			}
+			
+		};
+	}
+
 }

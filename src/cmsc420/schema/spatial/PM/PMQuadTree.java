@@ -33,7 +33,10 @@ public abstract class PMQuadTree implements SpatialStructure {
 
 	@Override
 	public void add(City element) {
-		this.root.addCity(element);
+		if (this.canvas != null) {
+			this.canvas.addPoint(element.getName(), element.x, element.y, Color.BLACK);
+		}
+		this.root = this.root.addCity(element);
 	}
 
 	@Override
@@ -95,9 +98,12 @@ public abstract class PMQuadTree implements SpatialStructure {
 	
 	@Override
 	public void addRoad(City city1, City city2) {
+		if (this.canvas != null) {
+			this.canvas.addLine(city1.x, city1.y, city2.x, city2.y, Color.BLACK);
+		}
 		this.add(city1);
 		this.add(city2);
-		this.root.addRoad(city1, city2);
+		this.root = this.root.addRoad(city1, city2);
 	}
 	
 	@Override

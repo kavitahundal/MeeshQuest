@@ -13,9 +13,13 @@ public class PM3QuadTree extends PMQuadTree{
 	static class PM3Validator implements Validator {
 
 		@Override
-		public boolean valid() {
-			// TODO Auto-generated method stub
-			return false;
+		public boolean valid(PMBlackNode node, City city) {
+			return true;
+		}
+
+		@Override
+		public boolean valid(PMBlackNode node, City city1, City city2) {
+			return true;
 		}
 
 	}
