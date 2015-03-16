@@ -87,9 +87,7 @@ public interface SpatialStructure extends DataStructure<City> {
 	 */
 	public void removeCanvas();
 
-	public default void addRoad(City city1, City city2) {
-		throw new UnsupportedOperationException();
-	}
+	public void addRoad(City city1, City city2);
 
 	/**
 	 * Gets the name of this spatial structure.

@@ -148,5 +148,9 @@ public class PRQuadTree implements SpatialStructure {
 	public String getName() {
 		return this.name;
 	}
+	
+	public void addRoad(City city1, City city2) {
+		throw new UnsupportedOperationException("can't add roads in PM Quadtree");
+	}
 
 }

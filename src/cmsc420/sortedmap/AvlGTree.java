@@ -46,7 +46,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		if (entry == null) {
 			return null;
 		}
-		if (this.comp.compare(key, entry.key) > 0) {
+		if (this.comp.compare(key, entry.key) < 0) {
 			return this.findEntryAux(entry.left, key);
 		} else if (this.comp.compare(key, entry.key) > 0) {
 			return this.findEntryAux(entry.right, key);

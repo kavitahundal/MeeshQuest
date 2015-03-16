@@ -405,25 +405,30 @@ public class CommandRunner {
 
 	void rangeRoads(int x, int y, int radius, String saveMap) {
 		// noRoadsExistInRange
+		throw new UnsupportedOperationException("rangeRoads not implemented");
 	}
 
 	void nearestIsolatedCity(int x, int y) {
 		// cityNotFound
+		throw new UnsupportedOperationException("nearestIsolatedCity not implemented");
 	}
 
 	void nearestRoad(int x, int y) {
 		// roadNotFound
+		throw new UnsupportedOperationException("nearestRoad not implemented");
 	}
 
 	void nearestCityToRoad(String start, String end) {
 		// roadIsNotMapped
 		// noOtherCitiesMapped
+		throw new UnsupportedOperationException("nearestCityToRoad not implemented");
 	}
 
 	void shortestPath(String start, String end, String saveMap, String saveHTML) {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists
+		throw new UnsupportedOperationException("shortestPath not implemented");
 	}
 
 }
