@@ -25,6 +25,10 @@ public class AvlGTreeDictionary extends SortedMapDictionary {
 		super.nameToCity = new AvlGTree<>(new CityNameComparator(), this.g);
 		super.cityToName = new AvlGTree<>(new CityCoordinateComparator(), this.g);
 	}
+	
+	public AvlGTreeDictionary generate(int g) {
+		return new AvlGTreeDictionary(g);
+	}
 
 	@Override
 	public DataStructure<City> reset() {

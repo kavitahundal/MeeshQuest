@@ -10,16 +10,16 @@ import cmsc420.schema.City;
 import cmsc420.schema.spatial.SpatialStructure;
 
 public abstract class PMQuadTree implements SpatialStructure {
-	
+
 	private final int width;
 	private final int height;
 	protected Validator validator;
-	private PMNode root;
+	protected PMNode root;
 	private final Point2D.Float origin;
 	private int size;
 	private CanvasPlus canvas;
 	private String name;
-	
+
 	public PMQuadTree(String name, int width, int height) {
 		this.name = name;
 		this.width = width;
@@ -28,8 +28,11 @@ public abstract class PMQuadTree implements SpatialStructure {
 		this.size = 0;
 		this.canvas = new CanvasPlus(name, (int) width, (int) height);
 		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
+		this.validator = this.getValidator();
 		this.root = new PMWhiteNode(this.origin, this.width, this.height, this.canvas, this.validator);
 	}
+
+	protected abstract Validator getValidator();
 
 	@Override
 	public void add(City element) {
@@ -95,7 +98,7 @@ public abstract class PMQuadTree implements SpatialStructure {
 		this.canvas = null;
 		this.root = null;
 	}
-	
+
 	@Override
 	public void addRoad(City city1, City city2) {
 		if (this.canvas != null) {
@@ -105,7 +108,7 @@ public abstract class PMQuadTree implements SpatialStructure {
 		this.add(city2);
 		this.root = this.root.addRoad(city1, city2);
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.name;

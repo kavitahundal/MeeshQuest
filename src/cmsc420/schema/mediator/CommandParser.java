@@ -21,6 +21,7 @@ import cmsc420.exceptions.CityNotMappedException;
 import cmsc420.exceptions.CityOutOfBoundsException;
 import cmsc420.exceptions.DuplicateCityCoordinatesException;
 import cmsc420.exceptions.DuplicateCityNameException;
+import cmsc420.exceptions.EmptyTreeException;
 import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.NameNotInDictionaryException;
 import cmsc420.exceptions.NoCitiesExistInRangeException;
@@ -29,9 +30,12 @@ import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyList;
+import cmsc420.schema.dictionary.AvlGTreeDictionary;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
+import cmsc420.schema.spatial.PM.PMQuadTree;
+import cmsc420.schema.spatial.PM.PMQuadTreeSeedling;
 import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
@@ -151,6 +155,22 @@ public class CommandParser {
 		NamedNodeMap attrs = root.getAttributes();
 		int spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
 		int spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
+		int g = -1;
+		try {
+			g = Integer.parseInt(attrs.getNamedItem("g").getNodeValue());
+		} catch (NullPointerException e) {
+		}
+		int pmOrder = -1;
+		try {
+			pmOrder = Integer.parseInt(attrs.getNamedItem("pmOrder").getNodeValue());
+		} catch (NullPointerException e) {
+		}
+		if (this.dictionary instanceof AvlGTreeDictionary) {
+			this.dictionary = ((AvlGTreeDictionary) this.dictionary).generate(g);
+		}
+		if (this.seed instanceof PMQuadTreeSeedling) {
+			((PMQuadTreeSeedling) this.seed).setOrder(pmOrder);
+		}
 		this.runner = new CommandRunner(this.dictionary, this.seed, this.adjacencyList, spatialWidth, spatialHeight);
 
 		/* process each command */
@@ -182,7 +202,6 @@ public class CommandParser {
 					String[] parameters = { name, xString, yString, radiusString, colorString };
 					try {
 						this.runner.createCity(name, x, y, radius, color);
-						// TODO add id to appendTag
 						this.writer.appendTag(null, command, parameters, paramNames, id);
 					} catch (DuplicateCityNameException | DuplicateCityCoordinatesException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
@@ -350,22 +369,133 @@ public class CommandParser {
 					}
 					String[] paramNames = {};
 					String parameters[] = {};
-					AvlGTree<String, City> tree = this.runner.printAvlTree();
-					this.writer.appendTag(command, parameters, paramNames, tree, id);
+					try {
+						AvlGTree<String, City> tree = this.runner.printAvlTree();
+						this.writer.appendTag(command, parameters, paramNames, tree, id);
+					} catch (EmptyTreeException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
+					
 				} else if (command.equals("mapRoad")) {
-					//
+
+					/* get parameters */
+					String start = params.getNamedItem("start").getNodeValue();
+					String end = params.getNamedItem("end").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "start", "end" };
+					String[] parameters = { start, end };
+//					this.runner.mapRoad(start, end);
+					// TODO append tag
 				} else if (command.equals("printPMQuadTree")) {
-					//
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = {};
+					String parameters[] = {};
+					PMQuadTree tree = this.runner.printPMQuadtree();
+					// TODO append tag
 				} else if (command.equals("rangeRoads")) {
-					//
+
+					/* get parameters */
+					String xString = params.getNamedItem("x").getNodeValue();
+					String yString = params.getNamedItem("y").getNodeValue();
+					String radiusString = params.getNamedItem("radius").getNodeValue();
+
+					/* get parameters */
+					int x = Integer.parseInt(xString);
+					int y = Integer.parseInt(yString);
+					int radius = Integer.parseInt(radiusString);
+					String saveMap = null;
+					try {
+						saveMap = params.getNamedItem("saveMap").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "x", "y", "radius", "saveMap" };
+					String[] parameters = { xString, yString, radiusString, saveMap };
+					List<City[]> roads = this.runner.rangeRoads(x, y, radius, saveMap);
+					// TODO append tag
 				} else if (command.equals("nearestIsolatedCity")) {
-					//
+
+					/* get parameters */
+					String xString = params.getNamedItem("x").getNodeValue();
+					String yString = params.getNamedItem("y").getNodeValue();
+					int x = Integer.parseInt(xString);
+					int y = Integer.parseInt(yString);
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "x", "y" };
+					String[] parameters = { xString, yString };
+//					City city = this.runner.nearestIsolatedCity(x, y);
+					// TODO append tag
 				} else if (command.equals("nearestRoad")) {
-					//
+
+					/* get parameters */
+					String xString = params.getNamedItem("x").getNodeValue();
+					String yString = params.getNamedItem("y").getNodeValue();
+					int x = Integer.parseInt(xString);
+					int y = Integer.parseInt(yString);
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "x", "y" };
+					String[] parameters = { xString, yString };
+					City[] road = this.runner.nearestRoad(x, y);
+					// TODO append tag
 				} else if (command.equals("nearestCityToRoad")) {
-					//
+
+					/* get parameters */
+					String start = params.getNamedItem("start").getNodeValue();
+					String end = params.getNamedItem("end").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "start", "end" };
+					String[] parameters = { start, end };
+					City city = this.runner.nearestCityToRoad(start, end);
+					// TODO append tag
 				} else if (command.equals("shortestPath")) {
-					//
+
+					/* get parameters */
+					String start = params.getNamedItem("start").getNodeValue();
+					String end = params.getNamedItem("end").getNodeValue();
+					String saveMap = null;
+					try {
+						saveMap = params.getNamedItem("saveMap").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String saveHTML = null;
+					try {
+						saveMap = params.getNamedItem("saveHTML").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "start", "end", "saveMap", "saveHTML" };
+					String[] parameters = { start, end, saveMap, saveHTML };
+					this.runner.shortestPath(start, end, saveMap, saveHTML);
+					// TODO append tag
+					// not sure about return type
 				} else {
 					this.writer.undefinedError();
 				}

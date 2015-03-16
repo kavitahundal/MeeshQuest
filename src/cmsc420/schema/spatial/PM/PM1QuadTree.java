@@ -7,10 +7,9 @@ public class PM1QuadTree extends PMQuadTree {
 
 	public PM1QuadTree(String name, int width, int height) {
 		super(name, width, height);
-		super.validator = new PM3Validator();
 	}
 
-	static class PM3Validator implements Validator {
+	static class PM1Validator implements Validator {
 
 		@Override
 		public boolean valid(PMBlackNode node, City city) {
@@ -31,6 +30,11 @@ public class PM1QuadTree extends PMQuadTree {
 	@Override
 	public DataStructure<City> reset() {
 		return new PM1QuadTree(this.getName(), (int) this.getSpatialWidth(), (int) this.getSpatialHeight());
+	}
+
+	@Override
+	protected Validator getValidator() {
+		return new PM1Validator();
 	}
 
 }

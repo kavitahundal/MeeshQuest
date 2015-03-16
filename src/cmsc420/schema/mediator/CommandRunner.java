@@ -12,6 +12,7 @@ import cmsc420.exceptions.CityNotMappedException;
 import cmsc420.exceptions.CityOutOfBoundsException;
 import cmsc420.exceptions.DuplicateCityCoordinatesException;
 import cmsc420.exceptions.DuplicateCityNameException;
+import cmsc420.exceptions.EmptyTreeException;
 import cmsc420.exceptions.EndPointDoesNotExistException;
 import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.NameNotInDictionaryException;
@@ -422,8 +423,12 @@ public class CommandRunner {
 		this.spatial.removeCanvas();
 	}
 
-	AvlGTree<String, City> printAvlTree() {
-		return ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
+	AvlGTree<String, City> printAvlTree() throws EmptyTreeException {
+		AvlGTree<String, City> tree = ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
+		if (tree.size() == 0) {
+			throw new EmptyTreeException();
+		}
+		return tree;
 	}
 
 	void mapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
@@ -460,7 +465,7 @@ public class CommandRunner {
 		return (PMQuadTree) this.spatial;
 	}
 
-	void rangeRoads(int x, int y, int radius, String saveMap) {
+	List<City[]> rangeRoads(int x, int y, int radius, String saveMap) {
 		// noRoadsExistInRange
 		// TODO
 		throw new UnsupportedOperationException("rangeRoads not implemented");
@@ -491,13 +496,13 @@ public class CommandRunner {
 		return nearest;
 	}
 
-	void nearestRoad(int x, int y) {
+	City[] nearestRoad(int x, int y) {
 		// roadNotFound
 		// TODO
 		throw new UnsupportedOperationException("nearestRoad not implemented");
 	}
 
-	void nearestCityToRoad(String start, String end) {
+	City nearestCityToRoad(String start, String end) {
 		// roadIsNotMapped
 		// noOtherCitiesMapped
 		// TODO

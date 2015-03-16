@@ -7,7 +7,6 @@ public class PM3QuadTree extends PMQuadTree{
 	
 	public PM3QuadTree(String name, int width, int height) {
 		super(name, width, height);
-		super.validator = new PM3Validator();
 	}
 
 	static class PM3Validator implements Validator {
@@ -27,6 +26,11 @@ public class PM3QuadTree extends PMQuadTree{
 	@Override
 	public DataStructure<City> reset() {
 		return new PM3QuadTree(this.getName(), (int) this.getSpatialWidth(), (int) this.getSpatialHeight());
+	}
+
+	@Override
+	protected Validator getValidator() {
+		return new PM3Validator();
 	}
 
 }

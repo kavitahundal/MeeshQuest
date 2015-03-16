@@ -10,6 +10,11 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import cmsc420.schema.City;
+
 public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	private int size;
@@ -22,6 +27,30 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		this.comp = comp;
 		this.g = g >= 1 ? g : 1;
 		this.root = null;
+	}
+	
+	public Element elementize(Document doc) {
+		Element xmlRoot = doc.createElement("AvlGTree");
+		xmlRoot.setAttribute("cardinality", "" + this.size);
+		// add cardinality
+		xmlRoot.setAttribute("height", "" + this.height());
+		// height
+		xmlRoot.setAttribute("maxImbalance", "" + this.g);
+		// and maxImbalance
+		xmlRoot.appendChild(this.root.elementize(doc));
+		return xmlRoot;
+	}
+	
+	public int height() {
+		return this.heightAux(this.root);
+	}
+	
+	private int heightAux(Entry<K, V> entry) {
+		if (entry == null) {
+			return 0;
+		} else {
+			return 1 + Math.max(heightAux(entry.left), heightAux(entry.right));
+		}
 	}
 
 	@Override
@@ -121,7 +150,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			} else {
 				this.addAux(entry.left, toAdd);
 			}
-		} else { // this.comp.compare(toAdd.key, entry.key) < 0
+		} else { // this.comp.compare(toAdd.key, entry.key) > 0
 			if (entry.right == null) {
 				entry.right = toAdd;
 			} else {
@@ -194,10 +223,14 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 	}
 
 	private void updateHeight(Entry<K, V> entry) {
-		entry.height = Math.max(height(entry.left), height(entry.right));
+		if (entry != null) {
+			entry.height = 1 + Math.max(height(entry.left), height(entry.right));
+		}
 	}
 
 	private int balanceFactor(Entry<K, V> entry) {
+		this.updateHeight(entry.left);
+		this.updateHeight(entry.right);
 		return height(entry.left) - height(entry.right);
 	}
 
@@ -320,6 +353,29 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			V oldValue = this.value;
 			this.value = value;
 			return oldValue;
+		}
+		
+		Element elementize(Document doc) {
+			Element ele = doc.createElement("node");
+			// set key attr to name
+			ele.setAttribute("key", (String) this.key);
+			// set valu attr to (x,y)
+			City val = (City) this.value;
+			String value = "(" + (int) val.x + "," + (int) val.y + ")";
+			ele.setAttribute("value", value);
+			// if left child is null add empty child else rec
+			if (this.left == null) {
+				ele.appendChild(doc.createElement("emptyChild"));
+			} else {
+				ele.appendChild(this.left.elementize(doc));
+			}
+			// if right child null add empty else rec
+			if (this.right == null) {
+				ele.appendChild(doc.createElement("emptyChild"));
+			} else {
+				ele.appendChild(this.right.elementize(doc));
+			}
+			return ele;
 		}
 
 	}
@@ -610,14 +666,6 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 				arr[index++] = e;
 			}
 			return arr;
-			
-//			int index = 0;
-//			Object[] arr = new Object[this.size()];
-//			Iterator<java.util.Map.Entry<K, V>> iter = this.iterator();
-//			while (iter.hasNext()) {
-//				arr[index++] = new Entry<K, V>(iter.next());
-//			}
-//			return arr;
 		}
 		
 		private void generateList(List<Entry<K, V>> list, Entry<K, V> entry) {

@@ -82,7 +82,13 @@ public class CommandWriter {
 	}
 
 	void appendTag(String command, String[] parameters, String[] paramNames, AvlGTree<String, City> tree, String id) {
-		throw new UnsupportedOperationException("implement"); // TODO
+		Element tag = this.initiateTag(null);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
+		Element outputTag = this.output.createElement("output");
+		Element treeTag = tree.elementize(this.output); // XML version of tree TODO
+		outputTag.appendChild(treeTag);
+		tag.appendChild(outputTag);
+		this.root.appendChild(tag);
 	}
 
 	/**
