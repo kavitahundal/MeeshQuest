@@ -70,6 +70,10 @@ public class AdjacencyList<T> implements Iterable<T[]> {
 	public int size() {
 		return this.size;
 	}
+	
+	public boolean isIsolated(T ele) {
+		return this.neighbors(ele) == null || this.neighbors(ele).size() == 0;
+	}
 
 	@Override
 	public Iterator<T[]> iterator() {

@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 
 import cmsc420.schema.City;
 import cmsc420.schema.spatial.PRQuadTree;
+import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
 public class CommandWriter {
@@ -78,6 +79,10 @@ public class CommandWriter {
 		outputTag.appendChild(treeTag);
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
+	}
+
+	void appendTag(String command, String[] parameters, String[] paramNames, AvlGTree<String, City> tree, String id) {
+		throw new UnsupportedOperationException("implement"); // TODO
 	}
 
 	/**
@@ -185,14 +190,16 @@ public class CommandWriter {
 	}
 
 	private Element createTag(Element tag, String command, String[] parameters, String[] paramNames, String id) {
-		Element commandTag = this.output.createElement("command"); // command tag
+		Element commandTag = this.output.createElement("command"); // command
+																	// tag
 		commandTag.setAttribute("name", command);
 		if (id != null) {
 			commandTag.setAttribute("id", id);
 		}
 		tag.appendChild(commandTag);
-		
-		Element paramTag = this.output.createElement("parameters"); // parameter tag
+
+		Element paramTag = this.output.createElement("parameters"); // parameter
+																	// tag
 		for (int i = 0; i < parameters.length; i++) {
 			if (parameters[i] == null) {
 				continue; // for optional parameters

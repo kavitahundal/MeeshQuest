@@ -1,6 +1,8 @@
 package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
+import java.util.HashSet;
+import java.util.Set;
 
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
@@ -127,5 +129,13 @@ public class PMGrayNode implements PMNode {
 		}
 
 		return false; // hopefully this should be correct!
+	}
+
+	public Set<PMNode> getChildren() {
+		Set<PMNode> quads = new HashSet<>();
+		for (PMNode q : this.quadrants) {
+			quads.add(q);
+		}
+		return quads;
 	}
 }

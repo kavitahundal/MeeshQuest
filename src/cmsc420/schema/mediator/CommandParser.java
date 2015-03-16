@@ -31,6 +31,7 @@ import cmsc420.schema.adjacencylist.AdjacencyList;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
+import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
 /**
@@ -341,7 +342,15 @@ public class CommandParser {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("printAvlTree")) {
-					//
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = {};
+					String parameters[] = {};
+					AvlGTree<String, City> tree = this.runner.printAvlTree();
+					this.writer.appendTag(command, parameters, paramNames, tree, id);
 				} else if (command.equals("mapRoad")) {
 					//
 				} else if (command.equals("printPMQuadTree")) {

@@ -7,6 +7,7 @@ import java.util.PriorityQueue;
 
 import cmsc420.exceptions.CityAlreadyMappedException;
 import cmsc420.exceptions.CityDoesNotExistException;
+import cmsc420.exceptions.CityNotFoundException;
 import cmsc420.exceptions.CityNotMappedException;
 import cmsc420.exceptions.CityOutOfBoundsException;
 import cmsc420.exceptions.DuplicateCityCoordinatesException;
@@ -29,6 +30,9 @@ import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.schema.spatial.TreeNode;
+import cmsc420.schema.spatial.PM.PMBlackNode;
+import cmsc420.schema.spatial.PM.PMGrayNode;
+import cmsc420.schema.spatial.PM.PMNode;
 import cmsc420.schema.spatial.PM.PMQuadTree;
 import cmsc420.sortedmap.AvlGTree;
 
@@ -178,7 +182,7 @@ public class CommandRunner {
 	}
 
 	/**
-	 * Inserts the named city into the spatial map. // TODO check changes
+	 * Inserts the named city into the spatial map.
 	 * 
 	 * @param name
 	 *            the name of the city to map
@@ -258,7 +262,7 @@ public class CommandRunner {
 	 * correct name. It should match our image file: same dimensions, same
 	 * cities, same colors, same partitions, etc. How to keep track of your
 	 * graphic map is discussed in the previous section. Printing it out is
-	 * discussed there too. TODO check changes
+	 * discussed there too.
 	 * 
 	 * @param name
 	 *            the name of the file to save to
@@ -346,17 +350,28 @@ public class CommandRunner {
 	 *         cities)
 	 * @throws MapIsEmptyException
 	 *             an exception if there are no cities mapped
+	 * @throws CityNotFoundException
 	 */
-	City nearestCity(int x, int y) throws MapIsEmptyException {
-		// TODO nearest city connected via road
+	City nearestCity(int x, int y) throws MapIsEmptyException, CityNotFoundException {
 		/* check for exceptions */
-		if (this.spatial.size() == 0) {
-			throw new MapIsEmptyException();
+		if (this.spatial.size() == 0 && this.spatial instanceof PRQuadTree) {
+			if (this.spatial instanceof PRQuadTree) {
+				throw new MapIsEmptyException();
+			} else {
+				throw new CityNotFoundException();
+			}
 		}
 
 		/* fill priority queue with cities based off proximity */
 		PriorityQueue<City> queue = new PriorityQueue<>(new CityDistanceComparator(x, y));
-		this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot()); // TODO support PM
+		if (this.spatial instanceof PRQuadTree) {
+			this.fillQueue(queue, ((PRQuadTree) this.spatial).getRoot());
+		} else {
+			this.fillQueue(queue, ((PMQuadTree) this.spatial).getRoot(), false);
+		}
+		if (queue.size() == 0) {
+			throw new CityNotFoundException();
+		}
 		City nearest = queue.poll();
 
 		/* getting lexicographically first city in case of ties */
@@ -379,6 +394,21 @@ public class CommandRunner {
 		}
 	}
 
+	private void fillQueue(PriorityQueue<City> queue, PMNode node, boolean isolated) {
+		if (node instanceof PMBlackNode) {
+			City city = ((BlackNode) node).getCity();
+			// if city isn't null and is isolated, add
+			if (city != null && this.adjacencyList.isIsolated(city) == isolated) {
+				queue.add(city);
+			}
+
+		} else if (node instanceof PMGrayNode) {
+			for (PMNode child : ((PMGrayNode) node).getChildren()) {
+				this.fillQueue(queue, child, isolated); // add children nodes
+			}
+		}
+	}
+
 	/**
 	 * Clears the canvas of the spatial structure.F
 	 */
@@ -397,6 +427,7 @@ public class CommandRunner {
 		// startOrEndIsIsolated
 		// roadAlreadyMapped
 		// roadOutOfBounds
+		// TODO
 	}
 
 	PMQuadTree printPMQuadtree() {
@@ -405,22 +436,45 @@ public class CommandRunner {
 
 	void rangeRoads(int x, int y, int radius, String saveMap) {
 		// noRoadsExistInRange
+		// TODO
 		throw new UnsupportedOperationException("rangeRoads not implemented");
 	}
 
-	void nearestIsolatedCity(int x, int y) {
+	City nearestIsolatedCity(int x, int y) throws CityNotFoundException {
 		// cityNotFound
-		throw new UnsupportedOperationException("nearestIsolatedCity not implemented");
+		/* check for exceptions */
+		if (this.spatial.size() == 0) {
+			throw new CityNotFoundException();
+		}
+
+		/* fill priority queue with cities based off proximity */
+		PriorityQueue<City> queue = new PriorityQueue<>(new CityDistanceComparator(x, y));
+		this.fillQueue(queue, ((PMQuadTree) this.spatial).getRoot(), true);
+		if (queue.size() == 0) {
+			throw new CityNotFoundException();
+		}
+		City nearest = queue.poll();
+
+		/* getting lexicographically first city in case of ties */
+		while (queue.peek() != null && queue.peek().distance(x, y) <= nearest.distance(x, y)) {
+			City temp = queue.poll();
+			if (temp.getName().compareTo(nearest.getName()) < 0) {
+				nearest = temp;
+			}
+		}
+		return nearest;
 	}
 
 	void nearestRoad(int x, int y) {
 		// roadNotFound
+		// TODO
 		throw new UnsupportedOperationException("nearestRoad not implemented");
 	}
 
 	void nearestCityToRoad(String start, String end) {
 		// roadIsNotMapped
 		// noOtherCitiesMapped
+		// TODO
 		throw new UnsupportedOperationException("nearestCityToRoad not implemented");
 	}
 
@@ -428,6 +482,7 @@ public class CommandRunner {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists
+		// TODO
 		throw new UnsupportedOperationException("shortestPath not implemented");
 	}
 

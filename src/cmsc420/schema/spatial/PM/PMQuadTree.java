@@ -111,4 +111,8 @@ public abstract class PMQuadTree implements SpatialStructure {
 		return this.name;
 	}
 
+	public PMNode getRoot() {
+		return this.root;
+	}
+
 }

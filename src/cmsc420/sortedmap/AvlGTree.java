@@ -551,7 +551,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 				@Override
 				public boolean hasNext() {
-					return this.index >= this.entries.length;
+					return this.index < this.entries.length;
 				}
 
 				@SuppressWarnings("unchecked")

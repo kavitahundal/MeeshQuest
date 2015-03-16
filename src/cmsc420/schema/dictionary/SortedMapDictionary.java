@@ -82,7 +82,7 @@ public abstract class SortedMapDictionary implements DictionaryStructure {
 			while (iter.hasNext()) {
 				cities.add(iter.next().getKey());
 			}
-//			return new ArrayList<City>(this.cityToName.keySet());
+//			return new ArrayList<City>(this.cityToName.keySet())
 			return cities;
 		}
 	}
