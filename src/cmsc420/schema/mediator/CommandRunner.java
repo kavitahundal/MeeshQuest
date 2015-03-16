@@ -12,10 +12,16 @@ import cmsc420.exceptions.CityNotMappedException;
 import cmsc420.exceptions.CityOutOfBoundsException;
 import cmsc420.exceptions.DuplicateCityCoordinatesException;
 import cmsc420.exceptions.DuplicateCityNameException;
+import cmsc420.exceptions.EndPointDoesNotExistException;
 import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.NameNotInDictionaryException;
 import cmsc420.exceptions.NoCitiesExistInRangeException;
 import cmsc420.exceptions.NoCitiesToListException;
+import cmsc420.exceptions.RoadAlreadyMappedException;
+import cmsc420.exceptions.RoadOutOfBoundsException;
+import cmsc420.exceptions.StartEqualsEndException;
+import cmsc420.exceptions.StartOrEndIsIsolatedException;
+import cmsc420.exceptions.StartPointDoesNotExistException;
 import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.CityDistanceComparator;
@@ -420,14 +426,34 @@ public class CommandRunner {
 		return ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
 	}
 
-	void mapRoad(String start, String end) {
-		// startPointDoesNotExist
-		// endPointDoesNotExist
-		// startEqualsEnd
-		// startOrEndIsIsolated
-		// roadAlreadyMapped
-		// roadOutOfBounds
-		// TODO
+	void mapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
+			StartEqualsEndException, StartOrEndIsIsolatedException, RoadAlreadyMappedException,
+			RoadOutOfBoundsException {
+		if (!this.dictionary.containsName(start)) {
+			throw new StartPointDoesNotExistException();
+		}
+		if (!this.dictionary.containsName(end)) {
+			throw new EndPointDoesNotExistException();
+		}
+		City city1 = this.dictionary.getCity(start);
+		City city2 = this.dictionary.getCity(end);
+		if (start.equals(end) || city1.equals(city2)) {
+			throw new StartEqualsEndException();
+		}
+		if (this.adjacencyList.isIsolated(city1) || this.adjacencyList.isIsolated(city2)) {
+			throw new StartOrEndIsIsolatedException();
+		}
+		if (this.adjacencyList.containsUndirectedEdge(city1, city2)) {
+			throw new RoadAlreadyMappedException();
+		}
+		if (city1.x < 0 || city2.x < 0 || city1.y < 0 || city2.y < 0 || city1.x >= this.spatial.getSpatialWidth()
+				|| city2.x >= this.spatial.getSpatialWidth() || city1.y >= this.spatial.getSpatialHeight()
+				|| city2.y >= this.spatial.getSpatialHeight()) {
+			throw new RoadOutOfBoundsException();
+		}
+		// add to adjacency list
+		this.adjacencyList.addUndirectedEdge(city1, city2);
+		this.spatial.addRoad(city1, city2);
 	}
 
 	PMQuadTree printPMQuadtree() {

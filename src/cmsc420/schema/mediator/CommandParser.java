@@ -16,6 +16,7 @@ import org.xml.sax.SAXException;
 
 import cmsc420.exceptions.CityAlreadyMappedException;
 import cmsc420.exceptions.CityDoesNotExistException;
+import cmsc420.exceptions.CityNotFoundException;
 import cmsc420.exceptions.CityNotMappedException;
 import cmsc420.exceptions.CityOutOfBoundsException;
 import cmsc420.exceptions.DuplicateCityCoordinatesException;
@@ -338,7 +339,7 @@ public class CommandParser {
 					try {
 						City city = this.runner.nearestCity(x, y);
 						this.writer.appendTag(command, parameters, paramNames, city, id);
-					} catch (MapIsEmptyException e) {
+					} catch (MapIsEmptyException | CityNotFoundException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("printAvlTree")) {
