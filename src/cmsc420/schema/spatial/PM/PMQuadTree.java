@@ -42,7 +42,9 @@ public abstract class PMQuadTree implements SpatialStructure {
 		if (this.canvas != null) {
 			this.canvas.addPoint(element.getName(), element.x, element.y, Color.BLACK);
 		}
-		this.root = this.root.addCity(element);
+		if (!this.contains(element)) {
+			this.root = this.root.addCity(element);
+		}
 	}
 
 	@Override

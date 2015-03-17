@@ -396,12 +396,12 @@ public class CommandParser {
 					String[] parameters = { start, end };
 					try {
 						this.runner.mapRoad(start, end);
-						this.writer.appendTag(null, command, parameters, paramNames, id);
+						this.writer.appendTagRoad(command, parameters, paramNames, start, end, id);
 					} catch (StartPointDoesNotExistException | EndPointDoesNotExistException | StartEqualsEndException
 							| StartOrEndIsIsolatedException | RoadAlreadyMappedException | RoadOutOfBoundsException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
-				} else if (command.equals("printPMQuadTree")) {
+				} else if (command.equals("printPMQuadtree")) {
 					String id = null;
 					try {
 						id = params.getNamedItem("id").getNodeValue();
@@ -410,7 +410,7 @@ public class CommandParser {
 					String[] paramNames = {};
 					String parameters[] = {};
 					PMQuadTree tree = this.runner.printPMQuadtree();
-					// TODO append tag
+					this.writer.appendTag(command, parameters, paramNames, tree, id);
 				} else if (command.equals("rangeRoads")) {
 
 					/* get parameters */

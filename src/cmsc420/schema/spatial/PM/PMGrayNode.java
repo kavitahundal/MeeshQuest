@@ -85,20 +85,22 @@ public class PMGrayNode implements PMNode {
 	}
 
 	private boolean roadInQuadrant(PMNode node, City city1, City city2) {
+		float x = node.origin().x;
+		float y = node.origin().y;
+		int w = node.width();
+		int h = node.height();
 		// given a square and a line, determine if the line goes in the square
 
 		// determine if either end point is in the square
 		// if not, find a intersection between the and the 4 boundaries
 
 		// check city1
-		if (city1.x >= this.origin.x && city1.x < this.origin.x + this.width && city1.y >= this.origin.y
-				&& city1.y < this.origin.y + this.height) {
+		if (city1.x >= x && city1.x < x + w && city1.y >= y && city1.y < y + h) {
 			return true;
 		}
 
 		// check city2
-		if (city2.x >= this.origin.x && city2.x < this.origin.x + this.width && city2.y >= this.origin.y
-				&& city2.y < this.origin.y + this.height) {
+		if (city2.x >= x && city2.x < x + w && city2.y >= y && city2.y < y + h) {
 			return true;
 		}
 
@@ -108,26 +110,26 @@ public class PMGrayNode implements PMNode {
 		// x = ((y - y1) / m) + x1
 
 		// when y = lower line, x is in range [xLow, xHigh)
-		double xTest = ((this.origin.y - city1.y) / slope) + city1.x;
-		if (xTest >= this.origin.x && xTest < this.origin.x + this.width) {
+		double xTest = ((y - city1.y) / slope) + city1.x;
+		if (xTest >= x && xTest < x + w) {
 			return true;
 		}
 
 		// when y = upper line - 1, x is in range [xLow, xHigh)
-		xTest = ((this.origin.y = this.height - city1.y) / slope) + city1.x;
-		if (xTest >= this.origin.x && xTest < this.origin.x + this.width) {
+		xTest = ((y + h - city1.y) / slope) + city1.x;
+		if (xTest >= x && xTest < x + w) {
 			return true;
 		}
 
 		// when x = left line, y is in range [yLow, yHigh)
-		double yTest = slope * (this.origin.x - city1.x) + city1.y;
-		if (yTest >= this.origin.y && yTest < this.origin.y + this.height) {
+		double yTest = slope * (x - city1.x) + city1.y;
+		if (yTest >= y && yTest < y + h) {
 			return true;
 		}
 
 		// when x = right line - 1, y is in range [yLow, yHigh)
-		yTest = slope * (this.origin.x + this.width - city1.x) + city1.y;
-		if (yTest >= this.origin.y && yTest < this.origin.y + this.height) {
+		yTest = slope * (x + w - city1.x) + city1.y;
+		if (yTest >= y && yTest < y + h) {
 			return true;
 		}
 
@@ -147,7 +149,7 @@ public class PMGrayNode implements PMNode {
 		Element ele = doc.createElement("gray");
 		ele.setAttribute("x", Integer.toString((int) this.origin.x + this.width / 2));
 		ele.setAttribute("y", Integer.toString((int) this.origin.y + this.height / 2));
-		
+
 		/* recursive call on the children nodes */
 		for (int i = 0; i < this.quadrants.length; i++) {
 			ele.appendChild(this.quadrants[i].elementize(doc));
@@ -159,5 +161,20 @@ public class PMGrayNode implements PMNode {
 	public boolean contains(City city) {
 		int quadrant = this.getQuadrantIndex(city);
 		return this.quadrants[quadrant].contains(city);
+	}
+
+	@Override
+	public Point2D.Float origin() {
+		return this.origin;
+	}
+
+	@Override
+	public int width() {
+		return this.width;
+	}
+
+	@Override
+	public int height() {
+		return this.height;
 	}
 }

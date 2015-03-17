@@ -166,9 +166,25 @@ public class CommandWriter {
 		this.root.appendChild(tag);
 	}
 
+	void appendTagRoad(String command, String[] parameters, String[] paramNames, String start, String end, String id) {
+		Element tag = this.initiateTag(null);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
+		Element outputTag = this.output.createElement("output");
+		outputTag.appendChild(this.mapRoad(start, end));
+		tag.appendChild(outputTag);
+		this.root.appendChild(tag);
+	}
+
 	private Element mapCity(City city) {
 		Element tag = this.output.createElement("city");
 		return this.mapLocation(city, tag); // append city XML
+	}
+
+	private Element mapRoad(String start, String end) {
+		Element tag = this.output.createElement("roadCreated");
+		tag.setAttribute("start", start);
+		tag.setAttribute("end", end);
+		return tag;
 	}
 
 	private Element unmapCity(City city) {

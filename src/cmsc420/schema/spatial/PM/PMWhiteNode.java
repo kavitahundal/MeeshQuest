@@ -45,4 +45,19 @@ public class PMWhiteNode implements PMNode {
 		return false;
 	}
 
+	@Override
+	public Point2D.Float origin() {
+		return this.origin;
+	}
+
+	@Override
+	public int width() {
+		return this.width;
+	}
+
+	@Override
+	public int height() {
+		return this.height;
+	}
+
 }

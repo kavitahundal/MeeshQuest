@@ -2,9 +2,11 @@ package cmsc420.schema.spatial.PM;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -59,8 +61,8 @@ public class PMBlackNode implements PMNode {
 			node.addCity(city); // add the new node
 			Iterator<City[]> roadsToAdd = this.roads.iterator();
 			while (roadsToAdd.hasNext()) {
-				City[] road = roadsToAdd.next();
-				node.addRoad(road[0], road[1]);
+				Object[] road = roadsToAdd.next();
+				node.addRoad((City) road[0], (City) road[1]);
 			}
 			return node;
 		}
@@ -85,12 +87,12 @@ public class PMBlackNode implements PMNode {
 	@Override
 	public Element elementize(Document doc) {
 		Element ele = doc.createElement("black");
-		PriorityQueue<City[]> cities = this.getSortedUniqueRoads();
+		List<City[]> cities = this.getSortedUniqueRoads();
 		int cardinality = cities.size();
 		if (this.city != null) {
 			cardinality++;
 			// check if isolated
-			String tagName = this.roads.isIsolated(this.city) ? "isolatedCity": "city";
+			String tagName = this.roads.isIsolated(this.city) ? "isolatedCity" : "city";
 			Element cityTag = doc.createElement(tagName);
 			cityTag.setAttribute("color", this.city.getColor().toString());
 			cityTag.setAttribute("name", this.city.getName());
@@ -107,18 +109,22 @@ public class PMBlackNode implements PMNode {
 			roadTag.setAttribute("end", road[1].getName());
 			ele.appendChild(roadTag);
 		}
-		return null;
+		return ele;
 	}
 
-	private PriorityQueue<City[]> getSortedUniqueRoads() {
-		PriorityQueue<City[]> ret = new PriorityQueue<City[]>(new RoadComparator());
+	private List<City[]> getSortedUniqueRoads() {
+		List<City[]> ret = new LinkedList<City[]>();
 		Iterator<City[]> iter = this.roads.iterator();
 		while (iter.hasNext()) {
-			City[] next = iter.next();
-			if (next[0].getName().compareTo(next[1].getName()) < 0) {
-				ret.add(next);
+			Object[] next = iter.next();
+			if (((City) next[0]).getName().compareTo(((City) next[1]).getName()) < 0) {
+				City[] toAdd = new City[2];
+				toAdd[0] = (City) next[0];
+				toAdd[1] = (City) next[1];
+				ret.add(toAdd);
 			}
 		}
+		Collections.sort(ret, new RoadComparator());
 		return ret;
 	}
 
@@ -139,6 +145,21 @@ public class PMBlackNode implements PMNode {
 		} else {
 			return this.city.equals(city) && this.city.getName().equals(city.getName());
 		}
+	}
+
+	@Override
+	public Point2D.Float origin() {
+		return this.origin;
+	}
+
+	@Override
+	public int width() {
+		return this.width;
+	}
+
+	@Override
+	public int height() {
+		return this.height;
 	}
 
 }
