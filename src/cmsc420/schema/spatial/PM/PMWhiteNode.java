@@ -2,6 +2,9 @@ package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 
@@ -30,6 +33,11 @@ public class PMWhiteNode implements PMNode {
 	public PMNode addRoad(City city1, City city2) {
 		return new PMBlackNode(null, this.origin, this.width, this.height, this.canvas, this.validator).addRoad(city1,
 				city2);
+	}
+
+	@Override
+	public Element elementize(Document doc) {
+		return doc.createElement("white");
 	}
 
 }

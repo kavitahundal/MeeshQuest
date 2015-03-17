@@ -22,10 +22,16 @@ import cmsc420.exceptions.CityOutOfBoundsException;
 import cmsc420.exceptions.DuplicateCityCoordinatesException;
 import cmsc420.exceptions.DuplicateCityNameException;
 import cmsc420.exceptions.EmptyTreeException;
+import cmsc420.exceptions.EndPointDoesNotExistException;
 import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.NameNotInDictionaryException;
 import cmsc420.exceptions.NoCitiesExistInRangeException;
 import cmsc420.exceptions.NoCitiesToListException;
+import cmsc420.exceptions.RoadAlreadyMappedException;
+import cmsc420.exceptions.RoadOutOfBoundsException;
+import cmsc420.exceptions.StartEqualsEndException;
+import cmsc420.exceptions.StartOrEndIsIsolatedException;
+import cmsc420.exceptions.StartPointDoesNotExistException;
 import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
@@ -388,8 +394,13 @@ public class CommandParser {
 					}
 					String[] paramNames = { "start", "end" };
 					String[] parameters = { start, end };
-//					this.runner.mapRoad(start, end);
-					// TODO append tag
+					try {
+						this.runner.mapRoad(start, end);
+						this.writer.appendTag(null, command, parameters, paramNames, id);
+					} catch (StartPointDoesNotExistException | EndPointDoesNotExistException | StartEqualsEndException
+							| StartOrEndIsIsolatedException | RoadAlreadyMappedException | RoadOutOfBoundsException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else if (command.equals("printPMQuadTree")) {
 					String id = null;
 					try {

@@ -4,6 +4,9 @@ import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 
@@ -137,5 +140,18 @@ public class PMGrayNode implements PMNode {
 			quads.add(q);
 		}
 		return quads;
+	}
+
+	@Override
+	public Element elementize(Document doc) {
+		Element ele = doc.createElement("gray");
+		ele.setAttribute("x", Integer.toString((int) this.origin.x + this.width / 2));
+		ele.setAttribute("y", Integer.toString((int) this.origin.y + this.height / 2));
+		
+		/* recursive call on the children nodes */
+		for (int i = 0; i < this.quadrants.length; i++) {
+			ele.appendChild(this.quadrants[i].elementize(doc));
+		}
+		return ele;
 	}
 }

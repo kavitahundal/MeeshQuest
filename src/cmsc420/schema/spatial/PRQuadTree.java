@@ -90,13 +90,7 @@ public class PRQuadTree implements SpatialStructure {
 		return this.height;
 	}
 
-	/**
-	 * Returns the tree as an XML element.
-	 * 
-	 * @param doc
-	 *            the XML document to generate elements
-	 * @return the as an XML element
-	 */
+	@Override
 	public Element elementize(Document doc) {
 		Element xmlRoot = doc.createElement("quadtree");
 		xmlRoot.appendChild(this.root.elementize(doc)); // recursive call

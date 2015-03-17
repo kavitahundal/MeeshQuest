@@ -2,7 +2,12 @@ package cmsc420.schema.spatial.PM;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.PriorityQueue;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
@@ -75,6 +80,56 @@ public class PMBlackNode implements PMNode {
 			// return the gray node
 			// return null;
 		}
+	}
+
+	@Override
+	public Element elementize(Document doc) {
+		Element ele = doc.createElement("black");
+		PriorityQueue<City[]> cities = this.getSortedUniqueRoads();
+		int cardinality = cities.size();
+		if (this.city != null) {
+			cardinality++;
+			// check if isolated
+			String tagName = this.roads.isIsolated(this.city) ? "isolatedCity": "city";
+			Element cityTag = doc.createElement(tagName);
+			cityTag.setAttribute("color", this.city.getColor().toString());
+			cityTag.setAttribute("name", this.city.getName());
+			cityTag.setAttribute("radius", "" + this.city.getRadius());
+			cityTag.setAttribute("x", "" + (int) this.city.x);
+			cityTag.setAttribute("y", "" + (int) this.city.y);
+			ele.appendChild(cityTag);
+		}
+		ele.setAttribute("cardinality", "" + cardinality);
+		for (City[] road : cities) {
+			// add each road
+			Element roadTag = doc.createElement("road");
+			roadTag.setAttribute("start", road[0].getName());
+			roadTag.setAttribute("end", road[1].getName());
+			ele.appendChild(roadTag);
+		}
+		return null;
+	}
+
+	private PriorityQueue<City[]> getSortedUniqueRoads() {
+		PriorityQueue<City[]> ret = new PriorityQueue<City[]>(new RoadComparator());
+		Iterator<City[]> iter = this.roads.iterator();
+		while (iter.hasNext()) {
+			City[] next = iter.next();
+			if (next[0].getName().compareTo(next[1].getName()) < 0) {
+				ret.add(next);
+			}
+		}
+		return ret;
+	}
+
+	static class RoadComparator implements Comparator<City[]> {
+
+		@Override
+		public int compare(City[] o1, City[] o2) {
+			int startCmp = o1[0].getName().compareTo(o2[0].getName());
+			return startCmp == 0 ? o1[1].getName().compareTo(o2[1].getName()) : startCmp;
+		}
+
 	}
 
 }

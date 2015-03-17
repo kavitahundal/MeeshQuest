@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
 
 import cmsc420.schema.City;
 
-public class AvlGTree<K, V> /*extends AbstractMap<K, V>*/ implements SortedMap<K, V> {
+public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V> {
 
 	private int size;
 	private final Comparator<? super K> comp;

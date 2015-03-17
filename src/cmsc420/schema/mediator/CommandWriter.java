@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.schema.City;
-import cmsc420.schema.spatial.PRQuadTree;
+import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
@@ -71,7 +71,7 @@ public class CommandWriter {
 	 * @param tree
 	 *            the PR Quadtree to print
 	 */
-	void appendTag(String command, String[] parameters, String[] paramNames, PRQuadTree tree, String id) {
+	void appendTag(String command, String[] parameters, String[] paramNames, SpatialStructure tree, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
@@ -81,11 +81,12 @@ public class CommandWriter {
 		this.root.appendChild(tag);
 	}
 
+	// do you like how I copied the code from the above method? :D
 	void appendTag(String command, String[] parameters, String[] paramNames, AvlGTree<String, City> tree, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
-		Element treeTag = tree.elementize(this.output); // XML version of tree TODO
+		Element treeTag = tree.elementize(this.output); // XML version of tree
 		outputTag.appendChild(treeTag);
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);

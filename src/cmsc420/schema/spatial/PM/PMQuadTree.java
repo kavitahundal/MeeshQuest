@@ -5,6 +5,9 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.City;
 import cmsc420.schema.spatial.SpatialStructure;
@@ -116,6 +119,15 @@ public abstract class PMQuadTree implements SpatialStructure {
 
 	public PMNode getRoot() {
 		return this.root;
+	}
+	
+	@Override
+	public Element elementize(Document doc) {
+		Element xmlRoot = doc.createElement("quadtree");
+		int order = this instanceof PM1QuadTree? 1 : 3;
+		xmlRoot.setAttribute("order", "" + order);
+		xmlRoot.appendChild(this.root.elementize(doc)); // recursive call
+		return xmlRoot;
 	}
 
 }
