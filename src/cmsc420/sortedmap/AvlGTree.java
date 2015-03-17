@@ -1,5 +1,7 @@
 package cmsc420.sortedmap;
 
+import java.util.AbstractMap;
+import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -15,7 +17,7 @@ import org.w3c.dom.Element;
 
 import cmsc420.schema.City;
 
-public class AvlGTree<K, V> implements SortedMap<K, V> {
+public class AvlGTree<K, V> /*extends AbstractMap<K, V>*/ implements SortedMap<K, V> {
 
 	private int size;
 	private final Comparator<? super K> comp;
@@ -28,7 +30,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		this.g = g >= 1 ? g : 1;
 		this.root = null;
 	}
-	
+
 	public Element elementize(Document doc) {
 		Element xmlRoot = doc.createElement("AvlGTree");
 		xmlRoot.setAttribute("cardinality", "" + this.size);
@@ -40,11 +42,11 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		xmlRoot.appendChild(this.root.elementize(doc));
 		return xmlRoot;
 	}
-	
+
 	public int height() {
 		return this.heightAux(this.root);
 	}
-	
+
 	private int heightAux(Entry<K, V> entry) {
 		if (entry == null) {
 			return 0;
@@ -319,6 +321,44 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+
+		// Yes, this method was almost completely copied from AbstractMap...
+		// I hope it's okay...
+		if (o == this)
+			return true;
+
+		if (!(o instanceof Map))
+			return false;
+		@SuppressWarnings("unchecked")
+		Map<K, V> m = (Map<K, V>) o;
+		if (m.size() != size())
+			return false;
+
+		try {
+			Iterator<java.util.Map.Entry<K, V>> i = entrySet().iterator();
+			while (i.hasNext()) {
+				java.util.Map.Entry<K, V> e = i.next();
+				K key = e.getKey();
+				V value = e.getValue();
+				if (value == null) {
+					if (!(m.get(key) == null && m.containsKey(key)))
+						return false;
+				} else {
+					if (!value.equals(m.get(key)))
+						return false;
+				}
+			}
+		} catch (ClassCastException unused) {
+			return false;
+		} catch (NullPointerException unused) {
+			return false;
+		}
+
+		return true;
+	}
+
 	static class Entry<K, V> implements Map.Entry<K, V> {
 
 		K key;
@@ -354,7 +394,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			this.value = value;
 			return oldValue;
 		}
-		
+
 		Element elementize(Document doc) {
 			Element ele = doc.createElement("node");
 			// set key attr to name
@@ -380,7 +420,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	}
 
-	class AvlSubMap implements SortedMap<K, V> {
+	class AvlSubMap extends AbstractMap<K, V> implements SortedMap<K, V> {
 
 		private K lowerBound;
 		private K upperBound;
@@ -540,7 +580,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 
 	}
 
-	class EntrySet implements Set<java.util.Map.Entry<K, V>> {
+	class EntrySet extends AbstractSet<Map.Entry<K, V>> implements Set<java.util.Map.Entry<K, V>> {
 
 		private SortedMap<K, V> wrapper;
 
@@ -601,7 +641,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 		@Override
 		public Iterator<java.util.Map.Entry<K, V>> iterator() {
 			return new Iterator<java.util.Map.Entry<K, V>>() {
-				
+
 				Object[] entries = EntrySet.this.toArray();
 				int index = 0;
 
@@ -667,7 +707,7 @@ public class AvlGTree<K, V> implements SortedMap<K, V> {
 			}
 			return arr;
 		}
-		
+
 		private void generateList(List<Entry<K, V>> list, Entry<K, V> entry) {
 			if (entry == null || list == null) {
 				return;
