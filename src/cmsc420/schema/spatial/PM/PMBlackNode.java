@@ -132,4 +132,13 @@ public class PMBlackNode implements PMNode {
 
 	}
 
+	@Override
+	public boolean contains(City city) {
+		if (this.city == null) {
+			return false;
+		} else {
+			return this.city.equals(city) && this.city.getName().equals(city.getName());
+		}
+	}
+
 }

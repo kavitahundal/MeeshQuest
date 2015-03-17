@@ -445,7 +445,8 @@ public class CommandRunner {
 		if (start.equals(end) || city1.equals(city2)) {
 			throw new StartEqualsEndException();
 		}
-		if (this.adjacencyList.isIsolated(city1) || this.adjacencyList.isIsolated(city2)) {
+		if ((this.spatial.contains(city1) && this.adjacencyList.isIsolated(city1))
+				|| (this.spatial.contains(city2) && this.adjacencyList.isIsolated(city2))) {
 			throw new StartOrEndIsIsolatedException();
 		}
 		if (this.adjacencyList.containsUndirectedEdge(city1, city2)) {

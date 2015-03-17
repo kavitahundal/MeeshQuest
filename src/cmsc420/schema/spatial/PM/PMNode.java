@@ -10,5 +10,6 @@ public interface PMNode {
 	public PMNode addCity(City city);
 	public PMNode addRoad(City city1, City city2);
 	public Element elementize(Document doc);
+	public boolean contains(City city);
 
 }

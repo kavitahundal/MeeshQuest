@@ -40,4 +40,9 @@ public class PMWhiteNode implements PMNode {
 		return doc.createElement("white");
 	}
 
+	@Override
+	public boolean contains(City city) {
+		return false;
+	}
+
 }

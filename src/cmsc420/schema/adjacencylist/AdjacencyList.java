@@ -71,7 +71,7 @@ public class AdjacencyList<T> implements Iterable<T[]> {
 		return this.size;
 	}
 	
-	public boolean isIsolated(T ele) {
+	public boolean isIsolated(T ele) { // warning! make sure the city exists
 		return this.neighbors(ele) == null || this.neighbors(ele).size() == 0;
 	}
 

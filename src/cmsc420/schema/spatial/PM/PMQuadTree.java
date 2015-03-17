@@ -47,13 +47,12 @@ public abstract class PMQuadTree implements SpatialStructure {
 
 	@Override
 	public boolean contains(City element) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.root.contains(element);
 	}
 
 	@Override
 	public void remove(City element) {
-		// TODO implement in part 3
+		throw new UnsupportedOperationException("remove to be implmented in part 3");
 	}
 
 	@Override

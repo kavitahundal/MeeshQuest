@@ -154,4 +154,10 @@ public class PMGrayNode implements PMNode {
 		}
 		return ele;
 	}
+
+	@Override
+	public boolean contains(City city) {
+		int quadrant = this.getQuadrantIndex(city);
+		return this.quadrants[quadrant].contains(city);
+	}
 }

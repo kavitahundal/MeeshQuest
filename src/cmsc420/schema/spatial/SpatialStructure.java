@@ -107,4 +107,5 @@ public interface SpatialStructure extends DataStructure<City> {
 	 * @return the as an XML element
 	 */
 	public Element elementize(Document doc);
+	
 }
