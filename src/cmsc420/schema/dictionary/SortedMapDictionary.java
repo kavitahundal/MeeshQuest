@@ -76,13 +76,11 @@ public abstract class SortedMapDictionary implements DictionaryStructure {
 			}
 			return cities;
 		} else { // already lexicographically sorted
-			// TODO fix
 			List<City> cities = new ArrayList<>();
 			Iterator<Entry<City, String>> iter = this.cityToName.entrySet().iterator();
 			while (iter.hasNext()) {
 				cities.add(iter.next().getKey());
 			}
-//			return new ArrayList<City>(this.cityToName.keySet())
 			return cities;
 		}
 	}
