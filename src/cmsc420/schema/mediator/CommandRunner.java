@@ -475,7 +475,15 @@ public class CommandRunner {
 
 	List<City[]> rangeRoads(int x, int y, int radius, String saveMap) throws NoRoadsExistInRangeException {
 		// noRoadsExistInRange
+		if (radius == 0) {
+			throw new NoRoadsExistInRangeException();
+		}
 		// TODO
+		if (saveMap != null) {
+			this.spatial.addCircle(x, y, radius);
+			this.saveMap(saveMap);
+			this.spatial.removeCircle(x, y, radius);
+		}
 		throw new UnsupportedOperationException("rangeRoads not implemented");
 	}
 
@@ -506,6 +514,9 @@ public class CommandRunner {
 
 	City[] nearestRoad(int x, int y) throws RoadNotFoundException {
 		// roadNotFound
+		if (this.adjacencyList.size() == 0) {
+			throw new RoadNotFoundException();
+		}
 		// TODO
 		throw new UnsupportedOperationException("nearestRoad not implemented");
 	}
@@ -513,14 +524,24 @@ public class CommandRunner {
 	City nearestCityToRoad(String start, String end) throws RoadIsNotMappedException, NoOtherCitiesMappedException {
 		// roadIsNotMapped
 		// noOtherCitiesMapped
+		if (!this.adjacencyList.containsUndirectedEdge(this.dictionary.getCity(start), this.dictionary.getCity(end))) {
+			throw new RoadIsNotMappedException();
+		}
 		// TODO
 		throw new UnsupportedOperationException("nearestCityToRoad not implemented");
 	}
 
-	void shortestPath(String start, String end, String saveMap, String saveHTML) throws NonExistentStartException, NonExistentEndException, NoPathExistsException {
+	void shortestPath(String start, String end, String saveMap, String saveHTML) throws NonExistentStartException,
+			NonExistentEndException, NoPathExistsException {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists
+		if (!this.spatial.contains(this.dictionary.getCity(start))) {
+			throw new NonExistentStartException();
+		}
+		if (!this.spatial.contains(this.dictionary.getCity(end))) {
+			throw new NonExistentEndException();
+		}
 		// TODO
 		throw new UnsupportedOperationException("shortestPath not implemented");
 	}
