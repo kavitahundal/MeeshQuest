@@ -18,7 +18,14 @@ import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.NameNotInDictionaryException;
 import cmsc420.exceptions.NoCitiesExistInRangeException;
 import cmsc420.exceptions.NoCitiesToListException;
+import cmsc420.exceptions.NoOtherCitiesMappedException;
+import cmsc420.exceptions.NoPathExistsException;
+import cmsc420.exceptions.NoRoadsExistInRangeException;
+import cmsc420.exceptions.NonExistentEndException;
+import cmsc420.exceptions.NonExistentStartException;
 import cmsc420.exceptions.RoadAlreadyMappedException;
+import cmsc420.exceptions.RoadIsNotMappedException;
+import cmsc420.exceptions.RoadNotFoundException;
 import cmsc420.exceptions.RoadOutOfBoundsException;
 import cmsc420.exceptions.StartEqualsEndException;
 import cmsc420.exceptions.StartOrEndIsIsolatedException;
@@ -466,7 +473,7 @@ public class CommandRunner {
 		return (PMQuadTree) this.spatial;
 	}
 
-	List<City[]> rangeRoads(int x, int y, int radius, String saveMap) {
+	List<City[]> rangeRoads(int x, int y, int radius, String saveMap) throws NoRoadsExistInRangeException {
 		// noRoadsExistInRange
 		// TODO
 		throw new UnsupportedOperationException("rangeRoads not implemented");
@@ -497,20 +504,20 @@ public class CommandRunner {
 		return nearest;
 	}
 
-	City[] nearestRoad(int x, int y) {
+	City[] nearestRoad(int x, int y) throws RoadNotFoundException {
 		// roadNotFound
 		// TODO
 		throw new UnsupportedOperationException("nearestRoad not implemented");
 	}
 
-	City nearestCityToRoad(String start, String end) {
+	City nearestCityToRoad(String start, String end) throws RoadIsNotMappedException, NoOtherCitiesMappedException {
 		// roadIsNotMapped
 		// noOtherCitiesMapped
 		// TODO
 		throw new UnsupportedOperationException("nearestCityToRoad not implemented");
 	}
 
-	void shortestPath(String start, String end, String saveMap, String saveHTML) {
+	void shortestPath(String start, String end, String saveMap, String saveHTML) throws NonExistentStartException, NonExistentEndException, NoPathExistsException {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists

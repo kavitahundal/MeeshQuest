@@ -27,7 +27,14 @@ import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.NameNotInDictionaryException;
 import cmsc420.exceptions.NoCitiesExistInRangeException;
 import cmsc420.exceptions.NoCitiesToListException;
+import cmsc420.exceptions.NoOtherCitiesMappedException;
+import cmsc420.exceptions.NoPathExistsException;
+import cmsc420.exceptions.NoRoadsExistInRangeException;
+import cmsc420.exceptions.NonExistentEndException;
+import cmsc420.exceptions.NonExistentStartException;
 import cmsc420.exceptions.RoadAlreadyMappedException;
+import cmsc420.exceptions.RoadIsNotMappedException;
+import cmsc420.exceptions.RoadNotFoundException;
 import cmsc420.exceptions.RoadOutOfBoundsException;
 import cmsc420.exceptions.StartEqualsEndException;
 import cmsc420.exceptions.StartOrEndIsIsolatedException;
@@ -381,7 +388,7 @@ public class CommandParser {
 					} catch (EmptyTreeException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
-					
+
 				} else if (command.equals("mapRoad")) {
 
 					/* get parameters */
@@ -396,7 +403,7 @@ public class CommandParser {
 					String[] parameters = { start, end };
 					try {
 						this.runner.mapRoad(start, end);
-						this.writer.appendTagRoad(command, parameters, paramNames, start, end, id);
+						this.writer.appendTagRoadCreated(command, parameters, paramNames, start, end, id);
 					} catch (StartPointDoesNotExistException | EndPointDoesNotExistException | StartEqualsEndException
 							| StartOrEndIsIsolatedException | RoadAlreadyMappedException | RoadOutOfBoundsException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
@@ -434,8 +441,13 @@ public class CommandParser {
 					}
 					String[] paramNames = { "x", "y", "radius", "saveMap" };
 					String[] parameters = { xString, yString, radiusString, saveMap };
-					List<City[]> roads = this.runner.rangeRoads(x, y, radius, saveMap);
-					// TODO append tag
+
+					try {
+						List<City[]> roads = this.runner.rangeRoads(x, y, radius, saveMap);
+						this.writer.appendTagCities(command, parameters, paramNames, roads, id);
+					} catch (NoRoadsExistInRangeException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else if (command.equals("nearestIsolatedCity")) {
 
 					/* get parameters */
@@ -450,8 +462,12 @@ public class CommandParser {
 					}
 					String[] paramNames = { "x", "y" };
 					String[] parameters = { xString, yString };
-//					City city = this.runner.nearestIsolatedCity(x, y);
-					// TODO append tag
+					try {
+						City city = this.runner.nearestIsolatedCity(x, y);
+						this.writer.appendIsolatedCityTag(command, parameters, paramNames, city, id);
+					} catch (CityNotFoundException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else if (command.equals("nearestRoad")) {
 
 					/* get parameters */
@@ -466,8 +482,13 @@ public class CommandParser {
 					}
 					String[] paramNames = { "x", "y" };
 					String[] parameters = { xString, yString };
-					City[] road = this.runner.nearestRoad(x, y);
-					// TODO append tag
+					try {
+						City[] road = this.runner.nearestRoad(x, y);
+						this.writer.appendTagRoad(command, parameters, paramNames, road[0].getName(),
+								road[1].getName(), id);
+					} catch (RoadNotFoundException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else if (command.equals("nearestCityToRoad")) {
 
 					/* get parameters */
@@ -480,8 +501,12 @@ public class CommandParser {
 					}
 					String[] paramNames = { "start", "end" };
 					String[] parameters = { start, end };
-					City city = this.runner.nearestCityToRoad(start, end);
-					// TODO append tag
+					try {
+						City city = this.runner.nearestCityToRoad(start, end);
+						this.writer.appendTag(command, parameters, paramNames, city, id);
+					} catch (RoadIsNotMappedException | NoOtherCitiesMappedException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else if (command.equals("shortestPath")) {
 
 					/* get parameters */
@@ -504,9 +529,12 @@ public class CommandParser {
 					}
 					String[] paramNames = { "start", "end", "saveMap", "saveHTML" };
 					String[] parameters = { start, end, saveMap, saveHTML };
-					this.runner.shortestPath(start, end, saveMap, saveHTML);
-					// TODO append tag
-					// not sure about return type
+					try {
+						this.runner.shortestPath(start, end, saveMap, saveHTML);
+						// TODO not sure about return type
+					} catch (NonExistentStartException | NonExistentEndException | NoPathExistsException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else {
 					this.writer.undefinedError();
 				}

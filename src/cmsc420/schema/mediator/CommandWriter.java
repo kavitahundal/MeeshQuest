@@ -119,6 +119,24 @@ public class CommandWriter {
 		this.root.appendChild(tag);
 	}
 
+	void appendTagCities(String command, String[] parameters, String[] paramNames, List<City[]> roads, String id) {
+		Element tag = this.initiateTag(null);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
+		Element outputTag = this.output.createElement("output");
+		Element roadList = this.output.createElement("roadList");
+
+		/* appending city XML nodes */
+		for (City[] road : roads) {
+			Element roadTag = this.output.createElement("road");
+			roadTag.setAttribute("start", road[0].getName());
+			roadTag.setAttribute("end", road[1].getName());
+			roadList.appendChild(roadTag);
+		}
+		outputTag.appendChild(roadList);
+		tag.appendChild(outputTag);
+		this.root.appendChild(tag);
+	}
+
 	/**
 	 * Appends the XML output of a command that outputs a single city.
 	 * 
@@ -136,6 +154,15 @@ public class CommandWriter {
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 		outputTag.appendChild(this.mapCity(city)); // append city node
+		tag.appendChild(outputTag);
+		this.root.appendChild(tag);
+	}
+
+	void appendIsolatedCityTag(String command, String[] parameters, String[] paramNames, City city, String id) {
+		Element tag = this.initiateTag(null);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
+		Element outputTag = this.output.createElement("output");
+		outputTag.appendChild(this.mapIsolatedCity(city)); // append city node
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
@@ -166,6 +193,15 @@ public class CommandWriter {
 		this.root.appendChild(tag);
 	}
 
+	void appendTagRoadCreated(String command, String[] parameters, String[] paramNames, String start, String end, String id) {
+		Element tag = this.initiateTag(null);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
+		Element outputTag = this.output.createElement("output");
+		outputTag.appendChild(this.mapRoadCreated(start, end));
+		tag.appendChild(outputTag);
+		this.root.appendChild(tag);
+	}
+	
 	void appendTagRoad(String command, String[] parameters, String[] paramNames, String start, String end, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
@@ -180,8 +216,20 @@ public class CommandWriter {
 		return this.mapLocation(city, tag); // append city XML
 	}
 
-	private Element mapRoad(String start, String end) {
+	private Element mapIsolatedCity(City city) {
+		Element tag = this.output.createElement("isolatedCity");
+		return this.mapLocation(city, tag); // append city XML
+	}
+
+	private Element mapRoadCreated(String start, String end) {
 		Element tag = this.output.createElement("roadCreated");
+		tag.setAttribute("start", start);
+		tag.setAttribute("end", end);
+		return tag;
+	}
+	
+	private Element mapRoad(String start, String end) {
+		Element tag = this.output.createElement("road");
 		tag.setAttribute("start", start);
 		tag.setAttribute("end", end);
 		return tag;
