@@ -1,6 +1,7 @@
 package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,5 +23,7 @@ public interface PMNode {
 	public int width();
 
 	public int height();
+	
+	public void range(List<String> cities, int x, int y, int radius);
 
 }

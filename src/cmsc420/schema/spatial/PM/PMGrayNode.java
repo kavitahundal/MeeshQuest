@@ -2,6 +2,7 @@ package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Document;
@@ -176,5 +177,12 @@ public class PMGrayNode implements PMNode {
 	@Override
 	public int height() {
 		return this.height;
+	}
+
+	@Override
+	public void range(List<String> cities, int x, int y, int radius) {
+		for (int i = 0; i < this.quadrants.length; i++) {
+			this.quadrants[i].range(cities, x, y, radius);
+		}
 	}
 }

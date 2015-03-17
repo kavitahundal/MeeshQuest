@@ -1,6 +1,7 @@
 package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,6 +59,11 @@ public class PMWhiteNode implements PMNode {
 	@Override
 	public int height() {
 		return this.height;
+	}
+
+	@Override
+	public void range(List<String> cities, int x, int y, int radius) {
+		return;
 	}
 
 }

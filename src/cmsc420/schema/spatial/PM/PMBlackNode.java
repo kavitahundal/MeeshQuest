@@ -162,4 +162,11 @@ public class PMBlackNode implements PMNode {
 		return this.height;
 	}
 
+	@Override
+	public void range(List<String> cities, int x, int y, int radius) {
+		if (this.city.distance(x, y) <= radius) {
+			cities.add(this.city.getName());
+		}
+	}
+
 }

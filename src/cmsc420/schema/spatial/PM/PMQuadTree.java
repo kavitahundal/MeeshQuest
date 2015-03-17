@@ -3,6 +3,7 @@ package cmsc420.schema.spatial.PM;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.w3c.dom.Document;
@@ -74,8 +75,9 @@ public abstract class PMQuadTree implements SpatialStructure {
 
 	@Override
 	public List<String> range(int x, int y, int radius) {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> cities = new LinkedList<>();
+		this.root.range(cities, x, y, radius); // recursive call
+		return cities;
 	}
 
 	@Override
