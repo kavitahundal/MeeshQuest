@@ -17,14 +17,14 @@ import org.w3c.dom.Element;
 
 import cmsc420.schema.City;
 
-public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V> {
+public class OldAvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V> {
 
 	private int size;
 	private final Comparator<? super K> comp;
 	private final int g;
 	private Entry<K, V> root;
 
-	public AvlGTree(final Comparator<? super K> comp, final int g) {
+	public OldAvlGTree(final Comparator<? super K> comp, final int g) {
 		this.size = 0;
 		this.comp = comp;
 		this.g = g >= 1 ? g : 1;
@@ -429,10 +429,10 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		AvlSubMap(K lowerBound, K upperBound) {
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;
-			this.size = this.calculateSize(AvlGTree.this.root);
+			this.size = this.calculateSize(OldAvlGTree.this.root);
 		}
 
-		private int calculateSize(AvlGTree.Entry<K, V> entry) {
+		private int calculateSize(OldAvlGTree.Entry<K, V> entry) {
 			if (entry == null) {
 				return 0;
 			}
@@ -442,28 +442,28 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		private boolean inBounds(Object arg0) {
 			@SuppressWarnings("unchecked")
 			K key = (K) arg0;
-			return AvlGTree.this.comp.compare(this.lowerBound, key) <= 0
-					&& AvlGTree.this.comp.compare(key, this.upperBound) < 0;
+			return OldAvlGTree.this.comp.compare(this.lowerBound, key) <= 0
+					&& OldAvlGTree.this.comp.compare(key, this.upperBound) < 0;
 		}
 
 		@Override
 		public void clear() {
-			AvlGTree.this.clear(); // clear only the subset - for part 3
+			OldAvlGTree.this.clear(); // clear only the subset - for part 3
 		}
 
 		@Override
 		public boolean containsKey(Object arg0) {
-			return this.inBounds(arg0) ? AvlGTree.this.containsKey(arg0) : false;
+			return this.inBounds(arg0) ? OldAvlGTree.this.containsKey(arg0) : false;
 		}
 
 		@Override
 		public boolean containsValue(Object arg0) {
-			return this.inBounds(arg0) ? AvlGTree.this.containsValue(arg0) : false;
+			return this.inBounds(arg0) ? OldAvlGTree.this.containsValue(arg0) : false;
 		}
 
 		@Override
 		public V get(Object arg0) {
-			return this.inBounds(arg0) ? AvlGTree.this.get(arg0) : null;
+			return this.inBounds(arg0) ? OldAvlGTree.this.get(arg0) : null;
 		}
 
 		@Override
@@ -476,14 +476,14 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			if (arg0 == null || arg1 == null) {
 				throw new NullPointerException();
 			}
-			AvlGTree.Entry<K, V> entry = AvlGTree.this.findEntry(arg0);
+			OldAvlGTree.Entry<K, V> entry = OldAvlGTree.this.findEntry(arg0);
 			if (entry != null) {
 				V ret = entry.value;
 				entry.value = arg1;
 				return ret;
 			} else {
 				this.size++;
-				AvlGTree.this.put(arg0, arg1);
+				OldAvlGTree.this.put(arg0, arg1);
 				return null;
 			}
 		}
@@ -510,7 +510,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 		@Override
 		public Comparator<? super K> comparator() {
-			return AvlGTree.this.comparator();
+			return OldAvlGTree.this.comparator();
 		}
 
 		@Override
@@ -520,14 +520,14 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 		@Override
 		public K firstKey() {
-			if (AvlGTree.this.root == null) {
+			if (OldAvlGTree.this.root == null) {
 				throw new NoSuchElementException();
 			}
-			return this.firstKeyAux(AvlGTree.this.root);
+			return this.firstKeyAux(OldAvlGTree.this.root);
 		}
 
-		private K firstKeyAux(AvlGTree.Entry<K, V> entry) {
-			return entry.left == null || AvlGTree.this.comp.compare(entry.left.key, this.lowerBound) < 0 ? entry.key
+		private K firstKeyAux(OldAvlGTree.Entry<K, V> entry) {
+			return entry.left == null || OldAvlGTree.this.comp.compare(entry.left.key, this.lowerBound) < 0 ? entry.key
 					: this.firstKeyAux(entry.left);
 
 		}
@@ -544,14 +544,14 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 		@Override
 		public K lastKey() {
-			if (AvlGTree.this.root == null) {
+			if (OldAvlGTree.this.root == null) {
 				throw new NoSuchElementException();
 			}
-			return this.lastKeyAux(AvlGTree.this.root);
+			return this.lastKeyAux(OldAvlGTree.this.root);
 		}
 
-		private K lastKeyAux(AvlGTree.Entry<K, V> entry) {
-			return entry.right == null || AvlGTree.this.comp.compare(entry.right.key, this.upperBound) > 0 ? entry.key
+		private K lastKeyAux(OldAvlGTree.Entry<K, V> entry) {
+			return entry.right == null || OldAvlGTree.this.comp.compare(entry.right.key, this.upperBound) > 0 ? entry.key
 					: this.lastKeyAux(entry.right);
 		}
 
@@ -560,12 +560,12 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			if (arg0 == null || arg1 == null) {
 				throw new NullPointerException();
 			}
-			if (AvlGTree.this.comp.compare(arg0, arg1) > 0) {
+			if (OldAvlGTree.this.comp.compare(arg0, arg1) > 0) {
 				throw new IllegalArgumentException();
 			}
-			K lower = AvlGTree.this.comparator().compare(this.lowerBound, arg0) > 0 ? this.lowerBound : arg0;
-			K upper = AvlGTree.this.comparator().compare(this.upperBound, arg1) < 0 ? this.upperBound : arg1;
-			return AvlGTree.this.subMap(lower, upper);
+			K lower = OldAvlGTree.this.comparator().compare(this.lowerBound, arg0) > 0 ? this.lowerBound : arg0;
+			K upper = OldAvlGTree.this.comparator().compare(this.upperBound, arg1) < 0 ? this.upperBound : arg1;
+			return OldAvlGTree.this.subMap(lower, upper);
 		}
 
 		@Override
@@ -695,10 +695,10 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		public Object[] toArray() {
 			// to check if the AVL tree or subtree called this entry set
 			List<Entry<K, V>> entries = new LinkedList<Entry<K, V>>();
-			if (this.wrapper instanceof AvlGTree) {
-				this.generateList(entries, AvlGTree.this.root);
+			if (this.wrapper instanceof OldAvlGTree) {
+				this.generateList(entries, OldAvlGTree.this.root);
 			} else {
-				this.generateList(entries, AvlGTree.this.root);
+				this.generateList(entries, OldAvlGTree.this.root);
 			}
 			Object[] arr = new Object[this.size()];
 			int index = 0;
