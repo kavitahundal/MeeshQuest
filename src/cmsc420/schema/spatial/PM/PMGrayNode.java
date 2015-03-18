@@ -123,8 +123,13 @@ public class PMGrayNode implements PMNode {
 		}
 
 		// vertical lines
-		if (city1.x == city2.x && city1.x >= x && city1.x <= x + w) {
-			return highY >= y && lowY <= y + h;
+		if (city1.x == city2.x) {
+			return city1.x >= x && city1.x <= x + w && highY >= y && lowY <= y + h;
+		}
+		
+		// horizontal lines
+		if (city1.y == city2.y) {
+			return city1.y >= y && city1.y <= y + h && highX >= x && lowX <= x + w;
 		}
 		
 		double slope = (city2.y - city1.y) / (city2.x - city1.x);
