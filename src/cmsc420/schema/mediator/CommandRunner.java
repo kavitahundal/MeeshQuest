@@ -639,10 +639,12 @@ public class CommandRunner {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists
-		if (!this.spatial.contains(this.dictionary.getCity(start))) {
+		City startCity = this.dictionary.getCity(start);
+		if (startCity == null || !this.spatial.contains(startCity)) {
 			throw new NonExistentStartException();
 		}
-		if (!this.spatial.contains(this.dictionary.getCity(end))) {
+		City endCity = this.dictionary.getCity(end);
+		if (endCity == null || !this.spatial.contains(endCity)) {
 			throw new NonExistentEndException();
 		}
 		// TODO
