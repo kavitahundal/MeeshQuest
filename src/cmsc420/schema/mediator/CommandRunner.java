@@ -655,6 +655,8 @@ public class CommandRunner {
 			throw new NonExistentEndException();
 		}
 		Graph<City> dijkstra = new Graph<>();
+		dijkstra.addVertex(start, startCity);
+		dijkstra.addVertex(end, endCity);
 		for (Object[] road : this.adjacencyList) {
 			City city1 = (City) road[0];
 			City city2 = (City) road[1];
