@@ -677,7 +677,7 @@ public class CommandRunner {
 		int hops = path.size() - 1;
 		Element ret = doc.createElement("path");
 		ret.setAttribute("hops", "" + hops);
-		DecimalFormat df = new DecimalFormat("#.000");
+		DecimalFormat df = new DecimalFormat("0.000");
 		String formattedLen = df.format(length);
 		ret.setAttribute("length", formattedLen);
 		String startRoad = null;
