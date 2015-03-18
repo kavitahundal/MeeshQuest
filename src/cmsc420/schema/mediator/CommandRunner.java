@@ -491,8 +491,10 @@ public class CommandRunner {
 		for (Object[] road : this.adjacencyList) {
 			City start = (City) road[0];
 			City end = (City) road[1];
+
+			// we'll use distance squared to avoid nasty square roots
 			if (start.getName().compareTo(end.getName()) < 0
-					&& this.minDistanceBetweenCityAndRoad(x, y, start, end) <= radius) {
+					&& this.minSqDistanceBetweenCityAndRoad(x, y, start, end) <= radius * radius) {
 				City[] ele = new City[2];
 				ele[0] = start;
 				ele[1] = end;
@@ -512,10 +514,40 @@ public class CommandRunner {
 		return roads;
 	}
 
-	private double minDistanceBetweenCityAndRoad(int x, int y, City start, City end) {
-		throw new UnsupportedOperationException();
-		// min of <x,y> and <rx1,ry1> + t<rx2-rx1,ry2-ry1> where 0<=t<=1
-		// TODO
+	private double minSqDistanceBetweenCityAndRoad(int x, int y, City start, City end) {
+		// min of dist of <x,y> and <rx1,ry1> + t<rx2-rx1,ry2-ry1> where 0<=t<=1
+		// min of t:[0,1] of sqrt((rx1-x+t(rx2-rx1))^2 + (ry1-y+t(ry2-ry1))^2)
+		// min of t:[0,1] of (rx1-x+t(rx2-rx1))^2 + (ry1-y+t(ry2-ry1))^2
+		// min of t:[0,1] of ((rx1-x)+t(rx2-rx1))^2 + ((ry1-y)+t(ry2-ry1))^2
+		// min of t:[0,1] of (rx1-x)^2 + 2t(rx1-x)(rx2-rx1) + (t^2)(rx2-rx1)^2
+		// + (ry1-y)^2 + 2t(ry1-y)(ry2-ry1) + (t^2)(ry2-ry1)^2
+		// critical point of 2(rx1-x)(rx2-rx1) + 2t(rx2-rx1)^2 +
+		// 2(ry1-y)(ry2-ry1) + 2t(ry2-ry1)^2 = 0
+		// -t = ((rx1-x)(rx2-rx1) + (ry1-y)(ry2-ry1))
+		// / ((rx2-rx1)^2 + (ry2-ry1)^2)
+		// t = ((x-rx1)(rx2-rx1) + (y-ry1)(ry2-ry1))
+		// / ((rx2-rx1)^2 + (ry2-ry1)^2)
+		// t = dot((city - start), (end - start)) / (dist(start, end))^2
+		// if t <= 0 then let t = 0 aka dist(city, start)
+		// if t >= 1 then let t = 1 aka dist(city, end)
+		// otherwise just solve
+		double t = dot(x - start.x, y - start.y, end.x - start.x, end.y - start.y)
+				/ sqDist(start.x, start.y, end.x, end.y);
+		if (t <= 0) {
+			return sqDist(x, y, start.x, start.y);
+		}
+		if (t >= 1) {
+			return sqDist(x, y, end.x, end.y);
+		}
+		return sqDist(x, y, start.x + t * (end.x - start.x), start.y + t * (end.y - start.y));
+	}
+
+	private static double dot(double x1, double y1, double x2, double y2) {
+		return x1 * x2 + y1 * y2; // dot product
+	}
+
+	private static double sqDist(double x1, double y1, double x2, double y2) {
+		return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 	}
 
 	City nearestIsolatedCity(int x, int y) throws CityNotFoundException {
@@ -554,7 +586,8 @@ public class CommandRunner {
 			City start = (City) road[0];
 			City end = (City) road[1];
 			if (start.getName().compareTo(end.getName()) < 0) {
-				double dist = this.minDistanceBetweenCityAndRoad(x, y, start, end);
+				// squared distance for all distances should not break anything
+				double dist = this.minSqDistanceBetweenCityAndRoad(x, y, start, end);
 				City[] ele = new City[2];
 				ele[0] = start;
 				ele[1] = end;
@@ -587,7 +620,8 @@ public class CommandRunner {
 			if (city.equals(startCity) || city.equals(endCity)) {
 				continue;
 			}
-			double dist = this.minDistanceBetweenCityAndRoad((int) city.x, (int) city.y, startCity, endCity);
+			// squared distance for all distances should not break anything
+			double dist = this.minSqDistanceBetweenCityAndRoad((int) city.x, (int) city.y, startCity, endCity);
 			if (nearest == null || dist < minDist
 					|| (dist <= minDist && city.getName().compareTo(nearest.getName()) < 0)) {
 				nearest = city;
