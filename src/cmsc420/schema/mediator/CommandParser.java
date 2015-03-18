@@ -519,7 +519,7 @@ public class CommandParser {
 					}
 					String saveHTML = null;
 					try {
-						saveMap = params.getNamedItem("saveHTML").getNodeValue();
+						saveHTML = params.getNamedItem("saveHTML").getNodeValue();
 					} catch (NullPointerException e) {
 					}
 					String id = null;
