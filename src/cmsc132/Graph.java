@@ -1,4 +1,4 @@
-package cmsc132.legacy;
+package cmsc132;
 
 import java.util.ArrayList;
 import java.util.Collections;

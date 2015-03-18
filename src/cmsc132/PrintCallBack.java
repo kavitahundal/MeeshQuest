@@ -1,4 +1,4 @@
-package cmsc132.legacy;
+package cmsc132;
 
 /**
  * Implements a processor that appends the name of a vertex

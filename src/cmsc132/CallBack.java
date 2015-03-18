@@ -1,4 +1,4 @@
-package cmsc132.legacy;
+package cmsc132;
 
 /**
  * Represents the processing we apply to a vertex of a graph.
