@@ -660,6 +660,9 @@ public class CommandRunner {
 			City city2 = (City) road[1];
 			try {
 				dijkstra.addVertex(city1.getName(), city1);
+			} catch (IllegalArgumentException e) {
+			}
+			try {
 				dijkstra.addVertex(city2.getName(), city2);
 			} catch (IllegalArgumentException e) {
 			}
@@ -710,6 +713,7 @@ public class CommandRunner {
 			midPoint = endRoad;
 			endRoad = iter.hasNext() ? iter.next() : null;
 		} while (startRoad != null || midPoint != null || endRoad != null);
+		// TODO saveMap and saveHTML
 		return ret;
 	}
 
