@@ -228,7 +228,7 @@ public class CommandRunner {
 				&& (city.x == this.spatial.getSpatialWidth() || city.y == this.spatial.getSpatialHeight())) {
 			throw new CityOutOfBoundsException();
 		}
-		if (city.x >= this.spatial.getSpatialWidth() || city.y >= this.spatial.getSpatialHeight() || city.x < 0
+		if (city.x > this.spatial.getSpatialWidth() || city.y > this.spatial.getSpatialHeight() || city.x < 0
 				|| city.y < 0) {
 			throw new CityOutOfBoundsException();
 		}
