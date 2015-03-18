@@ -1,6 +1,8 @@
 package cmsc420.schema.mediator;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -327,6 +329,7 @@ public class CommandRunner {
 
 		/* get cities within range */
 		List<String> names = this.spatial.range(x, y, radius);
+		names = new ArrayList<>(new LinkedHashSet<>(names));
 		Collections.sort(names, new CityNameComparator());
 
 		/* check for exceptions */
