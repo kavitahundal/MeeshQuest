@@ -3,8 +3,10 @@ package cmsc420.schema.spatial.PM;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -131,6 +133,13 @@ public abstract class PMQuadTree implements SpatialStructure {
 		xmlRoot.setAttribute("order", "" + order);
 		xmlRoot.appendChild(this.root.elementize(doc)); // recursive call
 		return xmlRoot;
+	}
+	
+	@Override
+	public Set<City> getCities() {
+		Set<City> cities = new HashSet<>();
+		this.root.getCities(cities);
+		return cities;
 	}
 
 }

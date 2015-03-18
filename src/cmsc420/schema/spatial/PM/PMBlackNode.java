@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -128,7 +129,7 @@ public class PMBlackNode implements PMNode {
 		return ret;
 	}
 
-	static class RoadComparator implements Comparator<City[]> {
+	public static class RoadComparator implements Comparator<City[]> {
 
 		@Override
 		public int compare(City[] o1, City[] o2) {
@@ -166,6 +167,13 @@ public class PMBlackNode implements PMNode {
 	public void range(List<String> cities, int x, int y, int radius) {
 		if (this.city != null && this.city.distance(x, y) <= radius) {
 			cities.add(this.city.getName());
+		}
+	}
+
+	@Override
+	public void getCities(Set<City> cities) {
+		if (this.city != null) {
+			cities.add(this.city);
 		}
 	}
 

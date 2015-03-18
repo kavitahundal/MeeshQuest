@@ -201,4 +201,11 @@ public class PMGrayNode implements PMNode {
 			this.quadrants[i].range(cities, x, y, radius);
 		}
 	}
+
+	@Override
+	public void getCities(Set<City> cities) {
+		for (int i = 0; i < this.quadrants.length; i++) {
+			this.quadrants[i].getCities(cities);
+		}
+	}
 }

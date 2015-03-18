@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -145,6 +146,11 @@ public class PRQuadTree implements SpatialStructure {
 	
 	public void addRoad(City city1, City city2) {
 		throw new UnsupportedOperationException("can't add roads in PM Quadtree");
+	}
+
+	@Override
+	public Set<City> getCities() {
+		throw new UnsupportedOperationException();
 	}
 
 }

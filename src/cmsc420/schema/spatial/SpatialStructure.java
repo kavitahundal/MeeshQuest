@@ -1,6 +1,7 @@
 package cmsc420.schema.spatial;
 
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -107,5 +108,7 @@ public interface SpatialStructure extends DataStructure<City> {
 	 * @return the as an XML element
 	 */
 	public Element elementize(Document doc);
+	
+	public Set<City> getCities();
 	
 }

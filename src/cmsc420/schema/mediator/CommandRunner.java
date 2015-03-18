@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import cmsc420.exceptions.CityAlreadyMappedException;
 import cmsc420.exceptions.CityDoesNotExistException;
@@ -47,6 +48,7 @@ import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.schema.spatial.TreeNode;
 import cmsc420.schema.spatial.PM.PMBlackNode;
+import cmsc420.schema.spatial.PM.PMBlackNode.RoadComparator;
 import cmsc420.schema.spatial.PM.PMGrayNode;
 import cmsc420.schema.spatial.PM.PMNode;
 import cmsc420.schema.spatial.PM.PMQuadTree;
@@ -485,13 +487,35 @@ public class CommandRunner {
 		if (radius == 0) {
 			throw new NoRoadsExistInRangeException();
 		}
-		// TODO
+		List<City[]> roads = new LinkedList<City[]>();
+		for (Object[] road : this.adjacencyList) {
+			City start = (City) road[0];
+			City end = (City) road[1];
+			if (start.getName().compareTo(end.getName()) < 0
+					&& this.minDistanceBetweenCityAndRoad(x, y, start, end) <= radius) {
+				City[] ele = new City[2];
+				ele[0] = start;
+				ele[1] = end;
+				roads.add(ele);
+			}
+		}
+		roads = new ArrayList<>(new LinkedHashSet<>(roads)); // remove dups
+		if (roads.size() == 0) {
+			throw new NoRoadsExistInRangeException();
+		}
+		Collections.sort(roads, new RoadComparator());
 		if (saveMap != null) {
 			this.spatial.addCircle(x, y, radius);
 			this.saveMap(saveMap);
 			this.spatial.removeCircle(x, y, radius);
 		}
-		throw new UnsupportedOperationException("rangeRoads not implemented");
+		return roads;
+	}
+
+	private double minDistanceBetweenCityAndRoad(int x, int y, City start, City end) {
+		throw new UnsupportedOperationException();
+		// min of <x,y> and <rx1,ry1> + t<rx2-rx1,ry2-ry1> where 0<=t<=1
+		// TODO
 	}
 
 	City nearestIsolatedCity(int x, int y) throws CityNotFoundException {
@@ -524,8 +548,24 @@ public class CommandRunner {
 		if (this.adjacencyList.size() == 0) {
 			throw new RoadNotFoundException();
 		}
-		// TODO
-		throw new UnsupportedOperationException("nearestRoad not implemented");
+		double smallestDistance = -1;
+		City[] nearestRoad = null;
+		for (Object[] road : this.adjacencyList) {
+			City start = (City) road[0];
+			City end = (City) road[1];
+			if (start.getName().compareTo(end.getName()) < 0) {
+				double dist = this.minDistanceBetweenCityAndRoad(x, y, start, end);
+				City[] ele = new City[2];
+				ele[0] = start;
+				ele[1] = end;
+				if (nearestRoad == null || dist < smallestDistance
+						|| (dist <= smallestDistance && new RoadComparator().compare(ele, nearestRoad) < 0)) {
+					nearestRoad = ele;
+					smallestDistance = dist;
+				}
+			}
+		}
+		return nearestRoad;
 	}
 
 	City nearestCityToRoad(String start, String end) throws RoadIsNotMappedException, NoOtherCitiesMappedException {
@@ -534,8 +574,30 @@ public class CommandRunner {
 		if (!this.adjacencyList.containsUndirectedEdge(this.dictionary.getCity(start), this.dictionary.getCity(end))) {
 			throw new RoadIsNotMappedException();
 		}
-		// TODO
-		throw new UnsupportedOperationException("nearestCityToRoad not implemented");
+
+		/* get the set of all the cities */
+		Set<City> cities = this.spatial.getCities();
+
+		double minDist = -1;
+		City nearest = null;
+		City startCity = this.dictionary.getCity(start);
+		City endCity = this.dictionary.getCity(end);
+
+		for (City city : cities) {
+			if (city.equals(startCity) || city.equals(endCity)) {
+				continue;
+			}
+			double dist = this.minDistanceBetweenCityAndRoad((int) city.x, (int) city.y, startCity, endCity);
+			if (nearest == null || dist < minDist
+					|| (dist <= minDist && city.getName().compareTo(nearest.getName()) < 0)) {
+				nearest = city;
+				minDist = dist;
+			}
+		}
+		if (nearest == null) {
+			throw new NoOtherCitiesMappedException();
+		}
+		return nearest;
 	}
 
 	void shortestPath(String start, String end, String saveMap, String saveHTML) throws NonExistentStartException,
