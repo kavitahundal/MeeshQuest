@@ -25,7 +25,7 @@ import java.util.Stack;
 public class Graph<E> {
 
 	/* You must use the following maps in your implementation */
-	private HashMap<String, HashMap<String, Integer>> adjacencyMap;
+	private HashMap<String, HashMap<String, Double>> adjacencyMap;
 	private HashMap<String, E> dataMap;
 
 	/**
@@ -49,12 +49,12 @@ public class Graph<E> {
 	 *             If any of the vertices are not part of the graph.
 	 */
 	public void addDirectedEdge(String startVertexName, String endVertexName,
-			int cost) throws IllegalArgumentException {
+			double cost) throws IllegalArgumentException {
 		if (!this.dataMap.containsKey(startVertexName)
 				|| !this.dataMap.containsKey(endVertexName)) {
 			throw new IllegalArgumentException("Missing vertices.");
 		}
-		HashMap<String, Integer> map = this.adjacencyMap.get(startVertexName);
+		HashMap<String, Double> map = this.adjacencyMap.get(startVertexName);
 		map.put(endVertexName, cost);
 		this.adjacencyMap.put(startVertexName, map);
 	}
@@ -77,7 +77,7 @@ public class Graph<E> {
 			throw new IllegalArgumentException("Vertex already exists.");
 		}
 		this.dataMap.put(vertexName, data);
-		this.adjacencyMap.put(vertexName, new HashMap<String, Integer>());
+		this.adjacencyMap.put(vertexName, new HashMap<String, Double>());
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class Graph<E> {
 	 * @throws IllegalArgumentException
 	 *             If any of the vertices are not part of the graph.
 	 */
-	public int doDijkstras(String startVertexName, String endVertexName,
+	public double doDijkstras(String startVertexName, String endVertexName,
 			ArrayList<String> shortestPath) throws IllegalArgumentException {
 		if (!this.dataMap.containsKey(startVertexName)
 				|| !this.dataMap.containsKey(endVertexName)) {
@@ -174,16 +174,16 @@ public class Graph<E> {
 		}
 
 		/* initial setup */
-		final int INFINITY = -1;
+		final double INFINITY = -1;
 		final String NONE = "None";
 		Set<String> usedVertices = new HashSet<>();
-		Map<String, Integer> costs = new HashMap<>();
+		Map<String, Double> costs = new HashMap<>();
 		Map<String, String> predecessor = new HashMap<>();
 		for (String vertex : this.getVertices()) {
 			costs.put(vertex, INFINITY);
 			predecessor.put(vertex, NONE);
 		}
-		costs.put(startVertexName, 0);
+		costs.put(startVertexName, 0.0);
 
 		/* starting the greedy algorithm */
 		while (!usedVertices.contains(endVertexName)) {
@@ -194,7 +194,7 @@ public class Graph<E> {
 						|| costs.get(vertex) == INFINITY) {
 					continue;
 				}
-				Integer cost = costs.get(cheapestVertex);
+				Double cost = costs.get(cheapestVertex);
 				if (cost == null || costs.get(vertex) < cost) {
 					cheapestVertex = vertex;
 				}
@@ -207,9 +207,9 @@ public class Graph<E> {
 			for (String vertex : this.getVertices()) {
 				if (!usedVertices.contains(vertex)) {
 					try {
-						Integer cost = this.getCost(cheapestVertex, vertex);
-						int oldCost = costs.get(vertex);
-						int newCost = cost + costs.get(cheapestVertex);
+						Double cost = this.getCost(cheapestVertex, vertex);
+						double oldCost = costs.get(vertex);
+						double newCost = cost + costs.get(cheapestVertex);
 						if (oldCost == INFINITY || oldCost > newCost) {
 							costs.put(vertex, newCost);
 							predecessor.put(vertex, cheapestVertex);
@@ -247,7 +247,7 @@ public class Graph<E> {
 	 *            The starting vertex.
 	 * @return Mapping of the vertices adjacent to the given vertex.
 	 */
-	public Map<String, Integer> getAdjacentVertices(String vertexName) {
+	public Map<String, Double> getAdjacentVertices(String vertexName) {
 		return this.adjacencyMap.get(vertexName);
 	}
 
@@ -262,7 +262,7 @@ public class Graph<E> {
 	 * @throws IllegalArgumentException
 	 *             If any of the vertices are not part of the graph.
 	 */
-	public int getCost(String startVertexName, String endVertexName)
+	public double getCost(String startVertexName, String endVertexName)
 			throws IllegalArgumentException {
 		if (!this.dataMap.containsKey(startVertexName)
 				|| !this.dataMap.containsKey(endVertexName)) {
@@ -326,10 +326,10 @@ public class Graph<E> {
 		s.append("\nEdges:\n");
 		for (String vertex : sortedVertices) {
 			s.append("Vertex(" + vertex + ")--->{");
-			HashMap<String, Integer> edges = this.adjacencyMap.get(vertex);
+			HashMap<String, Double> edges = this.adjacencyMap.get(vertex);
 			boolean first = true;
 			for (String vertexAgain : sortedVertices) {
-				Integer cost = edges.get(vertexAgain);
+				Double cost = edges.get(vertexAgain);
 				if (cost == null) {
 					continue;
 				}
