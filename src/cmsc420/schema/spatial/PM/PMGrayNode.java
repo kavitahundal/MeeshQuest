@@ -40,35 +40,39 @@ public class PMGrayNode implements PMNode {
 				this.validator);
 	}
 
-	private Point2D.Float center() {
-		return new Point2D.Float(this.origin.x + this.width / 2, this.origin.y + this.height / 2);
-	}
-
-	private int getQuadrantIndex(City city) {
-		if (city == null) {
-			return -1;
-		}
-		Point2D.Float center = this.center();
-		if (city.x >= center.x) {
-			if (city.y >= center.y) {
-				return 1;
-			} else {
-				return 3;
-			}
-		} else {
-			if (city.y >= center.y) {
-				return 0;
-			} else {
-				return 2;
-			}
-		}
-	}
+	// private Point2D.Float center() {
+	// return new Point2D.Float(this.origin.x + this.width / 2, this.origin.y +
+	// this.height / 2);
+	// }
+	//
+	// private int getQuadrantIndex(City city) {
+	// if (city == null) {
+	// return -1;
+	// }
+	// Point2D.Float center = this.center();
+	// if (city.x >= center.x) {
+	// if (city.y >= center.y) {
+	// return 1;
+	// } else {
+	// return 3;
+	// }
+	// } else {
+	// if (city.y >= center.y) {
+	// return 0;
+	// } else {
+	// return 2;
+	// }
+	// }
+	// }
 
 	@Override
 	public PMNode addCity(City city) {
 		if (city != null) {
-			int quadrant = this.getQuadrantIndex(city);
-			this.quadrants[quadrant] = this.quadrants[quadrant].addCity(city);
+			for (int i = 0; i < this.quadrants.length; i++) {
+				if (this.cityInQuadrant(this.quadrants[i], city)) {
+					this.quadrants[i] = this.quadrants[i].addCity(city);
+				}
+			}
 		}
 		return this;
 	}
@@ -85,23 +89,31 @@ public class PMGrayNode implements PMNode {
 		return this;
 	}
 
-	private boolean roadInQuadrant(PMNode node, City city1, City city2) {
-		float x = node.origin().x;
-		float y = node.origin().y;
-		int w = node.width();
-		int h = node.height();
+	private boolean cityInQuadrant(PMNode quadrant, City city) {
+		float x = quadrant.origin().x;
+		float y = quadrant.origin().y;
+		int w = quadrant.width();
+		int h = quadrant.height();
+		return city.x >= x && city.x <= x + w && city.y >= y && city.y <= y + h;
+	}
+
+	private boolean roadInQuadrant(PMNode quadrant, City city1, City city2) {
+		float x = quadrant.origin().x;
+		float y = quadrant.origin().y;
+		int w = quadrant.width();
+		int h = quadrant.height();
 		// given a square and a line, determine if the line goes in the square
 
 		// determine if either end point is in the square
 		// if not, find a intersection between the and the 4 boundaries
 
 		// check city1
-		if (city1.x >= x && city1.x < x + w && city1.y >= y && city1.y < y + h) {
+		if (city1.x >= x && city1.x <= x + w && city1.y >= y && city1.y <= y + h) {
 			return true;
 		}
 
 		// check city2
-		if (city2.x >= x && city2.x < x + w && city2.y >= y && city2.y < y + h) {
+		if (city2.x >= x && city2.x <= x + w && city2.y >= y && city2.y <= y + h) {
 			return true;
 		}
 
@@ -112,25 +124,25 @@ public class PMGrayNode implements PMNode {
 
 		// when y = lower line, x is in range [xLow, xHigh)
 		double xTest = ((y - city1.y) / slope) + city1.x;
-		if (xTest >= x && xTest < x + w) {
+		if (xTest >= x && xTest <= x + w) {
 			return true;
 		}
 
 		// when y = upper line - 1, x is in range [xLow, xHigh)
 		xTest = ((y + h - city1.y) / slope) + city1.x;
-		if (xTest >= x && xTest < x + w) {
+		if (xTest >= x && xTest <= x + w) {
 			return true;
 		}
 
 		// when x = left line, y is in range [yLow, yHigh)
 		double yTest = slope * (x - city1.x) + city1.y;
-		if (yTest >= y && yTest < y + h) {
+		if (yTest >= y && yTest <= y + h) {
 			return true;
 		}
 
 		// when x = right line - 1, y is in range [yLow, yHigh)
 		yTest = slope * (x + w - city1.x) + city1.y;
-		if (yTest >= y && yTest < y + h) {
+		if (yTest >= y && yTest <= y + h) {
 			return true;
 		}
 
@@ -160,8 +172,12 @@ public class PMGrayNode implements PMNode {
 
 	@Override
 	public boolean contains(City city) {
-		int quadrant = this.getQuadrantIndex(city);
-		return this.quadrants[quadrant].contains(city);
+		for (int i = 0; i < this.quadrants.length; i++) {
+			if (this.cityInQuadrant(this.quadrants[i], city)) {
+				return this.quadrants[i].contains(city);
+			}
+		}
+		return false;
 	}
 
 	@Override
