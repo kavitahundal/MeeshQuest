@@ -1,5 +1,6 @@
 package cmsc420.sortedmap;
 
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -10,7 +11,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedMap;
 
-public class AvlGTree<K, V> implements SortedMap<K, V> {
+public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V> {
 
 	private final Comparator<? super K> comp;
 	private final int g;
