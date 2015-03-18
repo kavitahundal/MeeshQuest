@@ -1,13 +1,20 @@
 package cmsc420.schema.mediator;
 
+import java.awt.geom.Arc2D;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import cmsc132.Graph;
 import cmsc420.exceptions.CityAlreadyMappedException;
 import cmsc420.exceptions.CityDoesNotExistException;
 import cmsc420.exceptions.CityNotFoundException;
@@ -634,8 +641,8 @@ public class CommandRunner {
 		return nearest;
 	}
 
-	void shortestPath(String start, String end, String saveMap, String saveHTML) throws NonExistentStartException,
-			NonExistentEndException, NoPathExistsException {
+	void shortestPath(String start, String end, String saveMap, String saveHTML, Document doc)
+			throws NonExistentStartException, NonExistentEndException, NoPathExistsException {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists
@@ -647,6 +654,62 @@ public class CommandRunner {
 		if (endCity == null || !this.spatial.contains(endCity)) {
 			throw new NonExistentEndException();
 		}
+		Graph<City> dijkstra = new Graph<>();
+		for (Object[] road : this.adjacencyList) {
+			City city1 = (City) road[0];
+			City city2 = (City) road[1];
+			try {
+				dijkstra.addVertex(city1.getName(), city1);
+				dijkstra.addVertex(city2.getName(), city2);
+			} catch (IllegalArgumentException e) {
+			}
+			dijkstra.addDirectedEdge(city1.getName(), city2.getName(),
+					Math.sqrt(sqDist(city1.x, city1.y, city2.x, city2.y)));
+		}
+		ArrayList<String> path = new ArrayList<String>();
+		double length = dijkstra.doDijkstras(start, end, path);
+		if (length < 0) {
+			throw new NoPathExistsException();
+		}
+		int hops = path.size() - 1;
+		Element ret = doc.createElement("path");
+		ret.setAttribute("hops", "" + hops);
+		DecimalFormat df = new DecimalFormat("#.000");
+		String formattedLen = df.format(length);
+		ret.setAttribute("length", formattedLen);
+		String startRoad = null;
+		String midPoint = null;
+		String endRoad = null;
+		Iterator<String> iter = path.iterator();
+		do {
+			// if start + mid aren't null add the road
+			if (startRoad != null && midPoint != null) {
+				Element road = doc.createElement("road");
+				road.setAttribute("start", startRoad);
+				road.setAttribute("end", midPoint);
+				// if non are null add the direction
+				if (endRoad != null) {
+					Arc2D.Double arc = new Arc2D.Double();
+					arc.setArcByTangent(this.dictionary.getCity(endRoad), this.dictionary.getCity(midPoint),
+							this.dictionary.getCity(startRoad), 1);
+					double angle = arc.getAngleExtent();
+					if (angle < 135) {
+						Element dir = doc.createElement("left");
+						ret.appendChild(dir);
+					} else if (angle < 225) {
+						Element dir = doc.createElement("straight");
+						ret.appendChild(dir);
+					} else {
+						Element dir = doc.createElement("right");
+						ret.appendChild(dir);
+					}
+				}
+			}
+			// shift
+			startRoad = midPoint;
+			midPoint = endRoad;
+			endRoad = iter.hasNext() ? iter.next() : null;
+		} while (startRoad != null || midPoint != null || endRoad != null);
 		// TODO
 		throw new UnsupportedOperationException("shortestPath not implemented");
 	}

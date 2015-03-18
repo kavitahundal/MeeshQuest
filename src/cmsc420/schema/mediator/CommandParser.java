@@ -530,7 +530,7 @@ public class CommandParser {
 					String[] paramNames = { "start", "end", "saveMap", "saveHTML" };
 					String[] parameters = { start, end, saveMap, saveHTML };
 					try {
-						this.runner.shortestPath(start, end, saveMap, saveHTML);
+						this.runner.shortestPath(start, end, saveMap, saveHTML, this.writer.getDoc());
 						// TODO not sure about return type
 					} catch (NonExistentStartException | NonExistentEndException | NoPathExistsException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);

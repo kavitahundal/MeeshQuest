@@ -306,4 +306,8 @@ public class CommandWriter {
 		} catch (TransformerException e) {
 		}
 	}
+	
+	Document getDoc() {
+		return this.output;
+	}
 }
