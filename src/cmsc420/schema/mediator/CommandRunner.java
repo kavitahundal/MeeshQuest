@@ -641,7 +641,7 @@ public class CommandRunner {
 		return nearest;
 	}
 
-	void shortestPath(String start, String end, String saveMap, String saveHTML, Document doc)
+	Element shortestPath(String start, String end, String saveMap, String saveHTML, Document doc)
 			throws NonExistentStartException, NonExistentEndException, NoPathExistsException {
 		// nonExistentStart
 		// nonExistentEnd
@@ -710,8 +710,7 @@ public class CommandRunner {
 			midPoint = endRoad;
 			endRoad = iter.hasNext() ? iter.next() : null;
 		} while (startRoad != null || midPoint != null || endRoad != null);
-		// TODO
-		throw new UnsupportedOperationException("shortestPath not implemented");
+		return ret;
 	}
 
 }

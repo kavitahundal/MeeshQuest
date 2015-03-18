@@ -210,6 +210,15 @@ public class CommandWriter {
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
+	
+	void appendTag(String command, String[] parameters, String[] paramNames, Element e, String id) {
+		Element tag = this.initiateTag(null);
+		tag = this.createTag(tag, command, parameters, paramNames, id);
+		Element outputTag = this.output.createElement("output");
+		outputTag.appendChild(e);
+		tag.appendChild(outputTag);
+		this.root.appendChild(tag);
+	}
 
 	private Element mapCity(City city) {
 		Element tag = this.output.createElement("city");
