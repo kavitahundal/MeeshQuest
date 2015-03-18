@@ -143,8 +143,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 			@Override
 			public boolean add(java.util.Map.Entry<K, V> arg0) {
-				// TODO Auto-generated method stub
-				return false;
+				return !arg0.getValue().equals(AvlGTree.this.put(arg0.getKey(), arg0.getValue()));
 			}
 
 			@Override
@@ -155,8 +154,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 			@Override
 			public void clear() {
-				// TODO Auto-generated method stub
-				
+				AvlGTree.this.clear();
 			}
 
 			@Override
@@ -167,14 +165,17 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 			@Override
 			public boolean containsAll(Collection<?> arg0) {
-				// TODO Auto-generated method stub
-				return false;
+				for (Object o : arg0) {
+					if (!this.contains(o)) {
+						return false;
+					}
+				}
+				return true;
 			}
 
 			@Override
 			public boolean isEmpty() {
-				// TODO Auto-generated method stub
-				return false;
+				return AvlGTree.this.isEmpty();
 			}
 
 			@Override
@@ -185,14 +186,16 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 			@Override
 			public boolean remove(Object arg0) {
-				// TODO Auto-generated method stub
-				return false;
+				throw new UnsupportedOperationException();
 			}
 
 			@Override
 			public boolean removeAll(Collection<?> arg0) {
-				// TODO Auto-generated method stub
-				return false;
+				boolean ret = false;
+				for (Object o : arg0) {
+					ret = ret || this.remove(o);
+				}
+				return ret;
 			}
 
 			@Override
@@ -203,8 +206,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 			@Override
 			public int size() {
-				// TODO Auto-generated method stub
-				return 0;
+				return AvlGTree.this.size();
 			}
 
 			@Override
@@ -218,7 +220,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 		};
 	}
 
@@ -261,174 +263,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		if (this.comp.compare(fromKey, toKey) > 0) {
 			throw new IllegalArgumentException();
 		}
-		return new SortedMap<K, V>() {
-
-			private final K low = fromKey; // inclusive
-			private final K high = toKey; // exclusive
-
-			@Override
-			public void clear() {
-				throw new UnsupportedOperationException();
-			}
-
-			private boolean outOfBounds(K key) {
-				return AvlGTree.this.comp.compare(key, this.low) < 0 || AvlGTree.this.comp.compare(key, this.high) >= 0;
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public boolean containsKey(Object key) {
-				if (this.outOfBounds((K) key)) {
-					throw new IllegalArgumentException();
-				}
-				return AvlGTree.this.containsKey(key);
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public boolean containsValue(Object value) {
-				AvlNode<K, V> root = this.getValidRoot(AvlGTree.this.root);
-				return this.containsValueAux(root, (V) value);
-			}
-			
-			private boolean containsValueAux(AvlNode<K, V> node, V value) {
-				if (node == null || this.outOfBounds(node.key)) {
-					return false;
-				} else if (node.value.equals(value)) {
-					return true;
-				} else {
-					return this.containsValueAux(node.left, value) || this.containsValueAux(node.right, value);
-				}
-			}
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public V get(Object key) {
-				if (this.outOfBounds((K) key)) {
-					throw new IllegalArgumentException();
-				}
-				return AvlGTree.this.get(key);
-			}
-
-			@Override
-			public boolean isEmpty() {
-				return this.size() == 0;
-			}
-
-			@Override
-			public V put(K key, V value) {
-				if (this.outOfBounds((K) key)) {
-					throw new IllegalArgumentException();
-				}
-				return AvlGTree.this.put(key, value);
-			}
-
-			@Override
-			public void putAll(Map<? extends K, ? extends V> m) {
-				for (java.util.Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
-					this.put(entry.getKey(), entry.getValue());
-				}
-			}
-
-			@Override
-			public V remove(Object key) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public int size() {
-				return sizeAux(AvlGTree.this.root);
-			}
-
-			private int sizeAux(AvlNode<K, V> node) {
-				int size = this.outOfBounds(node.key) ? 0 : 1;
-				if (AvlGTree.this.comp.compare(node.key, this.low) > 0) {
-					size += this.sizeAux(node.left);
-				}
-				if (AvlGTree.this.comp.compare(node.key, this.high) < 0) {
-					size += this.sizeAux(node.right);
-				}
-				return size;
-			}
-
-			@Override
-			public Comparator<? super K> comparator() {
-				return AvlGTree.this.comp;
-			}
-
-			@Override
-			public Set<java.util.Map.Entry<K, V>> entrySet() {
-				// TODO Auto-generated method stub
-				throw new UnsupportedOperationException("entrySet");
-			}
-
-			@Override
-			public K firstKey() {
-				AvlNode<K, V> root = this.getValidRoot(AvlGTree.this.root);
-				if (root == null) {
-					throw new NoSuchElementException();
-				}
-				return this.firstKeyAux(root);
-			}
-
-			private AvlNode<K, V> getValidRoot(AvlNode<K, V> node) {
-				if (node == null) {
-					return null;
-				} else if (!this.outOfBounds(node.key)) {
-					return node;
-				} else if (AvlGTree.this.comp.compare(node.key, this.low) < 0) {
-					return this.getValidRoot(node.right);
-				} else {
-					return this.getValidRoot(node.left);
-				}
-			}
-
-			private K firstKeyAux(AvlNode<K, V> node) {
-				return node.left == null || this.outOfBounds(node.left.key) ? node.key : this.firstKeyAux(node.left);
-			}
-
-			@Override
-			public SortedMap<K, V> headMap(K arg0) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public Set<K> keySet() {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public K lastKey() {
-				AvlNode<K, V> root = this.getValidRoot(AvlGTree.this.root);
-				if (root == null) {
-					throw new NoSuchElementException();
-				}
-				return this.lastKeyAux(root);
-			}
-
-			private K lastKeyAux(AvlNode<K, V> node) {
-				return node.right == null || this.outOfBounds(node.right.key) ? node.key : this.firstKeyAux(node.right);
-			}
-
-			@Override
-			public SortedMap<K, V> subMap(K arg0, K arg1) {
-				if (this.outOfBounds(arg0) || this.outOfBounds(arg1)) {
-					throw new IllegalArgumentException();
-				}
-				return AvlGTree.this.subMap(arg0, arg1);
-			}
-
-			@Override
-			public SortedMap<K, V> tailMap(K arg0) {
-				throw new UnsupportedOperationException();
-			}
-
-			@Override
-			public Collection<V> values() {
-				throw new UnsupportedOperationException();
-			}
-
-		};
+		return new SubMap(fromKey, toKey);
 	}
 
 	@Override
@@ -468,6 +303,180 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			V oldValue = this.value;
 			this.value = value;
 			return oldValue;
+		}
+
+	}
+
+	public class SubMap implements SortedMap<K, V> {
+
+		private final K low; // inclusive
+		private final K high; // exclusive
+
+		public SubMap(K fromKey, K toKey) {
+			this.low = fromKey;
+			this.high = toKey;
+		}
+
+		@Override
+		public void clear() {
+			throw new UnsupportedOperationException();
+		}
+
+		private boolean outOfBounds(K key) {
+			return AvlGTree.this.comp.compare(key, this.low) < 0 || AvlGTree.this.comp.compare(key, this.high) >= 0;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public boolean containsKey(Object key) {
+			if (this.outOfBounds((K) key)) {
+				throw new IllegalArgumentException();
+			}
+			return AvlGTree.this.containsKey(key);
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public boolean containsValue(Object value) {
+			AvlNode<K, V> root = this.getValidRoot(AvlGTree.this.root);
+			return this.containsValueAux(root, (V) value);
+		}
+
+		private boolean containsValueAux(AvlNode<K, V> node, V value) {
+			if (node == null || this.outOfBounds(node.key)) {
+				return false;
+			} else if (node.value.equals(value)) {
+				return true;
+			} else {
+				return this.containsValueAux(node.left, value) || this.containsValueAux(node.right, value);
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public V get(Object key) {
+			if (this.outOfBounds((K) key)) {
+				throw new IllegalArgumentException();
+			}
+			return AvlGTree.this.get(key);
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return this.size() == 0;
+		}
+
+		@Override
+		public V put(K key, V value) {
+			if (this.outOfBounds((K) key)) {
+				throw new IllegalArgumentException();
+			}
+			return AvlGTree.this.put(key, value);
+		}
+
+		@Override
+		public void putAll(Map<? extends K, ? extends V> m) {
+			for (java.util.Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
+				this.put(entry.getKey(), entry.getValue());
+			}
+		}
+
+		@Override
+		public V remove(Object key) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public int size() {
+			return sizeAux(AvlGTree.this.root);
+		}
+
+		private int sizeAux(AvlNode<K, V> node) {
+			int size = this.outOfBounds(node.key) ? 0 : 1;
+			if (AvlGTree.this.comp.compare(node.key, this.low) > 0) {
+				size += this.sizeAux(node.left);
+			}
+			if (AvlGTree.this.comp.compare(node.key, this.high) < 0) {
+				size += this.sizeAux(node.right);
+			}
+			return size;
+		}
+
+		@Override
+		public Comparator<? super K> comparator() {
+			return AvlGTree.this.comp;
+		}
+
+		@Override
+		public Set<java.util.Map.Entry<K, V>> entrySet() {
+			// TODO
+			return null;
+		}
+
+		@Override
+		public K firstKey() {
+			AvlNode<K, V> root = this.getValidRoot(AvlGTree.this.root);
+			if (root == null) {
+				throw new NoSuchElementException();
+			}
+			return this.firstKeyAux(root);
+		}
+
+		private AvlNode<K, V> getValidRoot(AvlNode<K, V> node) {
+			if (node == null) {
+				return null;
+			} else if (!this.outOfBounds(node.key)) {
+				return node;
+			} else if (AvlGTree.this.comp.compare(node.key, this.low) < 0) {
+				return this.getValidRoot(node.right);
+			} else {
+				return this.getValidRoot(node.left);
+			}
+		}
+
+		private K firstKeyAux(AvlNode<K, V> node) {
+			return node.left == null || this.outOfBounds(node.left.key) ? node.key : this.firstKeyAux(node.left);
+		}
+
+		@Override
+		public SortedMap<K, V> headMap(K arg0) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Set<K> keySet() {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public K lastKey() {
+			AvlNode<K, V> root = this.getValidRoot(AvlGTree.this.root);
+			if (root == null) {
+				throw new NoSuchElementException();
+			}
+			return this.lastKeyAux(root);
+		}
+
+		private K lastKeyAux(AvlNode<K, V> node) {
+			return node.right == null || this.outOfBounds(node.right.key) ? node.key : this.firstKeyAux(node.right);
+		}
+
+		@Override
+		public SortedMap<K, V> subMap(K arg0, K arg1) {
+			if (this.outOfBounds(arg0) || this.outOfBounds(arg1)) {
+				throw new IllegalArgumentException();
+			}
+			return AvlGTree.this.subMap(arg0, arg1);
+		}
+
+		@Override
+		public SortedMap<K, V> tailMap(K arg0) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public Collection<V> values() {
+			throw new UnsupportedOperationException();
 		}
 
 	}
