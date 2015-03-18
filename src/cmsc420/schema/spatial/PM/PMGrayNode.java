@@ -102,6 +102,11 @@ public class PMGrayNode implements PMNode {
 		float y = quadrant.origin().y;
 		int w = quadrant.width();
 		int h = quadrant.height();
+		
+		float highX = Math.max(city1.x, city2.x);
+		float lowX = Math.min(city1.x, city2.x);
+		float highY = Math.max(city1.y, city2.y);
+		float lowY = Math.min(city1.y, city2.y);
 		// given a square and a line, determine if the line goes in the square
 
 		// determine if either end point is in the square
@@ -117,6 +122,11 @@ public class PMGrayNode implements PMNode {
 			return true;
 		}
 
+		// vertical lines
+		if (city1.x == city2.x && city1.x >= x && city1.x <= x + w) {
+			return highY >= y && lowY <= y + h;
+		}
+		
 		double slope = (city2.y - city1.y) / (city2.x - city1.x);
 		// y - y1 = m(x - x1)
 		// y = m(x - x1) + y1
@@ -124,25 +134,25 @@ public class PMGrayNode implements PMNode {
 
 		// when y = lower line, x is in range [xLow, xHigh)
 		double xTest = ((y - city1.y) / slope) + city1.x;
-		if (xTest >= x && xTest <= x + w) {
+		if (xTest >= x && xTest <= x + w && xTest >= lowX && xTest <= highX) {
 			return true;
 		}
 
 		// when y = upper line - 1, x is in range [xLow, xHigh)
 		xTest = ((y + h - city1.y) / slope) + city1.x;
-		if (xTest >= x && xTest <= x + w) {
+		if (xTest >= x && xTest <= x + w && xTest >= lowX && xTest <= highX) {
 			return true;
 		}
 
 		// when x = left line, y is in range [yLow, yHigh)
 		double yTest = slope * (x - city1.x) + city1.y;
-		if (yTest >= y && yTest <= y + h) {
+		if (yTest >= y && yTest <= y + h && yTest >= lowY && yTest <= highY) {
 			return true;
 		}
 
 		// when x = right line - 1, y is in range [yLow, yHigh)
 		yTest = slope * (x + w - city1.x) + city1.y;
-		if (yTest >= y && yTest <= y + h) {
+		if (yTest >= y && yTest <= y + h && yTest >= lowY && yTest <= highY) {
 			return true;
 		}
 
