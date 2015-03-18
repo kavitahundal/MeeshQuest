@@ -697,14 +697,15 @@ public class CommandRunner {
 					arc.setArcByTangent(this.dictionary.getCity(endRoad), this.dictionary.getCity(midPoint),
 							this.dictionary.getCity(startRoad), 1);
 					double angle = arc.getAngleExtent();
-					if (angle < 135) {
+
+					if (angle > 45) {
 						Element dir = doc.createElement("left");
 						ret.appendChild(dir);
-					} else if (angle < 225) {
-						Element dir = doc.createElement("straight");
+					} else if (angle <= -45) {
+						Element dir = doc.createElement("right");
 						ret.appendChild(dir);
 					} else {
-						Element dir = doc.createElement("right");
+						Element dir = doc.createElement("straight");
 						ret.appendChild(dir);
 					}
 				}
