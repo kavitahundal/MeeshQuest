@@ -3,6 +3,7 @@ package cmsc420.sortedmap;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -138,8 +139,87 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("entrySet");
+		return new Set<java.util.Map.Entry<K, V>>() {
+
+			@Override
+			public boolean add(java.util.Map.Entry<K, V> arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean addAll(Collection<? extends java.util.Map.Entry<K, V>> arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public void clear() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public boolean contains(Object arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean containsAll(Collection<?> arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean isEmpty() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public Iterator<java.util.Map.Entry<K, V>> iterator() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public boolean remove(Object arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean removeAll(Collection<?> arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public boolean retainAll(Collection<?> arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+
+			@Override
+			public int size() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public Object[] toArray() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public <T> T[] toArray(T[] arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		};
 	}
 
 	@Override
@@ -183,8 +263,8 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		}
 		return new SortedMap<K, V>() {
 
-			private K low = fromKey; // inclusive
-			private K high = toKey; // exclusive
+			private final K low = fromKey; // inclusive
+			private final K high = toKey; // exclusive
 
 			@Override
 			public void clear() {
@@ -279,7 +359,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			@Override
 			public Set<java.util.Map.Entry<K, V>> entrySet() {
 				// TODO Auto-generated method stub
-				return null;
+				throw new UnsupportedOperationException("entrySet");
 			}
 
 			@Override
