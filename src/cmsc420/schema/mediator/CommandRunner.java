@@ -222,6 +222,10 @@ public class CommandRunner {
 		if (this.spatial.contains(city)) {
 			throw new CityAlreadyMappedException();
 		}
+		if (this.spatial instanceof PRQuadTree
+				&& (city.x == this.spatial.getSpatialWidth() || city.y == this.spatial.getSpatialHeight())) {
+			throw new CityOutOfBoundsException();
+		}
 		if (city.x >= this.spatial.getSpatialWidth() || city.y >= this.spatial.getSpatialHeight() || city.x < 0
 				|| city.y < 0) {
 			throw new CityOutOfBoundsException();
@@ -462,9 +466,9 @@ public class CommandRunner {
 		if (this.adjacencyList.containsUndirectedEdge(city1, city2)) {
 			throw new RoadAlreadyMappedException();
 		}
-		if (city1.x < 0 || city2.x < 0 || city1.y < 0 || city2.y < 0 || city1.x >= this.spatial.getSpatialWidth()
-				|| city2.x >= this.spatial.getSpatialWidth() || city1.y >= this.spatial.getSpatialHeight()
-				|| city2.y >= this.spatial.getSpatialHeight()) {
+		if (city1.x < 0 || city2.x < 0 || city1.y < 0 || city2.y < 0 || city1.x > this.spatial.getSpatialWidth()
+				|| city2.x > this.spatial.getSpatialWidth() || city1.y > this.spatial.getSpatialHeight()
+				|| city2.y > this.spatial.getSpatialHeight()) {
 			throw new RoadOutOfBoundsException();
 		}
 		// add to adjacency list
