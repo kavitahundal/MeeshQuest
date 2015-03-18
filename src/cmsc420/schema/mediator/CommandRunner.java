@@ -690,6 +690,7 @@ public class CommandRunner {
 				Element road = doc.createElement("road");
 				road.setAttribute("start", startRoad);
 				road.setAttribute("end", midPoint);
+				ret.appendChild(road);
 				// if non are null add the direction
 				if (endRoad != null) {
 					Arc2D.Double arc = new Arc2D.Double();
