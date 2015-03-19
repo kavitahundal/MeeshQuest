@@ -51,6 +51,9 @@ public class PMBlackNode implements PMNode {
 			this.city = city;
 			return this;
 		} else {
+			if (this.width == 1 || this.height == 1) {
+				throw new UnsupportedOperationException("Can't subdivide further!");
+			}
 			PMNode node = new PMGrayNode(this.origin, this.width, this.height, this.canvas, this.validator); // partition
 			if (this.canvas != null) {
 				this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
