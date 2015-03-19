@@ -2,11 +2,13 @@ package cmsc132;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
@@ -179,32 +181,41 @@ public class Graph<E> {
 		Set<String> usedVertices = new HashSet<>();
 		Map<String, Double> costs = new HashMap<>();
 		Map<String, String> predecessor = new HashMap<>();
-		for (String vertex : this.getVertices()) {
+		for (String vertex : this.getVertices()) { // consider taking out
 			costs.put(vertex, INFINITY);
 			predecessor.put(vertex, NONE);
 		}
 		costs.put(startVertexName, 0.0);
+		PriorityQueue<String> q = new PriorityQueue<String>(new VertexComparator(costs));
+		q.add(startVertexName);
 
 		/* starting the greedy algorithm */
-		while (!usedVertices.contains(endVertexName)) {
+		while (!usedVertices.contains(endVertexName) && q.size() > 0) {
 			String cheapestVertex = NONE;
 			// find "next" vertex, or lowest cost vertex
-			for (String vertex : this.getVertices()) {
-				if (usedVertices.contains(vertex)
-						|| costs.get(vertex) == INFINITY) {
-					continue;
-				}
-				Double cost = costs.get(cheapestVertex);
-				if (cost == null || costs.get(vertex) < cost) {
-					cheapestVertex = vertex;
-				}
-			}
+//			for (String vertex : this.getVertices()) {
+//				if (usedVertices.contains(vertex)
+//						|| costs.get(vertex) == INFINITY) {
+//					continue;
+//				}
+//				Double cost = costs.get(cheapestVertex);
+//				if (cost == null || costs.get(vertex) < cost) {
+//					cheapestVertex = vertex;
+//				}
+//			}
+			cheapestVertex = q.poll();
 			if (cheapestVertex == NONE) {
 				break; // we know we can't find anything else anymore
 			}
 			usedVertices.add(cheapestVertex);
-			// finding vertices with cost values to update
-			for (String vertex : this.getVertices()) {
+			
+			// finding vertices with cost values to update (aka relaxing)
+			Map<String, Double> map = this.adjacencyMap.get(cheapestVertex);
+			if (map == null) {
+				continue;
+			}
+			Set<String> neighbors = map.keySet();
+			for (String vertex : /*this.getVertices()*/ neighbors) {
 				if (!usedVertices.contains(vertex)) {
 					try {
 						Double cost = this.getCost(cheapestVertex, vertex);
@@ -213,6 +224,10 @@ public class Graph<E> {
 						if (oldCost == INFINITY || oldCost > newCost) {
 							costs.put(vertex, newCost);
 							predecessor.put(vertex, cheapestVertex);
+							if (q.contains(vertex)) {
+								q.remove(vertex);
+							}
+							q.add(vertex);
 						}
 					} catch (IllegalArgumentException e) {
 						// do nothing
@@ -237,6 +252,21 @@ public class Graph<E> {
 			shortestPath.add(ordering.pop()); // reversing the order
 		}
 		return costs.get(endVertexName);
+	}
+	
+	class VertexComparator implements Comparator<String> {
+		
+		private Map<String, Double> costs;
+		
+		public VertexComparator(Map<String, Double> costs) {
+			this.costs = costs;
+		}
+
+		@Override
+		public int compare(String o1, String o2) {
+			return this.costs.get(o1).compareTo(this.costs.get(o2));
+		}
+		
 	}
 
 	/**
