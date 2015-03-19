@@ -211,12 +211,17 @@ public class CommandWriter {
 		this.root.appendChild(tag);
 	}
 	
-	void appendTag(String command, String[] parameters, String[] paramNames, Element e, String id) {
+	Element shortestPathTag(String command, String[] parameters, String[] paramNames, Element e, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 		outputTag.appendChild(e);
 		tag.appendChild(outputTag);
+//		this.root.appendChild(tag);
+		return tag;
+	}
+	
+	void appendShortestPathTag(Element tag) {
 		this.root.appendChild(tag);
 	}
 

@@ -1,6 +1,9 @@
 package cmsc420.schema.mediator;
 
+import java.awt.Color;
 import java.awt.geom.Arc2D;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,10 +14,14 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc132.Graph;
+import cmsc420.drawing.CanvasPlus;
 import cmsc420.exceptions.CityAlreadyMappedException;
 import cmsc420.exceptions.CityDoesNotExistException;
 import cmsc420.exceptions.CityNotFoundException;
@@ -60,6 +67,7 @@ import cmsc420.schema.spatial.PM.PMGrayNode;
 import cmsc420.schema.spatial.PM.PMNode;
 import cmsc420.schema.spatial.PM.PMQuadTree;
 import cmsc420.sortedmap.OldAvlGTree;
+import cmsc420.xml.XmlUtility;
 
 /**
  * This class represents the collection of data structures used to run the
@@ -641,8 +649,8 @@ public class CommandRunner {
 		return nearest;
 	}
 
-	Element shortestPath(String start, String end, String saveMap, String saveHTML, Document doc)
-			throws NonExistentStartException, NonExistentEndException, NoPathExistsException {
+	Element shortestPath(String start, String end, String saveMap, String saveHTML, Document doc, CommandWriter writer,
+			String id) throws NonExistentStartException, NonExistentEndException, NoPathExistsException {
 		// nonExistentStart
 		// nonExistentEnd
 		// noPathExists
@@ -723,8 +731,60 @@ public class CommandRunner {
 			midPoint = endRoad;
 			endRoad = iter.hasNext() ? iter.next() : null;
 		} while (startRoad != null || midPoint != null || endRoad != null);
-		// TODO saveMap and saveHTML
-		return ret;
+		String[] paramNames = { "start", "end", "saveMap", "saveHTML" };
+		String[] parameters = { start, end, saveMap, saveHTML };
+		Element success = writer.shortestPathTag("shortestPath", parameters, paramNames, ret, id);
+		if (saveMap != null || saveHTML != null) {
+			CanvasPlus canvas = this.shortestPathCanvas(path);
+			if (saveMap != null) {
+				try {
+					canvas.save(saveMap);
+				} catch (IOException e) {
+				}
+			}
+			if (saveHTML != null) {
+				try {
+					org.w3c.dom.Document shortestPathDoc = XmlUtility.getDocumentBuilder().newDocument();
+					org.w3c.dom.Node spNode = shortestPathDoc.importNode(success, true);
+					shortestPathDoc.appendChild(spNode);
+					XmlUtility.transform(shortestPathDoc, new File("shortestPath.xsl"), new File(saveHTML + ".html"));
+					canvas.save(saveHTML); // add picture (?)
+				} catch (ParserConfigurationException | TransformerException | IOException e) {
+				}
+			}
+			canvas.dispose();
+		}
+		return success;
+	}
+
+	private CanvasPlus shortestPathCanvas(ArrayList<String> cities) {
+		CanvasPlus canvas = new CanvasPlus("MeeshQuest", (int) this.spatial.getSpatialWidth(),
+				(int) this.spatial.getSpatialHeight());
+		canvas.addRectangle(0, 0, this.spatial.getSpatialWidth(), this.spatial.getSpatialHeight(), Color.BLACK, false);
+		String prev = null;
+		String curr = null;
+		Iterator<String> iter = cities.iterator();
+		do {
+			if (curr != null) {
+				City currCity = this.dictionary.getCity(curr);
+				// draw city
+				Color color = Color.BLUE;
+				if (curr.equals(cities.get(0))) {
+					color = Color.GREEN;
+				} else if (curr.equals(cities.get(cities.size() - 1))) {
+					color = Color.RED;
+				}
+				canvas.addPoint(curr, currCity.x, currCity.y, color);
+				if (prev != null) {
+					// draw line
+					City prevCity = this.dictionary.getCity(prev);
+					canvas.addLine(prevCity.x, prevCity.y, currCity.x, currCity.y, Color.BLUE);
+				}
+			}
+			prev = curr;
+			curr = iter.hasNext() ? iter.next() : null;
+		} while (prev != null || curr != null);
+		return canvas;
 	}
 
 }
