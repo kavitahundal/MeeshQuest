@@ -39,6 +39,7 @@ public class AdjacencyList<T> implements Iterable<T[]> {
 
 	public void clear() {
 		this.map = new TreeMap<>(this.comp);
+		this.size = 0;
 	}
 
 	public void removeUndirectedEdge(T first, T second) {
