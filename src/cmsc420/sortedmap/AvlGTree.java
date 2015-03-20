@@ -18,9 +18,21 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 	private AvlNode<K, V> root;
 	private int size;
 
+	public AvlGTree() {
+		this(null, 1);
+	}
+	
+	public AvlGTree(final Comparator<? super K> comp) {
+		this(comp, 1);
+	}
+	
+	public AvlGTree(final int g) {
+		this(null, 1);
+	}
+	
 	public AvlGTree(final Comparator<? super K> comp, final int g) {
 		this.comp = comp;
-		this.g = g;
+		this.g = g < 1 ? 1 : g;
 		this.root = null;
 		this.size = 0;
 	}
