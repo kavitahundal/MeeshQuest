@@ -392,7 +392,7 @@ public class CommandRunner {
 	 */
 	City nearestCity(int x, int y) throws MapIsEmptyException, CityNotFoundException {
 		/* check for exceptions */
-		if (this.spatial.size() == 0 && this.spatial instanceof PRQuadTree) {
+		if (this.spatial.size() == 0) {
 			if (this.spatial instanceof PRQuadTree) {
 				throw new MapIsEmptyException();
 			} else {
