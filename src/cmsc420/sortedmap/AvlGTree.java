@@ -36,6 +36,16 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		this.root = null;
 		this.size = 0;
 	}
+	
+	public AvlGTree(java.util.Map<? extends K, ? extends V> m) {
+		this();
+		this.putAll(m);
+	}
+	
+	public AvlGTree(java.util.SortedMap<? extends K, ? extends V> m) {
+		this();
+		this.putAll(m);
+	}
 
 	@Override
 	public void clear() {
@@ -434,6 +444,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 	@Override
 	public boolean equals(Object other) {
+		if (other == this) {
+			return true;
+		}
 		if (!(other instanceof java.util.Map)) {
 			return false;
 		}
