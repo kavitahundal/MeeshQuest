@@ -334,7 +334,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		public boolean addAll(Collection<? extends java.util.Map.Entry<K, V>> c) {
 			boolean ret = false;
 			for (java.util.Map.Entry<K, V> e : c) {
-				ret = ret || this.add(e);
+				if (this.add(e)) {
+					ret = true;
+				}
 			}
 			return ret;
 		}
@@ -356,7 +358,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		public boolean removeAll(Collection<?> c) {
 			boolean ret = false;
 			for (Object o : c) {
-				ret = ret || this.remove(o);
+				if (this.remove(o)) {
+					ret = true;
+				}
 			}
 			return ret;
 		}
@@ -638,7 +642,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			public boolean addAll(Collection<? extends java.util.Map.Entry<K, V>> c) {
 				boolean ret = false;
 				for (java.util.Map.Entry<K, V> e : c) {
-					ret = ret || this.add(e);
+					if (this.add(e)) {
+						ret = true;
+					}
 				}
 				return ret;
 			}
@@ -678,16 +684,21 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 					{
 						List<java.util.Map.Entry<K, V>> entryList = new LinkedList<>();
-						this.fillList(entryList, SubMap.this.getValidRoot(AvlGTree.this.root));
+//						this.fillList(entryList, SubMap.this.getValidRoot(AvlGTree.this.root));
+						this.fillList(entryList, AvlGTree.this.root);
 						this.wrapper = entryList.iterator();
 					}
 
 					private void fillList(List<java.util.Map.Entry<K, V>> list, AvlNode<K, V> node) {
-						if (node == null || SubMap.this.outOfBounds(node.key)) {
+//						if (node == null || SubMap.this.outOfBounds(node.key)) {
+						if (node == null) {
 							return;
 						}
 						this.fillList(list, node.left);
-						list.add(node);
+						if (!SubMap.this.outOfBounds(node.key)) {
+							list.add(node);
+						}
+//						list.add(node);
 						this.fillList(list, node.right);
 					}
 
@@ -713,7 +724,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			public boolean removeAll(Collection<?> c) {
 				boolean ret = false;
 				for (Object o : c) {
-					ret = ret || this.remove(o);
+					if (this.remove(o)) {
+						ret = true;
+					}
 				}
 				return ret;
 			}
