@@ -2,6 +2,7 @@ package cmsc420.schema.mediator;
 
 import java.awt.Color;
 import java.awt.geom.Arc2D;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -66,6 +67,7 @@ import cmsc420.schema.spatial.PM.PMBlackNode.RoadComparator;
 import cmsc420.schema.spatial.PM.PMGrayNode;
 import cmsc420.schema.spatial.PM.PMNode;
 import cmsc420.schema.spatial.PM.PMQuadTree;
+import cmsc420.schema.spatial.PM.PMWhiteNode;
 import cmsc420.sortedmap.OldAvlGTree;
 import cmsc420.xml.XmlUtility;
 
@@ -483,9 +485,12 @@ public class CommandRunner {
 		if (this.adjacencyList.containsUndirectedEdge(city1, city2)) {
 			throw new RoadAlreadyMappedException();
 		}
-		if (city1.x < 0 || city2.x < 0 || city1.y < 0 || city2.y < 0 || city1.x > this.spatial.getSpatialWidth()
-				|| city2.x > this.spatial.getSpatialWidth() || city1.y > this.spatial.getSpatialHeight()
-				|| city2.y > this.spatial.getSpatialHeight()) {
+//		if (city1.x < 0 || city2.x < 0 || city1.y < 0 || city2.y < 0 || city1.x > this.spatial.getSpatialWidth()
+//				|| city2.x > this.spatial.getSpatialWidth() || city1.y > this.spatial.getSpatialHeight()
+//				|| city2.y > this.spatial.getSpatialHeight()) {
+//			throw new RoadOutOfBoundsException();
+//		}
+		if (!PMGrayNode.roadInQuadrant(new PMWhiteNode(new Point2D.Float(), (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(), null, null), city1, city2)) {
 			throw new RoadOutOfBoundsException();
 		}
 		// add to adjacency list

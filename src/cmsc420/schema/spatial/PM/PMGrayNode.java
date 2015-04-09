@@ -82,7 +82,7 @@ public class PMGrayNode implements PMNode {
 		// find all relevant quadrants
 		// add line to said quadrants
 		for (int i = 0; i < 4; i++) {
-			if (this.roadInQuadrant(this.quadrants[i], city1, city2)) {
+			if (roadInQuadrant(this.quadrants[i], city1, city2)) {
 				this.quadrants[i] = this.quadrants[i].addRoad(city1, city2);
 			}
 		}
@@ -97,7 +97,7 @@ public class PMGrayNode implements PMNode {
 		return city.x >= x && city.x <= x + w && city.y >= y && city.y <= y + h;
 	}
 
-	private boolean roadInQuadrant(PMNode quadrant, City city1, City city2) {
+	public static boolean roadInQuadrant(PMNode quadrant, City city1, City city2) {
 		float x = quadrant.origin().x;
 		float y = quadrant.origin().y;
 		int w = quadrant.width();
