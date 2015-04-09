@@ -538,7 +538,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 		@Override
 		public void clear() {
-			throw new UnsupportedOperationException();
+			AvlGTree.this.clear(); // change in part 3
 		}
 
 		private boolean outOfBounds(K key) {
