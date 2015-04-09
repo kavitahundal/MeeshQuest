@@ -611,6 +611,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		}
 
 		private int sizeAux(AvlNode<K, V> node) {
+			if (node == null) {
+				return 0;
+			}
 			int size = this.outOfBounds(node.key) ? 0 : 1;
 			if (AvlGTree.this.comp.compare(node.key, this.low) > 0) {
 				size += this.sizeAux(node.left);
@@ -684,13 +687,11 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 					{
 						List<java.util.Map.Entry<K, V>> entryList = new LinkedList<>();
-//						this.fillList(entryList, SubMap.this.getValidRoot(AvlGTree.this.root));
 						this.fillList(entryList, AvlGTree.this.root);
 						this.wrapper = entryList.iterator();
 					}
 
 					private void fillList(List<java.util.Map.Entry<K, V>> list, AvlNode<K, V> node) {
-//						if (node == null || SubMap.this.outOfBounds(node.key)) {
 						if (node == null) {
 							return;
 						}
@@ -698,7 +699,6 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 						if (!SubMap.this.outOfBounds(node.key)) {
 							list.add(node);
 						}
-//						list.add(node);
 						this.fillList(list, node.right);
 					}
 
