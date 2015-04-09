@@ -416,8 +416,12 @@ public class CommandParser {
 					}
 					String[] paramNames = {};
 					String parameters[] = {};
-					PMQuadTree tree = this.runner.printPMQuadtree();
-					this.writer.appendTag(command, parameters, paramNames, tree, id);
+					try {
+						PMQuadTree tree = this.runner.printPMQuadtree();
+						this.writer.appendTag(command, parameters, paramNames, tree, id);
+					} catch (MapIsEmptyException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else if (command.equals("rangeRoads")) {
 
 					/* get parameters */

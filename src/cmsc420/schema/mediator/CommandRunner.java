@@ -498,8 +498,13 @@ public class CommandRunner {
 		this.spatial.addRoad(city1, city2);
 	}
 
-	PMQuadTree printPMQuadtree() {
-		return (PMQuadTree) this.spatial;
+	PMQuadTree printPMQuadtree() throws MapIsEmptyException {
+		/* check for exceptions */
+		if (this.spatial.size() == 0) {
+			throw new MapIsEmptyException();
+		} else {
+			return (PMQuadTree) this.spatial;
+		}
 	}
 
 	List<City[]> rangeRoads(int x, int y, int radius, String saveMap) throws NoRoadsExistInRangeException {
