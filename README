@@ -1,2 +1,5 @@
 Andrew Liu
 aliu1
+
+This StackOverflow thread provided helpful inspiration when determining the minimum distance between a city and road: https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+However, I re-derived to personally verify and understand the material.

@@ -1,6 +1,10 @@
 package cmsc420.schema.spatial;
 
 import java.util.List;
+import java.util.Set;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import cmsc420.schema.City;
 import cmsc420.schema.DataStructure;
@@ -86,4 +90,25 @@ public interface SpatialStructure extends DataStructure<City> {
 	 * Destroys the canvas within the spatial structure.
 	 */
 	public void removeCanvas();
+
+	public void addRoad(City city1, City city2);
+
+	/**
+	 * Gets the name of this spatial structure.
+	 * 
+	 * @return the spatial structure name
+	 */
+	public String getName();
+	
+	/**
+	 * Returns the tree as an XML element.
+	 * 
+	 * @param doc
+	 *            the XML document to generate elements
+	 * @return the as an XML element
+	 */
+	public Element elementize(Document doc);
+	
+	public Set<City> getCities();
+	
 }

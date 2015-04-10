@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -90,13 +91,7 @@ public class PRQuadTree implements SpatialStructure {
 		return this.height;
 	}
 
-	/**
-	 * Returns the tree as an XML element.
-	 * 
-	 * @param doc
-	 *            the XML document to generate elements
-	 * @return the as an XML element
-	 */
+	@Override
 	public Element elementize(Document doc) {
 		Element xmlRoot = doc.createElement("quadtree");
 		xmlRoot.appendChild(this.root.elementize(doc)); // recursive call
@@ -142,6 +137,20 @@ public class PRQuadTree implements SpatialStructure {
 	 */
 	public TreeNode getRoot() {
 		return this.root;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+	
+	public void addRoad(City city1, City city2) {
+		throw new UnsupportedOperationException("can't add roads in PM Quadtree");
+	}
+
+	@Override
+	public Set<City> getCities() {
+		throw new UnsupportedOperationException();
 	}
 
 }
