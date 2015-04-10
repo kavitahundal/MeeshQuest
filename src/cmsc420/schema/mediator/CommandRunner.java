@@ -519,7 +519,9 @@ public class CommandRunner {
 
 			// we'll use distance squared to avoid nasty square roots
 			if (start.getName().compareTo(end.getName()) < 0
-					&& this.minSqDistanceBetweenCityAndRoad(x, y, start, end) <= radius * radius) {
+//					&& this.minSqDistanceBetweenCityAndRoad(x, y, start, end) <= radius * radius) {
+					// no jk i hate square roots :D 8=====D
+					&& Math.sqrt(this.minSqDistanceBetweenCityAndRoad(x, y, start, end)) <= radius) {
 				City[] ele = new City[2];
 				ele[0] = start;
 				ele[1] = end;
