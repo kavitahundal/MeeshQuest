@@ -68,7 +68,7 @@ import cmsc420.schema.spatial.PM.PMGrayNode;
 import cmsc420.schema.spatial.PM.PMNode;
 import cmsc420.schema.spatial.PM.PMQuadTree;
 import cmsc420.schema.spatial.PM.PMWhiteNode;
-import cmsc420.sortedmap.OldAvlGTree;
+import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
 /**
@@ -456,8 +456,8 @@ public class CommandRunner {
 		this.spatial.removeCanvas();
 	}
 
-	OldAvlGTree<String, City> printAvlTree() throws EmptyTreeException {
-		OldAvlGTree<String, City> tree = ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
+	AvlGTree<String, City> printAvlTree() throws EmptyTreeException {
+		AvlGTree<String, City> tree = ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
 		if (tree.size() == 0) {
 			throw new EmptyTreeException();
 		}
@@ -485,11 +485,6 @@ public class CommandRunner {
 		if (this.adjacencyList.containsUndirectedEdge(city1, city2)) {
 			throw new RoadAlreadyMappedException();
 		}
-//		if (city1.x < 0 || city2.x < 0 || city1.y < 0 || city2.y < 0 || city1.x > this.spatial.getSpatialWidth()
-//				|| city2.x > this.spatial.getSpatialWidth() || city1.y > this.spatial.getSpatialHeight()
-//				|| city2.y > this.spatial.getSpatialHeight()) {
-//			throw new RoadOutOfBoundsException();
-//		}
 		if (!PMGrayNode.roadInQuadrant(new PMWhiteNode(new Point2D.Float(), (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(), null, null), city1, city2)) {
 			throw new RoadOutOfBoundsException();
 		}
@@ -508,7 +503,6 @@ public class CommandRunner {
 	}
 
 	List<City[]> rangeRoads(int x, int y, int radius, String saveMap) throws NoRoadsExistInRangeException {
-		// noRoadsExistInRange
 		if (radius == 0) {
 			throw new NoRoadsExistInRangeException();
 		}
@@ -516,11 +510,7 @@ public class CommandRunner {
 		for (Object[] road : this.adjacencyList) {
 			City start = (City) road[0];
 			City end = (City) road[1];
-
-			// we'll use distance squared to avoid nasty square roots
 			if (start.getName().compareTo(end.getName()) < 0
-//					&& this.minSqDistanceBetweenCityAndRoad(x, y, start, end) <= radius * radius) {
-					// no jk i hate square roots :D 8=====D
 					&& Math.sqrt(this.minSqDistanceBetweenCityAndRoad(x, y, start, end)) <= radius) {
 				City[] ele = new City[2];
 				ele[0] = start;
@@ -542,22 +532,6 @@ public class CommandRunner {
 	}
 
 	private double minSqDistanceBetweenCityAndRoad(int x, int y, City start, City end) {
-		// min of dist of <x,y> and <rx1,ry1> + t<rx2-rx1,ry2-ry1> where 0<=t<=1
-		// min of t:[0,1] of sqrt((rx1-x+t(rx2-rx1))^2 + (ry1-y+t(ry2-ry1))^2)
-		// min of t:[0,1] of (rx1-x+t(rx2-rx1))^2 + (ry1-y+t(ry2-ry1))^2
-		// min of t:[0,1] of ((rx1-x)+t(rx2-rx1))^2 + ((ry1-y)+t(ry2-ry1))^2
-		// min of t:[0,1] of (rx1-x)^2 + 2t(rx1-x)(rx2-rx1) + (t^2)(rx2-rx1)^2
-		// + (ry1-y)^2 + 2t(ry1-y)(ry2-ry1) + (t^2)(ry2-ry1)^2
-		// critical point of 2(rx1-x)(rx2-rx1) + 2t(rx2-rx1)^2 +
-		// 2(ry1-y)(ry2-ry1) + 2t(ry2-ry1)^2 = 0
-		// -t = ((rx1-x)(rx2-rx1) + (ry1-y)(ry2-ry1))
-		// / ((rx2-rx1)^2 + (ry2-ry1)^2)
-		// t = ((x-rx1)(rx2-rx1) + (y-ry1)(ry2-ry1))
-		// / ((rx2-rx1)^2 + (ry2-ry1)^2)
-		// t = dot((city - start), (end - start)) / (dist(start, end))^2
-		// if t <= 0 then let t = 0 aka dist(city, start)
-		// if t >= 1 then let t = 1 aka dist(city, end)
-		// otherwise just solve
 		double t = dot(x - start.x, y - start.y, end.x - start.x, end.y - start.y)
 				/ sqDist(start.x, start.y, end.x, end.y);
 		if (t <= 0) {
@@ -578,7 +552,6 @@ public class CommandRunner {
 	}
 
 	City nearestIsolatedCity(int x, int y) throws CityNotFoundException {
-		// cityNotFound
 		/* check for exceptions */
 		if (this.spatial.size() == 0) {
 			throw new CityNotFoundException();
@@ -603,7 +576,6 @@ public class CommandRunner {
 	}
 
 	City[] nearestRoad(int x, int y) throws RoadNotFoundException {
-		// roadNotFound
 		if (this.adjacencyList.size() == 0) {
 			throw new RoadNotFoundException();
 		}
@@ -629,8 +601,6 @@ public class CommandRunner {
 	}
 
 	City nearestCityToRoad(String start, String end) throws RoadIsNotMappedException, NoOtherCitiesMappedException {
-		// roadIsNotMapped
-		// noOtherCitiesMapped
 		if (!this.adjacencyList.containsUndirectedEdge(this.dictionary.getCity(start), this.dictionary.getCity(end))) {
 			throw new RoadIsNotMappedException();
 		}
@@ -663,9 +633,6 @@ public class CommandRunner {
 
 	Element shortestPath(String start, String end, String saveMap, String saveHTML, Document doc, CommandWriter writer,
 			String id) throws NonExistentStartException, NonExistentEndException, NoPathExistsException {
-		// nonExistentStart
-		// nonExistentEnd
-		// noPathExists
 		City startCity = this.dictionary.getCity(start);
 		if (startCity == null || !this.spatial.contains(startCity)) {
 			throw new NonExistentStartException();

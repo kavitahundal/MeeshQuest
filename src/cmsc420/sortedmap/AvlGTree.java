@@ -12,6 +12,11 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import cmsc420.schema.City;
+
 public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V> {
 
 	private final Comparator<? super K> comp;
@@ -22,30 +27,54 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 	public AvlGTree() {
 		this(null, 1);
 	}
-	
+
 	public AvlGTree(final Comparator<? super K> comp) {
 		this(comp, 1);
 	}
-	
+
 	public AvlGTree(final int g) {
 		this(null, 1);
 	}
-	
+
 	public AvlGTree(final Comparator<? super K> comp, final int g) {
 		this.comp = comp;
 		this.g = g < 1 ? 1 : g;
 		this.root = null;
 		this.size = 0;
 	}
-	
+
 	public AvlGTree(java.util.Map<? extends K, ? extends V> m) {
 		this();
 		this.putAll(m);
 	}
-	
+
 	public AvlGTree(java.util.SortedMap<? extends K, ? extends V> m) {
 		this();
 		this.putAll(m);
+	}
+
+	public Element elementize(Document doc) {
+		Element xmlRoot = doc.createElement("AvlGTree");
+		xmlRoot.setAttribute("cardinality", "" + this.size);
+		// add cardinality
+		xmlRoot.setAttribute("height", "" + this.height());
+		// height
+		xmlRoot.setAttribute("maxImbalance", "" + this.g);
+		// and maxImbalance
+		xmlRoot.appendChild(this.root.elementize(doc));
+		return xmlRoot;
+	}
+
+	public int height() {
+		return this.heightAux(this.root);
+	}
+
+	private int heightAux(AvlNode<K, V> entry) {
+		if (entry == null) {
+			return 0;
+		} else {
+			return 1 + Math.max(heightAux(entry.left), heightAux(entry.right));
+		}
 	}
 
 	@Override
@@ -369,6 +398,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		public void clear() {
 			AvlGTree.this.clear();
 		}
+
 		@Override
 		public boolean equals(Object other) {
 			if (!(other instanceof Set)) {
@@ -388,9 +418,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			}
 			return true;
 		}
-		
+
 	}
-	
+
 	@Override
 	public Set<java.util.Map.Entry<K, V>> entrySet() {
 		return new MySet();
@@ -513,15 +543,38 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			java.util.Map.Entry<K, V> e = (java.util.Map.Entry<K, V>) other;
 			return this.key.equals(e.getKey()) && this.value.equals(e.getValue());
 		}
-		
+
 		@Override
 		public String toString() {
 			return key + "=" + value;
 		}
-		
+
 		@Override
 		public int hashCode() {
 			return (key == null ? 0 : key.hashCode()) ^ (value == null ? 0 : value.hashCode());
+		}
+
+		Element elementize(Document doc) {
+			Element ele = doc.createElement("node");
+			// set key attr to name
+			ele.setAttribute("key", (String) this.key);
+			// set valu attr to (x,y)
+			City val = (City) this.value;
+			String value = "(" + (int) val.x + "," + (int) val.y + ")";
+			ele.setAttribute("value", value);
+			// if left child is null add empty child else rec
+			if (this.left == null) {
+				ele.appendChild(doc.createElement("emptyChild"));
+			} else {
+				ele.appendChild(this.left.elementize(doc));
+			}
+			// if right child null add empty else rec
+			if (this.right == null) {
+				ele.appendChild(doc.createElement("emptyChild"));
+			} else {
+				ele.appendChild(this.right.elementize(doc));
+			}
+			return ele;
 		}
 
 	}
@@ -633,7 +686,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		public Set<java.util.Map.Entry<K, V>> entrySet() {
 			return new MySet2();
 		}
-		
+
 		class MySet2 extends AbstractSet<java.util.Map.Entry<K, V>> implements Set<java.util.Map.Entry<K, V>> {
 
 			@Override

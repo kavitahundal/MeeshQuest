@@ -49,7 +49,7 @@ import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.PM.PMQuadTree;
 import cmsc420.schema.spatial.PM.PMQuadTreeSeedling;
-import cmsc420.sortedmap.OldAvlGTree;
+import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
 /**
@@ -383,7 +383,7 @@ public class CommandParser {
 					String[] paramNames = {};
 					String parameters[] = {};
 					try {
-						OldAvlGTree<String, City> tree = this.runner.printAvlTree();
+						AvlGTree<String, City> tree = this.runner.printAvlTree();
 						this.writer.appendTag(command, parameters, paramNames, tree, id);
 					} catch (EmptyTreeException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
@@ -535,7 +535,6 @@ public class CommandParser {
 					String[] parameters = { start, end, saveMap, saveHTML };
 					try {
 						Element e = this.runner.shortestPath(start, end, saveMap, saveHTML, this.writer.getDoc(), this.writer, id);
-//						this.writer.appendTag(command, parameters, paramNames, e, id);
 						this.writer.appendShortestPathTag(e);
 					} catch (NonExistentStartException | NonExistentEndException | NoPathExistsException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);

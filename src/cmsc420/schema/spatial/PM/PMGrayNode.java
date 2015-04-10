@@ -40,31 +40,6 @@ public class PMGrayNode implements PMNode {
 				this.validator);
 	}
 
-	// private Point2D.Float center() {
-	// return new Point2D.Float(this.origin.x + this.width / 2, this.origin.y +
-	// this.height / 2);
-	// }
-	//
-	// private int getQuadrantIndex(City city) {
-	// if (city == null) {
-	// return -1;
-	// }
-	// Point2D.Float center = this.center();
-	// if (city.x >= center.x) {
-	// if (city.y >= center.y) {
-	// return 1;
-	// } else {
-	// return 3;
-	// }
-	// } else {
-	// if (city.y >= center.y) {
-	// return 0;
-	// } else {
-	// return 2;
-	// }
-	// }
-	// }
-
 	@Override
 	public PMNode addCity(City city) {
 		if (city != null) {
