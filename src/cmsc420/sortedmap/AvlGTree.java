@@ -684,10 +684,10 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 		@Override
 		public Set<java.util.Map.Entry<K, V>> entrySet() {
-			return new MySet2();
+			return new SubmapEntrySet();
 		}
 
-		class MySet2 extends AbstractSet<java.util.Map.Entry<K, V>> implements Set<java.util.Map.Entry<K, V>> {
+		class SubmapEntrySet extends AbstractSet<java.util.Map.Entry<K, V>> implements Set<java.util.Map.Entry<K, V>> {
 
 			@Override
 			public boolean add(java.util.Map.Entry<K, V> e) {
