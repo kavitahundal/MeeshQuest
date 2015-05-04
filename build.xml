@@ -8,8 +8,7 @@
 
 <project name="MeeshQuest Buildfile" default="all" basedir=".">
 	
-	<property name="prog1.name" value="meeshquest_part1.jar" />
-	<property name="prog2.name" value="meeshquest_part2.jar" />
+	<property name="prog.name" value="meeshquest.jar" />
 	<property name="submit.name" value="meeshquest-submission-files_aliu1.jar" />
 
 	<!-- Stuff that goes in the test-setup JAR -->
@@ -24,23 +23,12 @@
 		TARGETS: The builds available in this file. 
 	-->
 	
-	<target name="all" depends="part1, part2, submit" />
+	<target name="all" depends="part3, submit" />
 
-	<target name="part1">
-		<jar destfile="${prog1.name}" filesetmanifest="mergewithoutmain">
+	<target name="part3">
+		<jar destfile="${prog3.name}" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="cmsc420.meeshquest.part1.MeeshQuest"/>
-                <attribute name="Class-Path" value="."/>
-			</manifest>
-			<fileset dir="bin" />
-			<zipfileset excludes="META-INF/*.SF" src="${sub.utils}" />
-		</jar>
-	</target>
-	
-	<target name="part2">
-		<jar destfile="${prog2.name}" filesetmanifest="mergewithoutmain">
-			<manifest>
-				<attribute name="Main-Class" value="cmsc420.meeshquest.part2.MeeshQuest"/>
+				<attribute name="Main-Class" value="cmsc420.meeshquest.part3.MeeshQuest"/>
                 <attribute name="Class-Path" value="."/>
 			</manifest>
 			<fileset dir="bin" />

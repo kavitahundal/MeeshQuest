@@ -166,14 +166,20 @@ public class CommandParser {
 
 		/* retrieve spatial attributes and generate spatial structure */
 		NamedNodeMap attrs = root.getAttributes();
+		// TODO delete this two lines
 		int spatialWidth = Integer.parseInt(attrs.getNamedItem("spatialWidth").getNodeValue());
 		int spatialHeight = Integer.parseInt(attrs.getNamedItem("spatialHeight").getNodeValue());
-		int g = -1;
+		// TODO delete these two lines
+		int localSpatialWidth = Integer.parseInt(attrs.getNamedItem("localSpatialWidth").getNodeValue());
+		int localSpatialHeight = Integer.parseInt(attrs.getNamedItem("localSpatialHeight").getNodeValue());
+		int remoteSpatialWidth = Integer.parseInt(attrs.getNamedItem("remoteSpatialWidth").getNodeValue());
+		int remoteSpatialHeight = Integer.parseInt(attrs.getNamedItem("remoteSpatialHeight").getNodeValue());
+		int g = 1;
 		try {
 			g = Integer.parseInt(attrs.getNamedItem("g").getNodeValue());
 		} catch (NullPointerException e) {
 		}
-		int pmOrder = -1;
+		int pmOrder = 3;
 		try {
 			pmOrder = Integer.parseInt(attrs.getNamedItem("pmOrder").getNodeValue());
 		} catch (NullPointerException e) {
@@ -264,6 +270,125 @@ public class CommandParser {
 					} catch (NoCitiesToListException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
+				} else if (command.equals("printAvlTree")) {
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = {};
+					String parameters[] = {};
+					try {
+						AvlGTree<String, City> tree = this.runner.printAvlTree();
+						this.writer.appendTag(command, parameters, paramNames, tree, id);
+					} catch (EmptyTreeException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
+
+				} else if (command.equals("mapRoad")) {
+
+					/* get parameters */
+					String start = params.getNamedItem("start").getNodeValue();
+					String end = params.getNamedItem("end").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "start", "end" };
+					String[] parameters = { start, end };
+					try {
+						this.runner.mapRoad(start, end);
+						this.writer.appendTagRoadCreated(command, parameters, paramNames, start, end, id);
+					} catch (StartPointDoesNotExistException | EndPointDoesNotExistException | StartEqualsEndException
+							| StartOrEndIsIsolatedException | RoadAlreadyMappedException | RoadOutOfBoundsException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
+				} else if (command.equals("mapAirport")) {
+					// TODO
+				} else if (command.equals("unmapRoad")) {
+					// TODO
+				} else if (command.equals("unmapAirport")) {
+					// TODO
+				} else if (command.equals("printPMQuadtree")) {
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = {};
+					String parameters[] = {};
+					try {
+						PMQuadTree tree = this.runner.printPMQuadtree();
+						this.writer.appendTag(command, parameters, paramNames, tree, id);
+					} catch (MapIsEmptyException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
+				} else if (command.equals("saveMap")) {
+
+					/* get parameters */
+					String name = params.getNamedItem("name").getNodeValue();
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "name" };
+					String[] parameters = { name };
+					this.runner.saveMap(name);
+					this.writer.appendTag(null, command, parameters, paramNames, id);
+				} else if (command.equals("globalRangeCities")) {
+					// TODO
+				} else if (command.equals("nearestCity")) {
+
+					/* get parameters */
+					String xString = params.getNamedItem("x").getNodeValue();
+					String yString = params.getNamedItem("y").getNodeValue();
+					int x = Integer.parseInt(xString);
+					int y = Integer.parseInt(yString);
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "x", "y" };
+					String[] parameters = { xString, yString };
+					try {
+						City city = this.runner.nearestCity(x, y);
+						this.writer.appendTag(command, parameters, paramNames, city, id);
+					} catch (MapIsEmptyException | CityNotFoundException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
+				} else if (command.equals("nearestAirport")) {
+					// TODO
+				} else if (command.equals("shortestPath")) {
+
+					/* get parameters */
+					String start = params.getNamedItem("start").getNodeValue();
+					String end = params.getNamedItem("end").getNodeValue();
+					String saveMap = null;
+					try {
+						saveMap = params.getNamedItem("saveMap").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String saveHTML = null;
+					try {
+						saveHTML = params.getNamedItem("saveHTML").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String id = null;
+					try {
+						id = params.getNamedItem("id").getNodeValue();
+					} catch (NullPointerException e) {
+					}
+					String[] paramNames = { "start", "end", "saveMap", "saveHTML" };
+					String[] parameters = { start, end, saveMap, saveHTML };
+					try {
+						Element e = this.runner.shortestPath(start, end, saveMap, saveHTML, this.writer.getDoc(), this.writer, id);
+						this.writer.appendShortestPathTag(e);
+					} catch (NonExistentStartException | NonExistentEndException | NoPathExistsException e) {
+						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
+					}
 				} else if (command.equals("mapCity")) {
 
 					/* get parameters */
@@ -312,19 +437,6 @@ public class CommandParser {
 					} catch (MapIsEmptyException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
-				} else if (command.equals("saveMap")) {
-
-					/* get parameters */
-					String name = params.getNamedItem("name").getNodeValue();
-					String id = null;
-					try {
-						id = params.getNamedItem("id").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String[] paramNames = { "name" };
-					String[] parameters = { name };
-					this.runner.saveMap(name);
-					this.writer.appendTag(null, command, parameters, paramNames, id);
 				} else if (command.equals("rangeCities")) {
 
 					/* get parameters */
@@ -352,74 +464,6 @@ public class CommandParser {
 						List<City> cities = this.runner.rangeCities(x, y, radius, saveMap);
 						this.writer.appendTag(command, parameters, paramNames, cities, id);
 					} catch (NoCitiesExistInRangeException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
-					}
-				} else if (command.equals("nearestCity")) {
-
-					/* get parameters */
-					String xString = params.getNamedItem("x").getNodeValue();
-					String yString = params.getNamedItem("y").getNodeValue();
-					int x = Integer.parseInt(xString);
-					int y = Integer.parseInt(yString);
-					String id = null;
-					try {
-						id = params.getNamedItem("id").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String[] paramNames = { "x", "y" };
-					String[] parameters = { xString, yString };
-					try {
-						City city = this.runner.nearestCity(x, y);
-						this.writer.appendTag(command, parameters, paramNames, city, id);
-					} catch (MapIsEmptyException | CityNotFoundException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
-					}
-				} else if (command.equals("printAvlTree")) {
-					String id = null;
-					try {
-						id = params.getNamedItem("id").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String[] paramNames = {};
-					String parameters[] = {};
-					try {
-						AvlGTree<String, City> tree = this.runner.printAvlTree();
-						this.writer.appendTag(command, parameters, paramNames, tree, id);
-					} catch (EmptyTreeException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
-					}
-
-				} else if (command.equals("mapRoad")) {
-
-					/* get parameters */
-					String start = params.getNamedItem("start").getNodeValue();
-					String end = params.getNamedItem("end").getNodeValue();
-					String id = null;
-					try {
-						id = params.getNamedItem("id").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String[] paramNames = { "start", "end" };
-					String[] parameters = { start, end };
-					try {
-						this.runner.mapRoad(start, end);
-						this.writer.appendTagRoadCreated(command, parameters, paramNames, start, end, id);
-					} catch (StartPointDoesNotExistException | EndPointDoesNotExistException | StartEqualsEndException
-							| StartOrEndIsIsolatedException | RoadAlreadyMappedException | RoadOutOfBoundsException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
-					}
-				} else if (command.equals("printPMQuadtree")) {
-					String id = null;
-					try {
-						id = params.getNamedItem("id").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String[] paramNames = {};
-					String parameters[] = {};
-					try {
-						PMQuadTree tree = this.runner.printPMQuadtree();
-						this.writer.appendTag(command, parameters, paramNames, tree, id);
-					} catch (MapIsEmptyException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else if (command.equals("rangeRoads")) {
@@ -509,34 +553,6 @@ public class CommandParser {
 						City city = this.runner.nearestCityToRoad(start, end);
 						this.writer.appendTag(command, parameters, paramNames, city, id);
 					} catch (RoadIsNotMappedException | NoOtherCitiesMappedException e) {
-						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
-					}
-				} else if (command.equals("shortestPath")) {
-
-					/* get parameters */
-					String start = params.getNamedItem("start").getNodeValue();
-					String end = params.getNamedItem("end").getNodeValue();
-					String saveMap = null;
-					try {
-						saveMap = params.getNamedItem("saveMap").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String saveHTML = null;
-					try {
-						saveHTML = params.getNamedItem("saveHTML").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String id = null;
-					try {
-						id = params.getNamedItem("id").getNodeValue();
-					} catch (NullPointerException e) {
-					}
-					String[] paramNames = { "start", "end", "saveMap", "saveHTML" };
-					String[] parameters = { start, end, saveMap, saveHTML };
-					try {
-						Element e = this.runner.shortestPath(start, end, saveMap, saveHTML, this.writer.getDoc(), this.writer, id);
-						this.writer.appendShortestPathTag(e);
-					} catch (NonExistentStartException | NonExistentEndException | NoPathExistsException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
 				} else {

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<results>
+  <success>
+    <command id="1" name="createCity"/>
+    <parameters>
+      <name value="A"/>
+      <localX value="0"/>
+      <localY value="0"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+      <radius value="1"/>
+      <color value="red"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="2" name="createCity"/>
+    <parameters>
+      <name value="B"/>
+      <localX value="1"/>
+      <localY value="0"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+      <radius value="1"/>
+      <color value="red"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="3" name="createCity"/>
+    <parameters>
+      <name value="C"/>
+      <localX value="4"/>
+      <localY value="0"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+      <radius value="1"/>
+      <color value="red"/>
+    </parameters>
+    <output/>
+  </success>
+  <error type="roadViolatesPMRules">
+    <command id="4" name="mapRoad"/>
+    <parameters>
+      <start value="A"/>
+      <end value="B"/>
+    </parameters>
+  </error>
+  <error type="endPointDoesNotExist">
+    <command id="5" name="mapRoad"/>
+    <parameters>
+      <start value="A"/>
+      <end value="P"/>
+    </parameters>
+  </error>
+  <success>
+    <command id="6" name="mapRoad"/>
+    <parameters>
+      <start value="A"/>
+      <end value="C"/>
+    </parameters>
+    <output>
+      <roadCreated end="C" start="A"/>
+    </output>
+  </success>
+  <error type="airportViolatesPMRules">
+    <command id="7" name="mapAirport"/>
+    <parameters>
+      <name value="P"/>
+      <airlineName value="Air_A"/>
+      <localX value="0"/>
+      <localY value="1"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+    </parameters>
+  </error>
+  <error type="duplicateAirportCoordinates">
+    <command id="8" name="mapAirport"/>
+    <parameters>
+      <name value="P"/>
+      <airlineName value="Air_B"/>
+      <localX value="1"/>
+      <localY value="0"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+    </parameters>
+  </error>
+  <error type="airportViolatesPMRules">
+    <command id="9" name="mapAirport"/>
+    <parameters>
+      <name value="P"/>
+      <airlineName value="Air_C"/>
+      <localX value="2"/>
+      <localY value="0"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+    </parameters>
+  </error>
+  <error type="airportViolatesPMRules">
+    <command id="10" name="mapAirport"/>
+    <parameters>
+      <name value="P"/>
+      <airlineName value="Air_D"/>
+      <localX value="3"/>
+      <localY value="0"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+    </parameters>
+  </error>
+  <error type="duplicateAirportCoordinates">
+    <command id="11" name="mapAirport"/>
+    <parameters>
+      <name value="P"/>
+      <airlineName value="Air_E"/>
+      <localX value="0"/>
+      <localY value="0"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+    </parameters>
+  </error>
+  <success>
+    <command id="12" name="mapAirport"/>
+    <parameters>
+      <name value="P"/>
+      <airlineName value="Air_F"/>
+      <localX value="6"/>
+      <localY value="6"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+    </parameters>
+    <output/>
+  </success>
+  <success>
+    <command id="13" name="mapAirport"/>
+    <parameters>
+      <name value="P1"/>
+      <airlineName value="Air_G"/>
+      <localX value="10"/>
+      <localY value="10"/>
+      <remoteX value="0"/>
+      <remoteY value="0"/>
+    </parameters>
+    <output/>
+  </success>
+</results>

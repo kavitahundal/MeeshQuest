@@ -216,6 +216,43 @@ public class CommandRunner {
 		return this.dictionary.listCities(sortBy);
 	}
 
+	AvlGTree<String, City> printAvlTree() throws EmptyTreeException {
+		AvlGTree<String, City> tree = ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
+		if (tree.size() == 0) {
+			throw new EmptyTreeException();
+		}
+		return tree;
+	}
+
+	void mapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
+			StartEqualsEndException, StartOrEndIsIsolatedException, RoadAlreadyMappedException,
+			RoadOutOfBoundsException {
+		if (!this.dictionary.containsName(start)) {
+			throw new StartPointDoesNotExistException();
+		}
+		if (!this.dictionary.containsName(end)) {
+			throw new EndPointDoesNotExistException();
+		}
+		City city1 = this.dictionary.getCity(start);
+		City city2 = this.dictionary.getCity(end);
+		if (start.equals(end) || city1.equals(city2)) {
+			throw new StartEqualsEndException();
+		}
+		if ((this.spatial.contains(city1) && this.adjacencyList.isIsolated(city1))
+				|| (this.spatial.contains(city2) && this.adjacencyList.isIsolated(city2))) {
+			throw new StartOrEndIsIsolatedException();
+		}
+		if (this.adjacencyList.containsUndirectedEdge(city1, city2)) {
+			throw new RoadAlreadyMappedException();
+		}
+		if (!PMGrayNode.roadInQuadrant(new PMWhiteNode(new Point2D.Float(), (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(), null, null), city1, city2)) {
+			throw new RoadOutOfBoundsException();
+		}
+		// add to adjacency list
+		this.adjacencyList.addUndirectedEdge(city1, city2);
+		this.spatial.addRoad(city1, city2);
+	}
+
 	/**
 	 * Inserts the named city into the spatial map.
 	 * 
@@ -454,43 +491,6 @@ public class CommandRunner {
 	 */
 	void close() {
 		this.spatial.removeCanvas();
-	}
-
-	AvlGTree<String, City> printAvlTree() throws EmptyTreeException {
-		AvlGTree<String, City> tree = ((AvlGTreeDictionary) this.dictionary).getPrintingTree();
-		if (tree.size() == 0) {
-			throw new EmptyTreeException();
-		}
-		return tree;
-	}
-
-	void mapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
-			StartEqualsEndException, StartOrEndIsIsolatedException, RoadAlreadyMappedException,
-			RoadOutOfBoundsException {
-		if (!this.dictionary.containsName(start)) {
-			throw new StartPointDoesNotExistException();
-		}
-		if (!this.dictionary.containsName(end)) {
-			throw new EndPointDoesNotExistException();
-		}
-		City city1 = this.dictionary.getCity(start);
-		City city2 = this.dictionary.getCity(end);
-		if (start.equals(end) || city1.equals(city2)) {
-			throw new StartEqualsEndException();
-		}
-		if ((this.spatial.contains(city1) && this.adjacencyList.isIsolated(city1))
-				|| (this.spatial.contains(city2) && this.adjacencyList.isIsolated(city2))) {
-			throw new StartOrEndIsIsolatedException();
-		}
-		if (this.adjacencyList.containsUndirectedEdge(city1, city2)) {
-			throw new RoadAlreadyMappedException();
-		}
-		if (!PMGrayNode.roadInQuadrant(new PMWhiteNode(new Point2D.Float(), (int) this.spatial.getSpatialWidth(), (int) this.spatial.getSpatialHeight(), null, null), city1, city2)) {
-			throw new RoadOutOfBoundsException();
-		}
-		// add to adjacency list
-		this.adjacencyList.addUndirectedEdge(city1, city2);
-		this.spatial.addRoad(city1, city2);
 	}
 
 	PMQuadTree printPMQuadtree() throws MapIsEmptyException {
