@@ -26,7 +26,7 @@
 	<target name="all" depends="part3, submit" />
 
 	<target name="part3">
-		<jar destfile="${prog3.name}" filesetmanifest="mergewithoutmain">
+		<jar destfile="${prog.name}" filesetmanifest="mergewithoutmain">
 			<manifest>
 				<attribute name="Main-Class" value="cmsc420.meeshquest.part3.MeeshQuest"/>
                 <attribute name="Class-Path" value="."/>

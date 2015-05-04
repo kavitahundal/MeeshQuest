@@ -37,7 +37,19 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 	}
 
 	public AvlGTree(final Comparator<? super K> comp, final int g) {
-		this.comp = comp;
+		if (comp == null) {
+			this.comp = new Comparator<K>() {
+
+				@SuppressWarnings("unchecked")
+				@Override
+				public int compare(K o1, K o2) {
+					return ((Comparable<K>) o1).compareTo(o2);
+				}
+				
+			};
+		} else {
+			this.comp = comp;
+		}
 		this.g = g < 1 ? 1 : g;
 		this.root = null;
 		this.size = 0;
@@ -248,7 +260,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 	@Override
 	public V remove(Object key) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(); // TODO
 	}
 
 	@Override
@@ -285,6 +297,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			return new Iterator<java.util.Map.Entry<K, V>>() {
 
 				private Iterator<java.util.Map.Entry<K, V>> wrapper;
+				private java.util.Map.Entry<K, V> current = null;
 
 				{
 					List<java.util.Map.Entry<K, V>> entryList = new LinkedList<>();
@@ -308,7 +321,13 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 				@Override
 				public java.util.Map.Entry<K, V> next() {
-					return wrapper.next();
+					this.current = this.wrapper.next();
+					return this.current;
+				}
+				
+				@Override
+				public void remove() {
+					AvlGTree.this.remove(this.current.getKey());
 				}
 
 			};
@@ -346,7 +365,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 		@Override
 		public boolean remove(Object o) {
-			throw new UnsupportedOperationException();
+			return AvlGTree.this.remove(o) != null;
 		}
 
 		@Override
@@ -653,9 +672,13 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			}
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public V remove(Object key) {
-			throw new UnsupportedOperationException();
+			if (this.outOfBounds((K) key)) {
+				throw new IllegalArgumentException();
+			}
+			return AvlGTree.this.remove(key);
 		}
 
 		@Override
@@ -737,6 +760,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 				return new Iterator<java.util.Map.Entry<K, V>>() {
 
 					private Iterator<java.util.Map.Entry<K, V>> wrapper;
+					private java.util.Map.Entry<K, V> current = null;
 
 					{
 						List<java.util.Map.Entry<K, V>> entryList = new LinkedList<>();
@@ -762,7 +786,13 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 					@Override
 					public java.util.Map.Entry<K, V> next() {
-						return wrapper.next();
+						this.current = wrapper.next();
+						return this.current;
+					}
+					
+					@Override
+					public void remove() {
+						AvlGTree.this.remove(this.current.getKey());
 					}
 
 				};
@@ -770,7 +800,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 			@Override
 			public boolean remove(Object o) {
-				throw new UnsupportedOperationException();
+				return AvlGTree.this.remove(o) != null;
 			}
 
 			@Override
