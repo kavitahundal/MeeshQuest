@@ -112,7 +112,6 @@
     <xs:attribute name="remoteX" type="xs:nonNegativeInteger" use="required"/>
     <xs:attribute name="remoteY" type="xs:nonNegativeInteger" use="required"/>
     <xs:attribute name="radius" type="xs:nonNegativeInteger" use="required"/>
-    <xs:attribute name="saveMap" type="xs:NCName" use="optional"/>
     <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
 </xs:complexType>
 <xs:complexType name="saveMapType">
@@ -145,8 +144,7 @@
                 <xs:element name="printPMQuadtree" type="printPMType"/>
                 <xs:element name="nearestCity" type="nearestType"/>
                 <xs:element name="nearestAirport" type="nearestType"/>
-                <xs:element name="rangeCities" type="outerRangeType"/>
-                <xs:element name="rangeRoads" type="rangeType"/>
+                <xs:element name="globalRangeCities" type="outerRangeType"/>
                 <xs:element name="saveMap" type="saveMapType"/>
                 <xs:element name="shortestPath" type="shortestPathType"/>
             </xs:choice>
