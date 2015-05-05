@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.Stack;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -23,6 +24,24 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 	private final int g;
 	private AvlNode<K, V> root;
 	private int size;
+	
+	public void debugPrint() {
+		this.debugAux(this.root);
+		System.out.println();
+	}
+	
+	private void debugAux(AvlNode<K, V> node) {
+		if (node == null) {
+			return;
+		}
+		System.out.print("(");
+		this.debugAux(node.left);
+		System.out.print(" ");
+		System.out.print(node.key);
+		System.out.print(" ");
+		this.debugAux(node.right);
+		System.out.print(")");
+	}
 
 	public AvlGTree() {
 		this(null, 1);
@@ -104,6 +123,10 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 	private AvlNode<K, V> find(K key) {
 		return this.findNodeAux(this.root, key);
 	}
+	
+	private AvlNode<K, V> find(Stack<AvlNode<K, V>> stack, K key) {
+		return this.findNodeAux(stack, this.root, key);
+	}
 
 	private AvlNode<K, V> findNodeAux(AvlNode<K, V> node, K key) {
 		if (node == null) {
@@ -112,6 +135,20 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			return this.findNodeAux(node.left, key);
 		} else if (this.comp.compare(key, node.key) > 0) {
 			return this.findNodeAux(node.right, key);
+		} else {
+			return node;
+		}
+	}
+	
+	private AvlNode<K, V> findNodeAux(Stack<AvlNode<K, V>> stack, AvlNode<K, V> node, K key) {
+		if (node == null) {
+			return null;
+		}
+		stack.push(node);
+		if (this.comp.compare(key, node.key) < 0) {
+			return this.findNodeAux(stack, node.left, key);
+		} else if (this.comp.compare(key, node.key) > 0) {
+			return this.findNodeAux(stack, node.right, key);
 		} else {
 			return node;
 		}
@@ -178,6 +215,10 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 				this.putAux(node.right, add);
 			}
 		}
+		this.balance(node);
+	}
+	
+	public void balance(AvlNode<K, V> node) {
 		int balanceFactor = this.balanceFactor(node);
 		if (Math.abs(balanceFactor) > this.g) {
 			if (balanceFactor > 0) {
@@ -258,9 +299,76 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public V remove(Object key) {
-		throw new UnsupportedOperationException(); // TODO
+		Stack<AvlNode<K, V>> stack = new Stack<>();
+		AvlNode<K, V> toDelete = this.find(stack, (K) key);
+		if (toDelete == null) {
+			return null;
+		}
+		this.size--; // TODO what if we remove root?
+		V ret = toDelete.getValue();
+		if (this.size == 0) {
+			this.clear();
+			return ret;
+		}
+		
+		if (toDelete.left == null && toDelete.right == null) {
+			// if no children we need to find parent
+//			for (AvlNode<K, V> i : stack) {
+//				System.out.println(i.getKey());
+//			}
+			stack.pop();
+			AvlNode<K, V> parent = stack.peek();
+			if (parent.left == toDelete) {
+				parent.left = null;
+			} else {
+				parent.right = null;
+			}
+		} else if (toDelete.left != null && toDelete.right != null) {
+			// if 2 children find smallest in right subtree or largest in left subtree
+			AvlNode<K, V> cur = toDelete.left;
+//			stack.push(cur);
+			while (cur.right != null) {
+				stack.push(cur);
+				cur = cur.right;
+			}
+//			AvlGTree<K, V> dumdum = new AvlGTree<>(this.comp, this.g);
+//			dumdum.root = cur;
+//			dumdum.remove(cur.key);
+			toDelete.key = cur.key;
+			toDelete.value = cur.value;
+			AvlNode<K, V> parent = stack.peek();
+//			parent.right = null;
+			if (parent.left != null && parent.left.equals(cur)) {
+				parent.left = cur.left; // case of immediate successor
+			} else {
+				parent.right = cur.left;
+			}
+		} else {
+			// if 1 child we need to swap keys and replace children
+			if (toDelete.left == null) {
+				//
+				toDelete.key = toDelete.right.key;
+				toDelete.value = toDelete.right.value;
+				toDelete.left = toDelete.right.left;
+				toDelete.right = toDelete.right.right;
+			} else {
+				//
+				toDelete.key = toDelete.left.key;
+				toDelete.value = toDelete.left.value;
+				toDelete.right = toDelete.left.right;
+				toDelete.left = toDelete.left.left;
+			}
+		}
+		
+		// then we need to rebalance...
+		// start at the killed node's parent
+		while (stack.size() > 0) {
+			this.balance(stack.pop());
+		}
+		return ret;
 	}
 
 	@Override
@@ -311,6 +419,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 					}
 					this.fillList(list, node.left);
 					list.add(node);
+//					System.out.println("I just added " + node.key); // TODO
 					this.fillList(list, node.right);
 				}
 
@@ -327,6 +436,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 				
 				@Override
 				public void remove() {
+					this.wrapper.remove();
 					AvlGTree.this.remove(this.current.getKey());
 				}
 
@@ -610,7 +720,17 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 
 		@Override
 		public void clear() {
-			AvlGTree.this.clear(); // change in part 3
+//			AvlGTree.this.clear(); // change in part 3
+//			Iterator<java.util.Map.Entry<K, V>> iter = this.entrySet().iterator();//TODO fix
+			Iterator<java.util.Map.Entry<K, V>> iter = AvlGTree.this.entrySet().iterator();
+			while (iter.hasNext()) {
+				K key = iter.next().getKey();
+				System.out.println(key);
+				if (!this.outOfBounds(key)) {
+					System.out.println(key + " is out of bounds");
+					iter.remove();
+				}
+			}
 		}
 
 		private boolean outOfBounds(K key) {
@@ -672,12 +792,12 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 			}
 		}
 
-		@SuppressWarnings("unchecked")
+//		@SuppressWarnings("unchecked")
 		@Override
 		public V remove(Object key) {
-			if (this.outOfBounds((K) key)) {
-				throw new IllegalArgumentException();
-			}
+//			if (this.outOfBounds((K) key)) {
+//				throw new IllegalArgumentException();
+//			}
 			return AvlGTree.this.remove(key);
 		}
 
@@ -900,7 +1020,16 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		}
 
 		private K firstKeyAux(AvlNode<K, V> node) {
-			return node.left == null || this.outOfBounds(node.left.key) ? node.key : this.firstKeyAux(node.left);
+//			return node.left == null || this.outOfBounds(node.left.key) ? node.key : this.firstKeyAux(node.left);
+			if (node == null) {
+				return null;
+			} else if (AvlGTree.this.comp.compare(node.key, this.low) < 0) {
+				// if too low go right
+				return this.firstKeyAux(node.right);
+			} else { // if too high go left
+				K ret = this.firstKeyAux(node.left);
+				return ret == null ? node.key : ret;
+			}
 		}
 
 		@Override
@@ -923,7 +1052,16 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements SortedMap<K, V>
 		}
 
 		private K lastKeyAux(AvlNode<K, V> node) {
-			return node.right == null || this.outOfBounds(node.right.key) ? node.key : this.firstKeyAux(node.right);
+//			return node.right == null || this.outOfBounds(node.right.key) ? node.key : this.firstKeyAux(node.right);
+			if (node == null) {
+				return null;
+			} else if (AvlGTree.this.comp.compare(node.key, this.high) >= 0) {
+				// if too high go left
+				return this.lastKeyAux(node.left);
+			} else { // if too low go right
+				K ret = this.lastKeyAux(node.right);
+				return ret == null ? node.key : ret;
+			}
 		}
 
 		@Override
