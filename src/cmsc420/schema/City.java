@@ -15,6 +15,8 @@ public class City extends Float {
 	private String name;
 	private CityColor color;
 	private int radius;
+	public int remoteX;
+	public int remoteY;
 
 	/**
 	 * The public constructor for a city.
@@ -30,8 +32,10 @@ public class City extends Float {
 	 * @param radius
 	 *            the radius of the city
 	 */
-	public City(String name, float x, float y, CityColor color, int radius) {
+	public City(String name, float x, float y, int remoteX, int remoteY, CityColor color, int radius) {
 		super(x, y);
+		this.remoteX = remoteX;
+		this.remoteY = remoteY;
 		this.name = name;
 		this.color = color;
 		this.radius = radius;
@@ -67,5 +71,14 @@ public class City extends Float {
 	@Override
 	public String toString() {
 		return this.name + " " + this.x + " " + this.y + " " + this.radius + " " + this.color.toString();
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof City)) {
+			return false;
+		}
+		City c = (City) other;
+		return super.equals(other) && this.remoteX == c.remoteX && this.remoteY == c.remoteY;
 	}
 }

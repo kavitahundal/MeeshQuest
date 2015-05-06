@@ -14,19 +14,32 @@ public class CityCoordinateComparator implements Comparator<City> {
 
 	@Override
 	public int compare(City o1, City o2) {
-		if (o1.x == o2.x) {
-			if (o1.y == o2.y) {
-				return 0;
-			} else if (o1.y < o2.y) {
+		if (o1.remoteX == o2.remoteX) {
+			if (o1.remoteY == o2.remoteY) {
+				if (o1.x == o2.x) {
+					if (o1.y == o2.y) {
+						return 0;
+					} else if (o1.y < o2.y) {
+						return -1;
+					} else { // o1.y > o2.y
+						return 1;
+					}
+				} else if (o1.x < o2.x) {
+					return -1;
+				} else { // o1.x > o2.x
+					return 1;
+				}
+			} else if (o1.remoteY < o2.remoteY) {
 				return -1;
-			} else { // o1.y > o2.y
+			} else {
 				return 1;
 			}
-		} else if (o1.x < o2.x) {
+		} else if (o1.remoteX < o2.remoteX) {
 			return -1;
-		} else { // o1.x > o2.x
+		} else {
 			return 1;
 		}
+		
 	}
 
 }

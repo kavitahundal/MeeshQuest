@@ -42,7 +42,7 @@ public class WhiteNode implements TreeNode {
 	}
 
 	@Override
-	public boolean contains(Metropole metropole) {
+	public boolean contains(Point2D.Float loc) {
 		return false;
 	}
 
@@ -58,7 +58,7 @@ public class WhiteNode implements TreeNode {
 
 	@Override
 	public Metropole getMetropole(Float loc) {
-		throw new UnsupportedOperationException("no metropole");
+		return null;
 	}
 
 }

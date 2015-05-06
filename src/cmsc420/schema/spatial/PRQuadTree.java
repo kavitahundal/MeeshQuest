@@ -45,8 +45,8 @@ public class PRQuadTree {
 	}
 
 	
-	public boolean contains(Metropole metropole) {
-		return this.root.contains(metropole);
+	public boolean contains(Point2D.Float loc) {
+		return this.root.contains(loc);
 	}
 
 	public void remove(Metropole metropole) { // assuming contains is true

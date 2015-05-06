@@ -29,7 +29,7 @@ public interface TreeNode {
 	 *            the city to search for
 	 * @return if the subtree contains the city
 	 */
-	public boolean contains(Metropole metropole);
+	public boolean contains(Point2D.Float loc);
 
 	/**
 	 * Gives the node structure after removing a city.

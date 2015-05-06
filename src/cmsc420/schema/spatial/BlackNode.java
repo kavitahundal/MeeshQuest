@@ -49,8 +49,8 @@ public class BlackNode implements TreeNode {
 	}
 
 	@Override
-	public boolean contains(Metropole metropole) {
-		return metropole.equals(this.metropole);
+	public boolean contains(Point2D.Float loc) {
+		return true;
 	}
 
 	@Override
@@ -69,7 +69,6 @@ public class BlackNode implements TreeNode {
 		if (this.metropole.distance(x, y) <= radius) {
 			metropoles.add(this.metropole);
 		}
-		throw new UnsupportedOperationException("range");
 	}
 
 }

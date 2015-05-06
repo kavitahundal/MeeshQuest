@@ -57,9 +57,9 @@ public class GrayNode implements TreeNode {
 	}
 
 	@Override
-	public boolean contains(Metropole metropole) {
-		int quadrant = this.getQuadrantIndex(metropole);
-		return this.quadrants[quadrant].contains(metropole);
+	public boolean contains(Point2D.Float loc) {
+		int quadrant = this.getQuadrantIndex(loc);
+		return this.quadrants[quadrant].contains(loc);
 	}
 
 	private int getQuadrantIndex(Point2D.Float metropole) {
@@ -141,9 +141,5 @@ public class GrayNode implements TreeNode {
 		int quadrant = this.getQuadrantIndex(loc);
 		return this.quadrants[quadrant].getMetropole(loc);
 	}
-	
-	/*
-	 * metropole extends city
-	 * we will only add metropoles
-	 */
+
 }
