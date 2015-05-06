@@ -1,18 +1,10 @@
 package cmsc420.schema.spatial;
 
-import java.awt.Color;
 import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import cmsc420.drawing.CanvasPlus;
-import cmsc420.schema.City;
-import cmsc420.schema.DataStructure;
+import cmsc420.schema.Metropole;
 
 /**
  * A PR Quadtree data structure.
@@ -20,15 +12,13 @@ import cmsc420.schema.DataStructure;
  * @author Andrew Liu
  *
  */
-public class PRQuadTree implements SpatialStructure {
+public class PRQuadTree {
 
 	private TreeNode root;
 	private final Point2D.Float origin;
 	private final float width;
 	private final float height;
 	private int size;
-	private CanvasPlus canvas;
-	private String name;
 
 	/**
 	 * Constructor.
@@ -40,94 +30,57 @@ public class PRQuadTree implements SpatialStructure {
 	 * @param height
 	 *            the height of the tree
 	 */
-	public PRQuadTree(String name, float width, float height) {
-		this.name = name;
+	public PRQuadTree(float width, float height) {
 		this.origin = new Point2D.Float();
 		this.width = width;
 		this.height = height;
 		this.size = 0;
-		this.canvas = new CanvasPlus(name, (int) width, (int) height);
-		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
-		this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
+		this.root = new WhiteNode(this.origin, this.width, this.height);
 	}
 
-	@Override
-	public void add(City city) {
-		this.root = this.root.add(city);
+	
+	public void add(Metropole metropole) {
+		this.root = this.root.add(metropole);
 		this.size++;
 	}
 
-	@Override
-	public boolean contains(City city) {
-		return this.root.contains(city);
+	
+	public boolean contains(Metropole metropole) {
+		return this.root.contains(metropole);
 	}
 
-	@Override
-	public void remove(City city) {
+	public void remove(Metropole metropole) { // assuming contains is true
+		this.size--;
 		if (this.root instanceof BlackNode) { // empty the tree
-			this.root = new WhiteNode(this.origin, this.width, this.height, this.canvas);
+			this.root = new WhiteNode(this.origin, this.width, this.height);
 		} else {
-			this.root = this.root.remove(city);
+			this.root = this.root.remove(metropole);
 		}
 	}
 
-	@Override
-	public DataStructure<City> reset() {
-		return new PRQuadTree(this.name, this.width, this.height);
+	
+	public PRQuadTree reset() {
+		return new PRQuadTree(this.width, this.height);
 	}
-
-	@Override
+	
 	public int size() {
 		return this.size;
 	}
 
-	@Override
+	
 	public float getSpatialWidth() {
 		return this.width;
 	}
 
-	@Override
+	
 	public float getSpatialHeight() {
 		return this.height;
 	}
-
-	@Override
-	public Element elementize(Document doc) {
-		Element xmlRoot = doc.createElement("quadtree");
-		xmlRoot.appendChild(this.root.elementize(doc)); // recursive call
-		return xmlRoot;
-	}
-
-	@Override
-	public List<String> range(int x, int y, int radius) {
-		List<String> cities = new LinkedList<>();
-		this.root.range(cities, x, y, radius); // recursive call
-		return cities;
-	}
-
-	@Override
-	public void saveMap(String name) {
-		try {
-			this.canvas.save(name);
-		} catch (IOException e) {
-		}
-	}
-
-	@Override
-	public void addCircle(int x, int y, int radius) {
-		this.canvas.addCircle(x, y, radius, Color.BLUE, false);
-	}
-
-	@Override
-	public void removeCircle(int x, int y, int radius) {
-		this.canvas.removeCircle(x, y, radius, Color.BLUE, false);
-	}
-
-	@Override
-	public void removeCanvas() {
-		this.canvas.dispose();
-		this.canvas = null;
-		this.root = null;
+	
+	public List<Metropole> range(int x, int y, int radius) {
+		List<Metropole> metropoles = new LinkedList<>();
+		this.root.range(metropoles, x, y, radius); // recursive call
+		return metropoles;
 	}
 
 	/**
@@ -138,19 +91,9 @@ public class PRQuadTree implements SpatialStructure {
 	public TreeNode getRoot() {
 		return this.root;
 	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
 	
-	public void addRoad(City city1, City city2) {
-		throw new UnsupportedOperationException("can't add roads in PM Quadtree");
-	}
-
-	@Override
-	public Set<City> getCities() {
-		throw new UnsupportedOperationException();
+	public Metropole getMetropole(Point2D.Float loc) {
+		return this.root.getMetropole(loc);
 	}
 
 }

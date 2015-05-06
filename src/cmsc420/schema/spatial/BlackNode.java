@@ -1,14 +1,10 @@
 package cmsc420.schema.spatial;
 
-import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 import java.util.List;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import cmsc420.drawing.CanvasPlus;
-import cmsc420.schema.City;
+import cmsc420.schema.Metropole;
 
 /**
  * A TreeNode that acts as a leaf that holds one city.
@@ -21,8 +17,7 @@ public class BlackNode implements TreeNode {
 	private final Point2D.Float origin;
 	private final float width;
 	private final float height;
-	private City city;
-	private CanvasPlus canvas;
+	private Metropole metropole;
 
 	/**
 	 * Constructor.
@@ -38,65 +33,43 @@ public class BlackNode implements TreeNode {
 	 * @param canvas
 	 *            the drawing canvas of the structure
 	 */
-	public BlackNode(City city, Point2D.Float origin, float width, float height, CanvasPlus canvas) {
+	public BlackNode(Metropole metropole, Point2D.Float origin, float width, float height) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
-		this.city = city;
-		this.canvas = canvas;
+		this.metropole = metropole;
 	}
 
 	@Override
-	public TreeNode add(City city) {
-		GrayNode node = new GrayNode(this.origin, this.width, this.height, this.canvas); // partition
-		if (this.canvas != null) {
-			this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
-					this.origin.y + this.height / 2, Color.BLACK);
-			this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
-					this.origin.y + this.height, Color.BLACK);
-			this.canvas.removePoint(this.city.getName(), this.city.x, this.city.y, Color.BLACK);
-		}
-		node.add(this.city); // add the old node that was removed
-		node.add(city); // add the new node
+	public TreeNode add(Metropole metropole) {
+		GrayNode node = new GrayNode(this.origin, this.width, this.height); // partition
+		node.add(this.metropole); // add the old node that was removed
+		node.add(metropole); // add the new node
 		return node;
 	}
 
 	@Override
-	public boolean contains(City city) {
-		return city.equals(this.city);
+	public boolean contains(Metropole metropole) {
+		return metropole.equals(this.metropole);
 	}
 
 	@Override
-	public TreeNode remove(City city) {
-		if (this.canvas != null) {
-			this.canvas.removePoint(city.getName(), city.x, city.y, Color.BLACK);
+	public TreeNode remove(Metropole metropole) {
+		return new WhiteNode(this.origin, this.width, this.height);
+	}
+
+
+	@Override
+	public Metropole getMetropole(Float loc) {
+		return this.metropole;
+	}
+
+	@Override
+	public void range(List<Metropole> metropoles, int x, int y, int radius) {
+		if (this.metropole.distance(x, y) <= radius) {
+			metropoles.add(this.metropole);
 		}
-		return new WhiteNode(this.origin, this.width, this.height, this.canvas);
-	}
-
-	/**
-	 * Gets the city that this node contains.
-	 * 
-	 * @return the node's city
-	 */
-	public City getCity() {
-		return this.city;
-	}
-
-	@Override
-	public Element elementize(Document doc) {
-		Element ele = doc.createElement("black");
-		ele.setAttribute("name", this.city.getName());
-		ele.setAttribute("x", Integer.toString((int) this.city.x));
-		ele.setAttribute("y", Integer.toString((int) this.city.y));
-		return ele;
-	}
-
-	@Override
-	public void range(List<String> cities, int x, int y, int radius) {
-		if (this.city.distance(x, y) <= radius) {
-			cities.add(this.city.getName());
-		}
+		throw new UnsupportedOperationException("range");
 	}
 
 }

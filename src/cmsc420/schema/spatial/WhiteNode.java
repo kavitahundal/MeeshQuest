@@ -1,14 +1,10 @@
 package cmsc420.schema.spatial;
 
-import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 import java.util.List;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import cmsc420.drawing.CanvasPlus;
-import cmsc420.schema.City;
+import cmsc420.schema.Metropole;
 
 /**
  * A TreeNode that acts as a leaf that does not contain any cities.
@@ -21,7 +17,6 @@ public class WhiteNode implements TreeNode {
 	private final Point2D.Float origin;
 	private final float width;
 	private final float height;
-	private CanvasPlus canvas;
 
 	/**
 	 * Constructor.
@@ -35,39 +30,35 @@ public class WhiteNode implements TreeNode {
 	 * @param canvas
 	 *            the drawing canvas of the structure
 	 */
-	public WhiteNode(Point2D.Float origin, float width, float height, CanvasPlus canvas) {
+	public WhiteNode(Point2D.Float origin, float width, float height) {
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
-		this.canvas = canvas;
 	}
 
 	@Override
-	public TreeNode add(City city) {
-		if (this.canvas != null) {
-			this.canvas.addPoint(city.getName(), city.x, city.y, Color.BLACK);
-		}
-		return new BlackNode(city, this.origin, this.width, this.height, this.canvas);
+	public TreeNode add(Metropole metropole) {
+		return new BlackNode(metropole, this.origin, this.width, this.height);
 	}
 
 	@Override
-	public boolean contains(City city) {
+	public boolean contains(Metropole metropole) {
 		return false;
 	}
 
 	@Override
-	public TreeNode remove(City city) {
+	public TreeNode remove(Metropole metropole) {
 		throw new UnsupportedOperationException(); // no city to remove
 	}
 
 	@Override
-	public Element elementize(Document doc) {
-		return doc.createElement("white");
+	public void range(List<Metropole> metropoles, int x, int y, int radius) {
+		return;
 	}
 
 	@Override
-	public void range(List<String> cities, int x, int y, int radius) {
-		return;
+	public Metropole getMetropole(Float loc) {
+		throw new UnsupportedOperationException("no metropole");
 	}
 
 }

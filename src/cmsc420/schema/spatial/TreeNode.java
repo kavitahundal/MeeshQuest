@@ -1,11 +1,9 @@
 package cmsc420.schema.spatial;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import cmsc420.schema.City;
+import cmsc420.schema.Metropole;
 
 /**
  * An interface that represents the functionality of a general node of a tree.
@@ -22,7 +20,7 @@ public interface TreeNode {
 	 *            the city to add
 	 * @return the subtree after the addition
 	 */
-	public TreeNode add(City city);
+	public TreeNode add(Metropole metropole);
 
 	/**
 	 * Checks if the subtree with the node as a root contains the given city.
@@ -31,7 +29,7 @@ public interface TreeNode {
 	 *            the city to search for
 	 * @return if the subtree contains the city
 	 */
-	public boolean contains(City city);
+	public boolean contains(Metropole metropole);
 
 	/**
 	 * Gives the node structure after removing a city.
@@ -40,16 +38,7 @@ public interface TreeNode {
 	 *            the city to remove
 	 * @return the subtree after the removal
 	 */
-	public TreeNode remove(City city);
-
-	/**
-	 * Gives the subtree rooted at the node as an XML element
-	 * 
-	 * @param doc
-	 *            the document to generate XML elements
-	 * @return the XML representation of the subtree
-	 */
-	public Element elementize(Document doc);
+	public TreeNode remove(Metropole metropole);
 
 	/**
 	 * Finds a list of cities within the given coordinate's radius that are part
@@ -64,5 +53,7 @@ public interface TreeNode {
 	 * @param radius
 	 *            the radius of the circle
 	 */
-	public void range(List<String> cities, int x, int y, int radius);
+	public void range(List<Metropole> metropoles, int x, int y, int radius);
+	
+	public Metropole getMetropole(Point2D.Float loc);
 }
