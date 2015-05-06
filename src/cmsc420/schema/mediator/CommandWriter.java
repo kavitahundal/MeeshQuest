@@ -8,6 +8,7 @@ import javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import cmsc420.schema.Airport;
 import cmsc420.schema.City;
 import cmsc420.schema.spatial.SpatialStructure;
 import cmsc420.sortedmap.AvlGTree;
@@ -71,7 +72,7 @@ public class CommandWriter {
 	 * @param tree
 	 *            the PR Quadtree to print
 	 */
-	void appendTag(String command, String[] parameters, String[] paramNames, SpatialStructure tree, String id) {
+	void appendTagQuadtree(String command, String[] parameters, String[] paramNames, SpatialStructure tree, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
@@ -82,7 +83,7 @@ public class CommandWriter {
 	}
 
 	// do you like how I copied the code from the above method? :D
-	void appendTag(String command, String[] parameters, String[] paramNames, AvlGTree<String, City> tree, String id) {
+	void appendTagAVLTree(String command, String[] parameters, String[] paramNames, AvlGTree<String, City> tree, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
@@ -104,7 +105,7 @@ public class CommandWriter {
 	 * @param cities
 	 *            the list of cities to output
 	 */
-	void appendTag(String command, String[] parameters, String[] paramNames, List<City> cities, String id) {
+	void appendTagCityList(String command, String[] parameters, String[] paramNames, List<City> cities, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
@@ -115,24 +116,6 @@ public class CommandWriter {
 			cityList.appendChild(this.mapCity(city));
 		}
 		outputTag.appendChild(cityList);
-		tag.appendChild(outputTag);
-		this.root.appendChild(tag);
-	}
-
-	void appendTagCities(String command, String[] parameters, String[] paramNames, List<City[]> roads, String id) {
-		Element tag = this.initiateTag(null);
-		tag = this.createTag(tag, command, parameters, paramNames, id);
-		Element outputTag = this.output.createElement("output");
-		Element roadList = this.output.createElement("roadList");
-
-		/* appending city XML nodes */
-		for (City[] road : roads) {
-			Element roadTag = this.output.createElement("road");
-			roadTag.setAttribute("start", road[0].getName());
-			roadTag.setAttribute("end", road[1].getName());
-			roadList.appendChild(roadTag);
-		}
-		outputTag.appendChild(roadList);
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
@@ -149,7 +132,7 @@ public class CommandWriter {
 	 * @param city
 	 *            the city to output
 	 */
-	void appendTag(String command, String[] parameters, String[] paramNames, City city, String id) {
+	void appendTagCity(String command, String[] parameters, String[] paramNames, City city, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
@@ -157,12 +140,12 @@ public class CommandWriter {
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
-
-	void appendIsolatedCityTag(String command, String[] parameters, String[] paramNames, City city, String id) {
+	
+	void appendTagAirport(String command, String[] parameters, String[] paramNames, Airport airport, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
-		outputTag.appendChild(this.mapIsolatedCity(city)); // append city node
+		outputTag.appendChild(this.mapAirport(airport)); // append city node
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
@@ -180,7 +163,7 @@ public class CommandWriter {
 	 * @param city
 	 *            the city that was unmapped (null if no city was unmapped)
 	 */
-	void appendTagUnmapped(String command, String[] parameters, String[] paramNames, City city, String id) {
+	void appendTagCityUnmapped(String command, String[] parameters, String[] paramNames, City city, List<City[]> roads, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
@@ -189,6 +172,14 @@ public class CommandWriter {
 		if (city != null) {
 			outputTag.appendChild(this.unmapCity(city));
 		}
+
+		for (City[] road : roads) {
+			Element roadTag = this.output.createElement("roadUnmapped");
+			roadTag.setAttribute("start", road[0].getName());
+			roadTag.setAttribute("end", road[1].getName());
+			outputTag.appendChild(roadTag);
+		}
+		
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
@@ -202,14 +193,15 @@ public class CommandWriter {
 		this.root.appendChild(tag);
 	}
 	
-	void appendTagRoad(String command, String[] parameters, String[] paramNames, String start, String end, String id) {
+	void appendTagRoadDeleted(String command, String[] parameters, String[] paramNames, String start, String end, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
-		outputTag.appendChild(this.mapRoad(start, end));
+		outputTag.appendChild(this.mapRoadDeleted(start, end));
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
+	
 	
 	Element shortestPathTag(String command, String[] parameters, String[] paramNames, Element e, String id) {
 		Element tag = this.initiateTag(null);
@@ -229,10 +221,10 @@ public class CommandWriter {
 		Element tag = this.output.createElement("city");
 		return this.mapLocation(city, tag); // append city XML
 	}
-
-	private Element mapIsolatedCity(City city) {
-		Element tag = this.output.createElement("isolatedCity");
-		return this.mapLocation(city, tag); // append city XML
+	
+	private Element mapAirport(Airport airport) {
+		Element tag = this.output.createElement("city");
+		return this.mapAirportLocation(airport, tag); // append city XML
 	}
 
 	private Element mapRoadCreated(String start, String end) {
@@ -242,8 +234,8 @@ public class CommandWriter {
 		return tag;
 	}
 	
-	private Element mapRoad(String start, String end) {
-		Element tag = this.output.createElement("road");
+	private Element mapRoadDeleted(String start, String end) {
+		Element tag = this.output.createElement("roadDeleted");
 		tag.setAttribute("start", start);
 		tag.setAttribute("end", end);
 		return tag;
@@ -256,10 +248,22 @@ public class CommandWriter {
 
 	private Element mapLocation(City city, Element tag) {
 		tag.setAttribute("name", city.getName());
-		tag.setAttribute("x", Integer.toString((int) city.x));
-		tag.setAttribute("y", Integer.toString((int) city.y));
+		tag.setAttribute("localX", Integer.toString((int) city.x));
+		tag.setAttribute("localY", Integer.toString((int) city.y));
+		tag.setAttribute("remoteX", Integer.toString((int) city.remoteX));
+		tag.setAttribute("remoteY", Integer.toString((int) city.remoteY));
 		tag.setAttribute("color", city.getColor().toString());
 		tag.setAttribute("radius", Integer.toString(city.getRadius()));
+		return tag; // XML element with the city
+	}
+	
+	private Element mapAirportLocation(Airport airport, Element tag) {
+		tag.setAttribute("name", airport.getName());
+		tag.setAttribute("airlineName", airport.getAirlineName());
+		tag.setAttribute("localX", Integer.toString((int) airport.x));
+		tag.setAttribute("localY", Integer.toString((int) airport.y));
+		tag.setAttribute("remoteX", Integer.toString(airport.remoteX));
+		tag.setAttribute("remoteY", Integer.toString(airport.remoteY));
 		return tag; // XML element with the city
 	}
 

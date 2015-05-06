@@ -26,7 +26,6 @@ import cmsc420.exceptions.DuplicateCityCoordinatesException;
 import cmsc420.exceptions.DuplicateCityNameException;
 import cmsc420.exceptions.EmptyTreeException;
 import cmsc420.exceptions.EndPointDoesNotExistException;
-import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.MetropoleIsEmptyException;
 import cmsc420.exceptions.MetropoleOutOfBoundsException;
 import cmsc420.exceptions.NoCitiesExistInRangeException;
@@ -43,15 +42,11 @@ import cmsc420.exceptions.RoadViolatesPMRulesException;
 import cmsc420.exceptions.StartEqualsEndException;
 import cmsc420.exceptions.StartOrEndIsIsolatedException;
 import cmsc420.exceptions.StartPointDoesNotExistException;
+import cmsc420.schema.Airport;
 import cmsc420.schema.City;
 import cmsc420.schema.CityColor;
 import cmsc420.schema.SortType;
-import cmsc420.schema.adjacencylist.AdjacencyList;
-import cmsc420.schema.dictionary.AvlGTreeDictionary;
-import cmsc420.schema.dictionary.DictionaryStructure;
-import cmsc420.schema.spatial.Seedling;
 import cmsc420.schema.spatial.PM.PMQuadTree;
-import cmsc420.schema.spatial.PM.PMQuadTreeSeedling;
 import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
@@ -65,9 +60,6 @@ public class CommandParser {
 
 	private Document input;
 	private boolean processed;
-	private DictionaryStructure dictionary;
-	private Seedling seed;
-	private AdjacencyList<City> adjacencyList;
 	private CommandRunner runner;
 	private CommandWriter writer;
 
@@ -82,15 +74,8 @@ public class CommandParser {
 	 * @param adj
 	 *            adjacency list data structure
 	 */
-	public CommandParser(DictionaryStructure dict, Seedling seed, AdjacencyList<City> adj) {
+	public CommandParser() {
 		this.processed = false;
-
-		/* initialize data structures */
-		this.dictionary = dict;
-		this.seed = seed;
-		this.adjacencyList = adj;
-
-		/* initialize output XML writer */
 		writer = new CommandWriter();
 	}
 
@@ -185,12 +170,6 @@ public class CommandParser {
 			pmOrder = Integer.parseInt(attrs.getNamedItem("pmOrder").getNodeValue());
 		} catch (NullPointerException e) {
 		}
-		if (this.dictionary instanceof AvlGTreeDictionary) {
-			this.dictionary = ((AvlGTreeDictionary) this.dictionary).generate(g);
-		}
-		if (this.seed instanceof PMQuadTreeSeedling) {
-			((PMQuadTreeSeedling) this.seed).setOrder(pmOrder);
-		}
 		this.runner = new CommandRunner(localSpatialWidth, localSpatialHeight, remoteSpatialWidth, remoteSpatialHeight, g, pmOrder);
 
 		/* process each command */
@@ -244,7 +223,9 @@ public class CommandParser {
 					String[] parameters = { name };
 					try {
 						City deleted = this.runner.deleteCity(name);
-						this.writer.appendTagUnmapped(command, parameters, paramNames, deleted, id);
+//						this.writer.appendTagCityUnmapped(command, parameters, paramNames, deleted, id);
+						// TODO return type is city and roadlist
+						// need to fix writer method
 					} catch (CityDoesNotExistException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
@@ -272,7 +253,7 @@ public class CommandParser {
 					String[] parameters = { sortByString };
 					try {
 						List<City> cities = this.runner.listCities(sortBy);
-						this.writer.appendTag(command, parameters, paramNames, cities, id);
+						this.writer.appendTagCityList(command, parameters, paramNames, cities, id);
 					} catch (NoCitiesToListException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
@@ -286,7 +267,7 @@ public class CommandParser {
 					String parameters[] = {};
 					try {
 						AvlGTree<String, City> tree = this.runner.printAvlTree();
-						this.writer.appendTag(command, parameters, paramNames, tree, id);
+						this.writer.appendTagAVLTree(command, parameters, paramNames, tree, id);
 					} catch (EmptyTreeException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
@@ -349,8 +330,7 @@ public class CommandParser {
 					String[] parameters = { start, end };
 					try {
 						this.runner.unmapRoad(start, end);
-//						this.writer.appendTagRoadCreated(command, parameters, paramNames, start, end, id);
-						// TODO
+						this.writer.appendTagRoadDeleted(command, parameters, paramNames, start, end, null);
 					} catch (StartPointDoesNotExistException | EndPointDoesNotExistException | StartEqualsEndException
 							| RoadNotMappedException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, null);
@@ -361,7 +341,7 @@ public class CommandParser {
 					String[] parameters = { name };
 					try {
 						this.runner.unmapAirport(name);
-						// TODO write
+						this.writer.appendTag(null, command, parameters, paramNames, null);
 					} catch (AirportDoesNotExistException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, null); 
 					}
@@ -379,7 +359,7 @@ public class CommandParser {
 					String parameters[] = { remoteXString, remoteYString };
 					try {
 						PMQuadTree tree = this.runner.printPMQuadtree(remoteX, remoteY);
-						this.writer.appendTag(command, parameters, paramNames, tree, id);
+						this.writer.appendTagQuadtree(command, parameters, paramNames, tree, id);
 					} catch (MetropoleOutOfBoundsException | MetropoleIsEmptyException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
@@ -415,8 +395,8 @@ public class CommandParser {
 					String[] paramNames = { "remoteX", "remoteY", "radius" };
 					String[] parameters = { remoteXString, remoteYString, radiusString };
 					try {
-						this.runner.globalRangeCities(remoteX, remoteY, radius);
-						// TODO print
+						List<City> cities = this.runner.globalRangeCities(remoteX, remoteY, radius);
+						this.writer.appendTagCityList(command, parameters, paramNames, cities, null);
 					} catch (NoCitiesExistInRangeException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, null);
 					}
@@ -440,7 +420,7 @@ public class CommandParser {
 					String[] parameters = { localXString, localYString, remoteXString, remoteYString };
 					try {
 						City city = this.runner.nearestCity(localX, localY, remoteX, remoteY);
-						this.writer.appendTag(command, parameters, paramNames, city, id);
+						this.writer.appendTagCity(command, parameters, paramNames, city, id);
 					} catch (CityNotFoundException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
 					}
@@ -456,8 +436,8 @@ public class CommandParser {
 					String[] paramNames = { "localX", "localY", "remoteX", "remoteY" };
 					String[] parameters = { localXString, localYString, remoteXString, remoteYString };
 					try {
-						this.runner.nearestAirport(localX, localY, remoteX, remoteY);
-						// TODO print
+						Airport airport = this.runner.nearestAirport(localX, localY, remoteX, remoteY);
+						this.writer.appendTagAirport(command, parameters, paramNames, airport, null);
 					} catch (AirportNotFoundException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, null);
 					}
@@ -489,7 +469,7 @@ public class CommandParser {
 						this.writer.appendShortestPathTag(e);
 					} catch (NonExistentStartException | NonExistentEndException | NoPathExistsException e) {
 						this.writer.appendTag(e.getMessage(), command, parameters, paramNames, id);
-					} // TODO everything below is garbage!
+					}
 				} else {
 					this.writer.undefinedError();
 				}
