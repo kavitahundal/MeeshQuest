@@ -218,13 +218,16 @@ public class CommandWriter {
 	}
 	
 	void appendTagCityRoadsUnmapped(String command, String[] parameters, String[] paramNames, City city, List<City[]> deleted, String id) {
-		// TODO
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");
 		// outputtag append child cityunmapped
+		outputTag.appendChild(this.unmapCity(city));
 		// for each road
 		// outputtag append child roadunmapped
+		for (City[] road : deleted) {
+			outputTag.appendChild(this.mapRoadUnmapped(road[0].getName(), road[1].getName()));
+		}
 		tag.appendChild(outputTag);
 		this.root.appendChild(tag);
 	}
@@ -235,7 +238,7 @@ public class CommandWriter {
 	}
 	
 	private Element mapAirport(Airport airport) {
-		Element tag = this.output.createElement("city");
+		Element tag = this.output.createElement("airport");
 		return this.mapAirportLocation(airport, tag); // append city XML
 	}
 
@@ -248,6 +251,13 @@ public class CommandWriter {
 	
 	private Element mapRoadDeleted(String start, String end) {
 		Element tag = this.output.createElement("roadDeleted");
+		tag.setAttribute("start", start);
+		tag.setAttribute("end", end);
+		return tag;
+	}
+	
+	private Element mapRoadUnmapped(String start, String end) {
+		Element tag = this.output.createElement("roadUnmapped");
 		tag.setAttribute("start", start);
 		tag.setAttribute("end", end);
 		return tag;
