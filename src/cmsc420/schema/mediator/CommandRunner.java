@@ -20,7 +20,6 @@ import cmsc420.exceptions.AirportOutOfBoundsException;
 import cmsc420.exceptions.AirportViolatesPMRulesException;
 import cmsc420.exceptions.CityDoesNotExistException;
 import cmsc420.exceptions.CityNotFoundException;
-import cmsc420.exceptions.CityNotMappedException;
 import cmsc420.exceptions.DuplicateAirportCoordinatesException;
 import cmsc420.exceptions.DuplicateAirportNameException;
 import cmsc420.exceptions.DuplicateCityCoordinatesException;
@@ -30,7 +29,6 @@ import cmsc420.exceptions.EndPointDoesNotExistException;
 import cmsc420.exceptions.MapIsEmptyException;
 import cmsc420.exceptions.MetropoleIsEmptyException;
 import cmsc420.exceptions.MetropoleOutOfBoundsException;
-import cmsc420.exceptions.NameNotInDictionaryException;
 import cmsc420.exceptions.NoCitiesExistInRangeException;
 import cmsc420.exceptions.NoCitiesToListException;
 import cmsc420.exceptions.NoPathExistsException;
@@ -156,13 +154,19 @@ public class CommandRunner {
 		/* get city to remove */
 		City city = this.cityDictionary.getCity(name);
 		Point2D.Float loc = new Point2D.Float((float) city.remoteX, (float) city.remoteY);
+		List<City[]> roadList = new LinkedList<>();
 		if (this.metropoles.contains(loc)) {
-			// try {
-			// Metropole metropole = this.metropoles.getMetropole(loc);
-			// // this.unmapCity(name); // unmap city if in spatial
-			// } catch (NameNotInDictionaryException | CityNotMappedException e)
-			// {
-			// }
+			// get metropole and pm quadtree
+			Metropole metropole= this.metropoles.getMetropole(loc);
+			PMQuadTree pm = metropole.getRoads();
+			// check adjacencylist for all roads
+			// delete each road
+			Set<City> neighbors = this.cityAdjList.neighbors(city);
+			for (City neighbor : neighbors) {
+				// add road to list
+				// remove road from pm quadtree
+			}
+
 			ret = city; // TODO need to return cities AND ROADS unmapped
 		}
 		this.cityDictionary.remove(city);
@@ -209,7 +213,6 @@ public class CommandRunner {
 
 	AvlGTree<String, City> printAvlTree() throws EmptyTreeException {
 		AvlGTree<String, City> tree = this.cityDictionary.getPrintingTree(); 
-		// TODO may be wrong
 		if (tree.size() == 0) {
 			throw new EmptyTreeException();
 		}
@@ -219,8 +222,6 @@ public class CommandRunner {
 	void mapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
 			StartEqualsEndException, StartOrEndIsIsolatedException, RoadAlreadyMappedException,
 			RoadOutOfBoundsException, RoadNotInOneMetropoleException, RoadIntersectsAnotherRoadException, RoadViolatesPMRulesException {
-		// roadNotInOneMetropole, roadIntersectsAnotherRoad, roadViolatesPMRules
-		// TODO
 		if (!this.cityDictionary.containsName(start)) {
 			throw new StartPointDoesNotExistException();
 		}
@@ -242,6 +243,8 @@ public class CommandRunner {
 		if (this.cityAdjList.containsUndirectedEdge(city1, city2)) {
 			throw new RoadAlreadyMappedException();
 		}
+		// TODO loop through all neighboring locations to see if there's a city
+		// ...or some more appropriate version of validation
 		// add to adjacency list
 		this.cityAdjList.addUndirectedEdge(city1, city2);
 		if (!this.metropoles.contains(new Point2D.Float(city1.remoteX, city1.remoteY))) {
@@ -250,7 +253,8 @@ public class CommandRunner {
 			this.metropoles.add(metropole);
 		}
 		Metropole metropole = this.metropoles.getMetropole(new Point2D.Float(city1.remoteX, city1.remoteY));
-		// TODO metropole add road
+		PMQuadTree quadtree = metropole.getRoads();
+		quadtree.addRoad(city1, city2);
 	}
 
 	void mapAirport(String name, String airlineName, int localX, int localY, int remoteX, int remoteY)
@@ -261,15 +265,14 @@ public class CommandRunner {
 		// airportOutOfBounds
 		// airportViolatesPMRules
 		// TODO
+		// put airport in a global dictionary (mapping of airline to airport)
+		// put airport in a local dictionary
+		// BUT we need to validate? (look's like just the coordinate should be not occupied?)
+		// TODO PMQUADTREE HOLD AIRPORTS
 	}
 
 	void unmapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
 			StartEqualsEndException, RoadNotMappedException {
-		// startPointDoesNotExist
-		// endPointDoesNotExist
-		// startEqualsEnd
-		// roadNotMapped
-		// TODO
 		if (!this.cityDictionary.containsName(start)) {
 			throw new StartPointDoesNotExistException();
 		}
@@ -297,8 +300,6 @@ public class CommandRunner {
 
 	PMQuadTree printPMQuadtree(int remoteX, int remoteY) throws MetropoleOutOfBoundsException,
 			MetropoleIsEmptyException {
-		// metropoleOutOfBounds
-		// metropoleIsEmpty
 		/* check for exceptions */
 		if (remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
 			throw new MetropoleOutOfBoundsException();
@@ -326,9 +327,6 @@ public class CommandRunner {
 	 *            the name of the file to save to
 	 */
 	void saveMap(int remoteX, int remoteY, String name) throws MetropoleOutOfBoundsException, MetropoleIsEmptyException {
-		// TODO
-		// metropoleOutOfBounds
-		// metropoleIsEmpty
 		if (remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
 			throw new MetropoleOutOfBoundsException();
 		}
@@ -344,8 +342,6 @@ public class CommandRunner {
 	}
 
 	List<City> globalRangeCities(int remoteX, int remoteY, int radius) throws NoCitiesExistInRangeException {
-		// noCitiesExistInRange
-		// TODO
 		try {
 			List<City> cities = this.listCities(SortType.name);
 			List<City> filter = new LinkedList<City>();
@@ -380,7 +376,6 @@ public class CommandRunner {
 	 * @throws CityNotFoundException
 	 */
 	City nearestCity(int localX, int localY, int remoteX, int remoteY) throws CityNotFoundException {
-		// citynotfound only
 		if (remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
 			throw new CityNotFoundException();
 		}
@@ -412,8 +407,6 @@ public class CommandRunner {
 	}
 
 	Airport nearestAirport(int localX, int localY, int remoteX, int remoteY) throws AirportNotFoundException {
-		// TODO
-		// airportNotFound
 		if (remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
 			throw new AirportNotFoundException();
 		}
