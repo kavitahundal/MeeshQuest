@@ -13,7 +13,8 @@ public class Airport extends Point2D.Float {
 	public int remoteX;
 	public int remoteY;
 	
-	public Airport(String name, String airlineName, int remoteX, int remoteY) {
+	public Airport(String name, String airlineName, int localX, int localY, int remoteX, int remoteY) {
+		super(localX, localY);
 		this.name = name;
 		this.airlineName = airlineName;
 		this.remoteX = remoteX;
@@ -26,5 +27,14 @@ public class Airport extends Point2D.Float {
 	
 	public String getAirlineName() {
 		return this.airlineName;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof Airport)) {
+			return false;
+		}
+		Airport a = (Airport) other;
+		return super.equals(other) && this.remoteX == a.remoteX && this.remoteY == a.remoteY;
 	}
 }

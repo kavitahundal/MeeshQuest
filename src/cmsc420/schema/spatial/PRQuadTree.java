@@ -95,5 +95,9 @@ public class PRQuadTree {
 	public Metropole getMetropole(Point2D.Float loc) {
 		return this.root.getMetropole(loc);
 	}
+	
+	public Metropole getMetorpole(int remoteX, int remoteY) {
+		return this.getMetropole(new Point2D.Float(remoteX, remoteY));
+	}
 
 }

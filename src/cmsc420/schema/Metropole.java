@@ -1,10 +1,9 @@
 package cmsc420.schema;
 
 import java.awt.geom.Point2D;
-import java.util.HashSet;
-import java.util.Set;
 
 import cmsc420.schema.adjacencylist.AdjacencyList;
+import cmsc420.schema.dictionary.AirportDictionary;
 import cmsc420.schema.dictionary.AvlGTreeDictionary;
 import cmsc420.schema.dictionary.DictionaryStructure;
 import cmsc420.schema.spatial.PM.PM1QuadTree;
@@ -21,7 +20,7 @@ public class Metropole extends Point2D.Float {
 	private PMQuadTree roads;
 	private DictionaryStructure dict;
 	private AdjacencyList<City> adj;
-	private Set<Airport> airports;
+	private AirportDictionary airports;
 
 	public Metropole(float x, float y, int pmOrder, int width, int height, int g) {
 		super(x, y);
@@ -34,7 +33,7 @@ public class Metropole extends Point2D.Float {
 		}
 		this.dict = new AvlGTreeDictionary(g);
 		this.adj = new AdjacencyList<City>(new CityCoordinateComparator());
-		this.airports = new HashSet<>();
+		this.airports = new AirportDictionary();
 	}
 	
 	public PMQuadTree getRoads() {
@@ -49,8 +48,10 @@ public class Metropole extends Point2D.Float {
 		return this.adj;
 	}
 	
-	public Set<Airport> getAirports() {
+	public AirportDictionary getAirports() {
 		return this.airports;
 	}
+	
+	// add/remove airport/road?
 
 }

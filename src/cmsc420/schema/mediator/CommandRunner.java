@@ -51,6 +51,7 @@ import cmsc420.schema.CityDistanceComparator;
 import cmsc420.schema.Metropole;
 import cmsc420.schema.SortType;
 import cmsc420.schema.adjacencylist.AdjacencyList;
+import cmsc420.schema.dictionary.AirportDictionary;
 import cmsc420.schema.dictionary.AvlGTreeDictionary;
 import cmsc420.schema.spatial.PRQuadTree;
 import cmsc420.schema.spatial.PM.PMBlackNode;
@@ -70,8 +71,9 @@ import cmsc420.sortedmap.AvlGTree;
 public class CommandRunner {
 
 	private PRQuadTree metropoles;
-	private AvlGTreeDictionary cityDictionary;
+	AvlGTreeDictionary cityDictionary;
 	private AdjacencyList<City> cityAdjList;
+	private AirportDictionary airportDictionary;
 
 	private int localWidth;
 	private int localHeight;
@@ -87,9 +89,7 @@ public class CommandRunner {
 		this.globalHeight = globalHeight;
 		this.g = g;
 		this.pmOrder = pmOrder;
-		this.metropoles = new PRQuadTree(globalWidth, globalHeight);
-		this.cityDictionary = new AvlGTreeDictionary(g);
-		this.cityAdjList = new AdjacencyList<City>(new CityCoordinateComparator());
+		this.clearAll(); // initialize the dictionaries
 	}
 
 	/**
@@ -119,12 +119,12 @@ public class CommandRunner {
 	 */
 	void createCity(String name, int localX, int localY, int remoteX, int remoteY, int radius, CityColor color)
 			throws DuplicateCityNameException, DuplicateCityCoordinatesException {
-		City city = new City(name, localX, localY, remoteX, remoteY, color, radius); // create
-																						// city
+		City city = new City(name, localX, localY, remoteX, remoteY, color, radius);
+		Airport airport = new Airport(name, "", localX, localY, remoteX, remoteY);
 		/* check for exceptions */
-		if (this.cityDictionary.containsName(name)) {
+		if (this.cityDictionary.containsName(name) || this.airportDictionary.containsName(name)) {
 			throw new DuplicateCityNameException();
-		} else if (this.cityDictionary.contains(city)) {
+		} else if (this.cityDictionary.contains(city) || this.airportDictionary.containsCoordinates(airport)) {
 			throw new DuplicateCityCoordinatesException();
 		} else {
 			this.cityDictionary.add(city);
@@ -143,9 +143,7 @@ public class CommandRunner {
 	 * @throws CityDoesNotExistException
 	 *             an exception if the city to delete is not in the dictionary
 	 */
-	City deleteCity(String name) throws CityDoesNotExistException {
-		City ret = null;
-
+	List<City[]> deleteCity(String name) throws CityDoesNotExistException {
 		/* check for exceptions */
 		if (!this.cityDictionary.containsName(name)) {
 			throw new CityDoesNotExistException();
@@ -167,10 +165,9 @@ public class CommandRunner {
 				// remove road from pm quadtree
 			}
 
-			ret = city; // TODO need to return cities AND ROADS unmapped
 		}
 		this.cityDictionary.remove(city);
-		return ret;
+		return roadList;
 	}
 
 	/**
@@ -183,6 +180,7 @@ public class CommandRunner {
 		this.metropoles = new PRQuadTree(this.globalWidth, this.globalHeight);
 		this.cityDictionary = new AvlGTreeDictionary(g);
 		this.cityAdjList = new AdjacencyList<City>(new CityCoordinateComparator());
+		this.airportDictionary = new AirportDictionary();
 	}
 
 	/**
@@ -269,6 +267,17 @@ public class CommandRunner {
 		// put airport in a local dictionary
 		// BUT we need to validate? (look's like just the coordinate should be not occupied?)
 		// TODO PMQUADTREE HOLD AIRPORTS
+		City city = new City(name, localX, localY, remoteX, remoteY, null, 0);
+		Airport airport = new Airport(name, airlineName, localX, localY, remoteX, remoteY);
+		/* check for exceptions */
+		if (this.cityDictionary.containsName(name) || this.airportDictionary.containsName(name)) {
+			throw new DuplicateAirportNameException();
+		} else if (this.cityDictionary.contains(city) || this.airportDictionary.containsCoordinates(airport)) {
+			throw new DuplicateAirportCoordinatesException();
+		}
+		// check if violation or out of bounds here
+		this.airportDictionary.add(airport);
+		// map it in a local dictionary here
 	}
 
 	void unmapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
@@ -294,8 +303,13 @@ public class CommandRunner {
 	}
 
 	void unmapAirport(String name) throws AirportDoesNotExistException {
-		// airportDoesNotExist
-		// TODO
+		if (this.airportDictionary.containsName(name)) {
+			throw new AirportDoesNotExistException();
+		}
+		Airport airport = this.airportDictionary.get(name);
+		this.airportDictionary.remove(airport);
+		Metropole metropole = this.metropoles.getMetorpole(airport.remoteX, airport.remoteY);
+		metropole.getAirports().remove(airport);
 	}
 
 	PMQuadTree printPMQuadtree(int remoteX, int remoteY) throws MetropoleOutOfBoundsException,
@@ -414,7 +428,7 @@ public class CommandRunner {
 		if (metropole == null) {
 			throw new AirportNotFoundException();
 		}
-		Set<Airport> airports = metropole.getAirports();
+		AirportDictionary airports = metropole.getAirports();
 		if (airports.size() == 0) {
 			throw new AirportNotFoundException();
 		}

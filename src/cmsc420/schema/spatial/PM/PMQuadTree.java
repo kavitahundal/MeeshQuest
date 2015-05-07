@@ -16,6 +16,8 @@ import cmsc420.schema.City;
 import cmsc420.schema.spatial.SpatialStructure;
 
 public abstract class PMQuadTree implements SpatialStructure {
+	
+	// TODO change print and struct to support airports
 
 	private final int width;
 	private final int height;
