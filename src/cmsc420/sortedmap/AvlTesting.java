@@ -35,7 +35,7 @@ public class AvlTesting {
 		}
 	}
 
-	private static void initialize(OldAvlGTree<Integer, String> aTree,
+	private static void initialize(AvlGTree<Integer, String> aTree,
 			TreeMap<Integer, String> tMap, List<Integer> keys,
 			List<String> values) {
 		aTree.clear();
@@ -69,10 +69,10 @@ public class AvlTesting {
 	
 	@Test
 	public void putDuplicateTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		int max = 10;
 		for (int i = 0; i < max; i++) {
@@ -93,10 +93,10 @@ public class AvlTesting {
 
 	@Test
 	public void putRandomTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 		
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -134,10 +134,10 @@ public class AvlTesting {
 
 	@Test
 	public void firstKeyLastKeyTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -173,10 +173,10 @@ public class AvlTesting {
 
 	@Test
 	public void containsTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -219,10 +219,10 @@ public class AvlTesting {
 
 	@Test
 	public void getTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -259,10 +259,10 @@ public class AvlTesting {
 
 	@Test
 	public void putAllTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -305,10 +305,10 @@ public class AvlTesting {
 
 	@Test
 	public void sizeTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -341,7 +341,7 @@ public class AvlTesting {
 	
 	@Test
 	public void equalsTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -372,9 +372,9 @@ public class AvlTesting {
 	
 	@Test
 	public void emptyTreeTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		
 		assertTrue(aTree.equals(tMap));
@@ -405,8 +405,8 @@ public class AvlTesting {
 
 	@Test
 	public void eSetClearTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
@@ -438,7 +438,7 @@ public class AvlTesting {
 
 	@Test
 	public void eSetContainsTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> tEntry = tMap.entrySet();
@@ -466,7 +466,7 @@ public class AvlTesting {
 
 	@Test
 	public void eSetContainsAllTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> tEntry = tMap.entrySet();
@@ -490,7 +490,7 @@ public class AvlTesting {
 
 	@Test
 	public void eSetIterHasNextTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> tEntry = tMap.entrySet();
@@ -527,7 +527,7 @@ public class AvlTesting {
 
 	@Test
 	public void eSetIteratorTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> tEntry = tMap.entrySet();
@@ -556,7 +556,7 @@ public class AvlTesting {
 
 	@Test
 	public void eSetSizeTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> tEntry = tMap.entrySet();
@@ -579,7 +579,7 @@ public class AvlTesting {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void eSetToArrayTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> tEntry = tMap.entrySet();
@@ -619,7 +619,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smPutTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		int lower = (int) (Math.random() * 20);
 		int upper = (int) (lower + Math.random() * 100);
@@ -650,7 +650,7 @@ public class AvlTesting {
 
 	@Test
 	public void smContainsAndGetTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		int lower = (int) (Math.random() * 20);
 		int upper = (int) (lower + Math.random() * 100);
@@ -681,7 +681,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smDeterministicSizeTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -702,7 +702,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smSizeTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -725,7 +725,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smFirstLastKeyTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -758,7 +758,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smESetTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -787,7 +787,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smESetContainsTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
 		List<Integer> keys = new ArrayList<Integer>();
@@ -818,7 +818,7 @@ public class AvlTesting {
 
 	@Test
 	public void smESetContainsAllTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
 		List<Integer> keys = new ArrayList<Integer>();
@@ -847,7 +847,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smESetIteratorTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
 		List<Integer> keys = new ArrayList<Integer>();
@@ -886,10 +886,10 @@ public class AvlTesting {
 	
 	@Test
 	public void removeDeterministic() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 1);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 1);
 		int max = 100;
 		
 		for (int i = 0; i < max; i++) {
@@ -936,10 +936,10 @@ public class AvlTesting {
 	@Test
 	
 	public void removeTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 		
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -983,10 +983,10 @@ public class AvlTesting {
 	
 	@Test
 	public void eSetRemoveAllTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 		
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> aEntry2 = aTree2.entrySet();
@@ -1035,10 +1035,10 @@ public class AvlTesting {
 	
 	@Test
 	public void eSetRetainAllTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer,String> aTree2 = new OldAvlGTree<Integer,String>(new IntComparator(), 3);
+		AvlGTree<Integer,String> aTree2 = new AvlGTree<Integer,String>(new IntComparator(), 3);
 		
 		Set<Map.Entry<Integer, String>> aEntry = aTree.entrySet();
 		Set<Map.Entry<Integer, String>> aEntry2 = aTree2.entrySet();
@@ -1086,10 +1086,10 @@ public class AvlTesting {
 	
 	@Test
 	public void smIterRemoveTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		
-		OldAvlGTree<Integer, String> aTreeCopy = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTreeCopy = new AvlGTree<Integer, String>(null, 3);
 
 		
 		List<Integer> keys = new ArrayList<Integer>();
@@ -1142,7 +1142,7 @@ public class AvlTesting {
 	
 	@Test
 	public void smClearTest() {
-		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
+		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();

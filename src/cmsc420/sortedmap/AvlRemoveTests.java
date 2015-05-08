@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 import org.junit.Test;
 
-import cmsc420.sortedmap.OldAvlGTree;
+import cmsc420.sortedmap.AvlGTree;
 
 /*
  * These tests were made by Anonymous.
@@ -22,7 +22,7 @@ public class AvlRemoveTests {
 
 	@Test
 	public void testRemoveFromSubMapEntrySet() {
-		OldAvlGTree<Integer, Integer> avl = new OldAvlGTree<Integer, Integer>();
+		AvlGTree<Integer, Integer> avl = new AvlGTree<Integer, Integer>();
 		TreeMap<Integer, Integer> treemap = new TreeMap<Integer, Integer>();
 
 		SortedMap<Integer, Integer> avlSub = avl.subMap(80, 567);
@@ -72,7 +72,7 @@ public class AvlRemoveTests {
 
 	@Test
 	public void testRemoveFromSubMapEntrySetIterator() {
-		OldAvlGTree<Integer, Integer> avl = new OldAvlGTree<Integer, Integer>();
+		AvlGTree<Integer, Integer> avl = new AvlGTree<Integer, Integer>();
 		TreeMap<Integer, Integer> treemap = new TreeMap<Integer, Integer>();
 		SortedMap<Integer, Integer> avlSub = avl.subMap(80, 567);
 		SortedMap<Integer, Integer> treemapSub = treemap.subMap(80, 567);
@@ -116,7 +116,7 @@ public class AvlRemoveTests {
 
 	@Test
 	public void testRemoveThroughEntrySet() {
-		OldAvlGTree<Integer, Integer> avl = new OldAvlGTree<Integer, Integer>();
+		AvlGTree<Integer, Integer> avl = new AvlGTree<Integer, Integer>();
 		TreeMap<Integer, Integer> treemap = new TreeMap<Integer, Integer>();
 
 		// put 1000 elements
@@ -144,7 +144,7 @@ public class AvlRemoveTests {
 
 	@Test
 	public void testSequentialRemoveEntrySetIterator() {
-		OldAvlGTree<Integer, Integer> avl = new OldAvlGTree<Integer, Integer>();
+		AvlGTree<Integer, Integer> avl = new AvlGTree<Integer, Integer>();
 		TreeMap<Integer, Integer> treemap = new TreeMap<Integer, Integer>();
 
 		for (int i = 0; i < 1000; i++) {
@@ -181,7 +181,7 @@ public class AvlRemoveTests {
 
 	@Test
 	public void testSequentialRemoveFromSubmap() {
-		OldAvlGTree<Integer, Integer> avl = new OldAvlGTree<Integer, Integer>();
+		AvlGTree<Integer, Integer> avl = new AvlGTree<Integer, Integer>();
 		TreeMap<Integer, Integer> treemap = new TreeMap<Integer, Integer>();
 		SortedMap<Integer, Integer> avlSub = avl.subMap(80, 567);
 		SortedMap<Integer, Integer> treemapSub = treemap.subMap(80, 567);
