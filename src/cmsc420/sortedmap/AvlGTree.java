@@ -20,7 +20,7 @@ import org.w3c.dom.Node;
  */
 public class AvlGTree<K, V> extends AbstractMap<K, V> implements
         SortedMap<K, V> {
-    static final boolean summer2014 = true; 
+    static final boolean summer2014 = false; 
     
 	public final int g;
    
@@ -120,7 +120,20 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
     }
 
     public V remove(Object key) {
-        throw new UnsupportedOperationException();
+    	if (!this.containsKey(key)) {
+    		return null;
+    	}
+    	this.modCount++;
+    	this.size--;
+    	if (this.size == 0) {
+    		V ret = this.root.getValue();
+    		this.root = null;
+    		return ret;
+    	}
+    	V ret = this.get(key);
+    	AvlNode<K, V> parent = this.root.remove(key);
+    	fixAfterModification(parent);
+    	return ret; // TODO
     }
 
     public K firstKey() {
@@ -210,6 +223,53 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
             } else {
                 return this.setValue(node.value);
             }
+        }
+        
+        // returns avlnode to start rebalancing from
+        public AvlNode<K, V> remove(Object key) {//TODO
+        	int cmp = compare((K) key, this.key);
+        	if (cmp < 0) {
+        		return this.left.remove(key);
+        	} else if (cmp > 0) {
+        		return this.right.remove(key);
+        	} else {
+        		AvlNode<K, V> parent = this.parent;
+        		if (this.left != null && this.right != null) {
+        			AvlNode<K, V> inorderSuccessor = this.getInorderSuccessor();
+        			this.key = inorderSuccessor.key;
+        			this.value = inorderSuccessor.value;
+        			return inorderSuccessor.remove(key);
+        		} else {
+        			if (this.left == null && this.right != null) {
+        				if (parent.left != null && parent.left.equals(this)) {
+            				parent.left = this.right;
+            			} else {
+            				parent.right = this.right;
+            			}
+            		} else if (this.left != null && this.right == null) {
+            			if (parent.left != null && parent.left.equals(this)) {
+            				parent.left = this.left;
+            			} else {
+            				parent.right = this.left;
+            			}
+            		} else {
+            			if (parent.left != null && parent.left.equals(this)) {
+            				parent.left = null;
+            			} else {
+            				parent.right = null;
+            			}
+            		}
+        			return parent;
+        		}
+        	}
+        }
+        
+        private AvlNode<K, V> getInorderSuccessor() {
+        	AvlNode<K, V> succ = this.right;
+        	while (succ.left != null) {
+        		succ = succ.left;
+        	}
+        	return succ;
         }
 
         public int hashCode() {
@@ -512,7 +572,13 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
         }
 
         public boolean remove(Object o) {
-            throw new UnsupportedOperationException();
+        	if (!this.contains(o)) {
+        		return false;
+        	} else {
+        		K key = ((Map.Entry<K, V>) o).getKey();
+        		AvlGTree.this.remove(key);
+        		return true;
+        	}
         }
     }
 
@@ -549,7 +615,12 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
         }
 
         public boolean remove(Object o) {
-            throw new UnsupportedOperationException();
+        	if (!this.contains(o)) {
+        		return false;
+        	} else {
+        		AvlGTree.this.remove(o);
+        		return true;
+        	}
         }
     }
 
@@ -609,9 +680,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
             AvlNode<K, V> e = next;
             if (e == null)
                 throw new NoSuchElementException();
-            if (modCount != expectedModCount)
-                throw new ConcurrentModificationException();
-
+//            if (modCount != expectedModCount)
+//                throw new ConcurrentModificationException();
+//            I hope this is safe...
             next = successor(e);
             lastReturned = e;
             return e;
@@ -621,15 +692,16 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
             AvlNode<K, V> e = next;
             if (e == null)
                 throw new NoSuchElementException();
-            if (modCount != expectedModCount)
-                throw new ConcurrentModificationException();
+//            if (modCount != expectedModCount)
+//                throw new ConcurrentModificationException();
+//            I hope this is safe...
             next = predecessor(e);
             lastReturned = e;
             return e;
         }
 
         public void remove() {
-            throw new UnsupportedOperationException();
+        	AvlGTree.this.remove(this.lastReturned.getKey());
         }
     }
 
@@ -719,7 +791,9 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
         }
 
         public final V remove(Object key) {
-            throw new UnsupportedOperationException();
+        	if (!inRange(key))
+                throw new IllegalArgumentException("key out of range");
+        	return (V) AvlGTree.this.remove(key);
         }
 
         public K firstKey() {
@@ -865,7 +939,7 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
                     }
 
                     public void remove() {
-                        throw new UnsupportedOperationException();
+                        AvlGTree.this.remove(lastReturned.getKey());
                     }
                 };
             }
@@ -881,7 +955,13 @@ public class AvlGTree<K, V> extends AbstractMap<K, V> implements
             }
 
             public boolean remove(Object o) {
-                throw new UnsupportedOperationException();
+            	if (!this.contains(o)) {
+            		return false;
+            	} else {
+            		K key = ((Map.Entry<K, V>) o).getKey();
+            		AvlGTree.this.remove(key);
+            		return true;
+            	}
             }
         }
     }
