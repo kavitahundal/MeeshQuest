@@ -4,7 +4,7 @@ import cmsc420.schema.City;
 import cmsc420.schema.CityCoordinateComparator;
 import cmsc420.schema.CityNameComparator;
 import cmsc420.schema.DataStructure;
-import cmsc420.sortedmap.AvlGTree;
+import cmsc420.sortedmap.OldAvlGTree;
 
 /**
  * A dictionary that stores cities using TreeMaps as an internal mapping
@@ -22,8 +22,8 @@ public class AvlGTreeDictionary extends SortedMapDictionary {
 	 */
 	public AvlGTreeDictionary(int g) {
 		this.g = g;
-		super.nameToCity = new AvlGTree<>(new CityNameComparator(), this.g);
-		super.cityToName = new AvlGTree<>(new CityCoordinateComparator(), this.g);
+		super.nameToCity = new OldAvlGTree<>(new CityNameComparator(), this.g);
+		super.cityToName = new OldAvlGTree<>(new CityCoordinateComparator(), this.g);
 	}
 	
 	public AvlGTreeDictionary generate(int g) {
@@ -35,7 +35,7 @@ public class AvlGTreeDictionary extends SortedMapDictionary {
 		return new AvlGTreeDictionary(this.g);
 	}
 	
-	public AvlGTree<String, City> getPrintingTree() {
-		return (AvlGTree<String, City>) this.nameToCity;
+	public OldAvlGTree<String, City> getPrintingTree() {
+		return (OldAvlGTree<String, City>) this.nameToCity;
 	}
 }

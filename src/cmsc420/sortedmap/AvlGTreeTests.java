@@ -15,7 +15,7 @@ public class AvlGTreeTests {
 
 	@Test
 	public void testSimpleRemove() {
-		SortedMap<Integer, Integer> avl = new AvlGTree<>();
+		SortedMap<Integer, Integer> avl = new OldAvlGTree<>();
 		SortedMap<Integer, Integer> rb = new TreeMap<>();
 
 		avl.put(1, 1);
@@ -35,7 +35,7 @@ public class AvlGTreeTests {
 
 	@Test
 	public void testSimpleRemove2() {
-		SortedMap<Integer, Integer> avl = new AvlGTree<>();
+		SortedMap<Integer, Integer> avl = new OldAvlGTree<>();
 		SortedMap<Integer, Integer> rb = new TreeMap<>();
 
 		for (int i = 1; i <= 10; i++) {
@@ -59,7 +59,7 @@ public class AvlGTreeTests {
 
 	@Test
 	public void testSimpleRemove3() {
-		SortedMap<Integer, Integer> avl = new AvlGTree<>();
+		SortedMap<Integer, Integer> avl = new OldAvlGTree<>();
 		SortedMap<Integer, Integer> rb = new TreeMap<>();
 
 		for (int i = 1; i <= 10; i++) {
@@ -78,10 +78,10 @@ public class AvlGTreeTests {
 
 	@Test
 	public void removeTest() {
-		AvlGTree<Integer, String> aTree = new AvlGTree<Integer, String>(null, 3);
+		OldAvlGTree<Integer, String> aTree = new OldAvlGTree<Integer, String>(null, 3);
 		TreeMap<Integer, String> tMap = new TreeMap<Integer, String>();
 
-		AvlGTree<Integer, String> aTree2 = new AvlGTree<Integer, String>(new IntComparator(), 3);
+		OldAvlGTree<Integer, String> aTree2 = new OldAvlGTree<Integer, String>(new IntComparator(), 3);
 
 		List<Integer> keys = new ArrayList<Integer>();
 		List<String> values = new ArrayList<String>();
@@ -133,7 +133,7 @@ public class AvlGTreeTests {
 		}
 	}
 
-	private static void initialize(AvlGTree<Integer, String> aTree, TreeMap<Integer, String> tMap, List<Integer> keys,
+	private static void initialize(OldAvlGTree<Integer, String> aTree, TreeMap<Integer, String> tMap, List<Integer> keys,
 			List<String> values) {
 		aTree.clear();
 		tMap.clear();

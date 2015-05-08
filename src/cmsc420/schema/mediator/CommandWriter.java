@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 import cmsc420.schema.Airport;
 import cmsc420.schema.City;
 import cmsc420.schema.spatial.PM.PMQuadTree;
-import cmsc420.sortedmap.AvlGTree;
+import cmsc420.sortedmap.OldAvlGTree;
 import cmsc420.xml.XmlUtility;
 
 public class CommandWriter {
@@ -83,7 +83,7 @@ public class CommandWriter {
 	}
 
 	// do you like how I copied the code from the above method? :D
-	void appendTagAVLTree(String command, String[] parameters, String[] paramNames, AvlGTree<String, City> tree, String id) {
+	void appendTagAVLTree(String command, String[] parameters, String[] paramNames, OldAvlGTree<String, City> tree, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");

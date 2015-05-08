@@ -61,7 +61,7 @@ import cmsc420.schema.spatial.PM.PMGrayNode;
 import cmsc420.schema.spatial.PM.PMNode;
 import cmsc420.schema.spatial.PM.PMQuadTree;
 import cmsc420.schema.spatial.PM.PMWhiteNode;
-import cmsc420.sortedmap.AvlGTree;
+import cmsc420.sortedmap.OldAvlGTree;
 
 /**
  * This class represents the collection of data structures used to run the
@@ -233,8 +233,8 @@ public class CommandRunner {
 		return this.cityDictionary.listCities(sortBy);
 	}
 
-	AvlGTree<String, City> printAvlTree() throws EmptyTreeException {
-		AvlGTree<String, City> tree = this.cityDictionary.getPrintingTree(); 
+	OldAvlGTree<String, City> printAvlTree() throws EmptyTreeException {
+		OldAvlGTree<String, City> tree = this.cityDictionary.getPrintingTree(); 
 		if (tree.size() == 0) {
 			throw new EmptyTreeException();
 		}
