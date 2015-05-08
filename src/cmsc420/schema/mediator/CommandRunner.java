@@ -4,6 +4,8 @@ import java.awt.geom.Arc2D;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -157,16 +159,38 @@ public class CommandRunner {
 			// get metropole and pm quadtree
 			Metropole metropole= this.metropoles.getMetropole(loc);
 			PMQuadTree pm = metropole.getRoads();
-			// check adjacencylist for all roads
 			// delete each road
 			Set<City> neighbors = this.cityAdjList.neighbors(city);
 			for (City neighbor : neighbors) {
+				City[] road = new City[2];
+				if (city.getName().compareTo(neighbor.getName()) < 0) {
+					road[0] = city;
+					road[1] = neighbor;
+				} else {
+					road[0] = neighbor;
+					road[1] = city;
+				}
 				// add road to list
+				roadList.add(road);
 				// remove road from pm quadtree
+				pm.removeRoad(road[0], road[1]);
 			}
 
 		}
 		this.cityDictionary.remove(city);
+		Collections.sort(roadList, new Comparator<City[]>() {
+
+			@Override
+			public int compare(City[] o1, City[] o2) {
+				int firstCmp = o1[0].getName().compareTo(o2[0].getName());
+				if (firstCmp == 0) {
+					return o1[1].getName().compareTo(o2[1].getName());
+				} else {
+					return firstCmp;
+				}
+			}
+			
+		});
 		return roadList;
 	}
 
@@ -289,7 +313,7 @@ public class CommandRunner {
 			throw new RoadNotMappedException();
 		}
 		PMQuadTree roads = metropole.getRoads();
-		// TODO actually remove that road....
+		roads.removeRoad(city1, city2);
 	}
 
 	void unmapAirport(String name) throws AirportDoesNotExistException {
@@ -571,7 +595,7 @@ public class CommandRunner {
 	}
 
 
-	private double minSqDistanceBetweenCityAndRoad(int x, int y, City start, City end) {
+	public double minSqDistanceBetweenCityAndRoad(int x, int y, City start, City end) {
 		double t = dot(x - start.x, y - start.y, end.x - start.x, end.y - start.y)
 				/ sqDist(start.x, start.y, end.x, end.y);
 		if (t <= 0) {
@@ -583,11 +607,11 @@ public class CommandRunner {
 		return sqDist(x, y, start.x + t * (end.x - start.x), start.y + t * (end.y - start.y));
 	}
 
-	private static double dot(double x1, double y1, double x2, double y2) {
+	public static double dot(double x1, double y1, double x2, double y2) {
 		return x1 * x2 + y1 * y2; // dot product
 	}
 
-	private static double sqDist(double x1, double y1, double x2, double y2) {
+	public static double sqDist(double x1, double y1, double x2, double y2) {
 		return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 	}
 

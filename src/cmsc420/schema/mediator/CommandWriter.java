@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 
 import cmsc420.schema.Airport;
 import cmsc420.schema.City;
-import cmsc420.schema.spatial.SpatialStructure;
+import cmsc420.schema.spatial.PM.PMQuadTree;
 import cmsc420.sortedmap.AvlGTree;
 import cmsc420.xml.XmlUtility;
 
@@ -72,7 +72,7 @@ public class CommandWriter {
 	 * @param tree
 	 *            the PR Quadtree to print
 	 */
-	void appendTagQuadtree(String command, String[] parameters, String[] paramNames, SpatialStructure tree, String id) {
+	void appendTagQuadtree(String command, String[] parameters, String[] paramNames, PMQuadTree tree, String id) {
 		Element tag = this.initiateTag(null);
 		tag = this.createTag(tag, command, parameters, paramNames, id);
 		Element outputTag = this.output.createElement("output");

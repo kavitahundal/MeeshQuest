@@ -57,7 +57,8 @@ public abstract class PMQuadTree {
 	}
 
 	public void remove(Point2D.Float element) {
-		throw new UnsupportedOperationException("remove to be implmented in part 3");
+		// TODO
+		throw new UnsupportedOperationException("I need to implement remove!");
 	}
 
 	public int size() {
@@ -93,13 +94,18 @@ public abstract class PMQuadTree {
 		this.root = null;
 	}
 
-	public void addRoad(City city1, City city2) {
+	public void addRoad(Point2D.Float endpoint1, Point2D.Float endpoint2) {
 		if (this.canvas != null) {
-			this.canvas.addLine(city1.x, city1.y, city2.x, city2.y, Color.BLACK);
+			this.canvas.addLine(endpoint1.x, endpoint1.y, endpoint2.x, endpoint2.y, Color.BLACK);
 		}
-		this.add(city1);
-		this.add(city2);
-		this.root = this.root.addRoad(city1, city2);
+		this.add(endpoint1);
+		this.add(endpoint2);
+		this.root = this.root.addRoad(endpoint1, endpoint2);
+	}
+	
+	public void removeRoad(Point2D.Float endpoint1, Point2D.Float endpoint2) {
+		// TODO
+		throw new UnsupportedOperationException("I need to implement removeRoad!");
 	}
 
 	public String getName() {
