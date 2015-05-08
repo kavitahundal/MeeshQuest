@@ -78,6 +78,7 @@ public class PMBlackNode implements PMNode {
 			this.roads.addUndirectedEdge((City) landmark1, (City) landmark2);
 			return this;
 		} else {
+			// TODO
 			throw new UnsupportedOperationException("I'll implement road functionality in part 3");
 			// create gray node
 			// add city to gray node if it isn't null

@@ -58,7 +58,7 @@ public abstract class PMQuadTree {
 
 	public void remove(Point2D.Float element) {
 		// TODO
-		throw new UnsupportedOperationException("I need to implement remove!");
+//		throw new UnsupportedOperationException("I need to implement remove!");
 	}
 
 	public int size() {
@@ -105,7 +105,7 @@ public abstract class PMQuadTree {
 	
 	public void removeRoad(Point2D.Float endpoint1, Point2D.Float endpoint2) {
 		// TODO
-		throw new UnsupportedOperationException("I need to implement removeRoad!");
+//		throw new UnsupportedOperationException("I need to implement removeRoad!");
 	}
 
 	public String getName() {

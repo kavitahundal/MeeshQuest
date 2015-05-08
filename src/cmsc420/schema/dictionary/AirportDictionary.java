@@ -29,7 +29,7 @@ public class AirportDictionary implements Iterable<Airport> {
 		this.nameToAirport.put(airport.getName(), airport);
 		this.airportToName.put(airport, airport.getName());
 		if (!this.airlineToAirports.containsKey(airport.getAirlineName())) {
-			this.airlineToAirports.put(airport.getAirlineName(), new HashSet<>());
+			this.airlineToAirports.put(airport.getAirlineName(), new HashSet<Airport>());
 		}
 		this.airlineToAirports.get(airport.getAirlineName()).add(airport);
 		this.size++;

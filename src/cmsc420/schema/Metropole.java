@@ -24,13 +24,15 @@ public class Metropole extends Point2D.Float {
 
 	public Metropole(float x, float y, int pmOrder, int width, int height, int g) {
 		super(x, y);
-		if (pmOrder == 1) {
-			this.roads = new PM1QuadTree("metropole PM", width, height);
-		} else if (pmOrder == 3) {
-			this.roads = new PM3QuadTree("metropole PM", width, height);
-		} else {
-			throw new UnsupportedOperationException("wrong pm order");
-		}
+//		if (pmOrder == 1) {
+//			this.roads = new PM1QuadTree("metropole PM", width, height);
+//		} else if (pmOrder == 3) {
+//			this.roads = new PM3QuadTree("metropole PM", width, height);
+//		} else {
+//			throw new UnsupportedOperationException("wrong pm order");
+//		}
+		this.roads = new PM3QuadTree("metropole PM", width, height);
+		// TODO
 		this.dict = new AvlGTreeDictionary(g);
 		this.adj = new AdjacencyList<City>(new CityCoordinateComparator());
 		this.airports = new AirportDictionary();
