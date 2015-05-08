@@ -1,14 +1,11 @@
 package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
-import java.util.List;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
-import cmsc420.schema.City;
 
 public class PMWhiteNode implements PMNode {
 
@@ -27,14 +24,14 @@ public class PMWhiteNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addCity(City city) {
-		return new PMBlackNode(city, this.origin, this.width, this.height, this.canvas, this.validator);
+	public PMNode addVertex(Point2D.Float landmark) {
+		return new PMBlackNode(landmark, this.origin, this.width, this.height, this.canvas, this.validator);
 	}
 
 	@Override
-	public PMNode addRoad(City city1, City city2) {
-		return new PMBlackNode(null, this.origin, this.width, this.height, this.canvas, this.validator).addRoad(city1,
-				city2);
+	public PMNode addRoad(Point2D.Float landmark1, Point2D.Float landmark2) {
+		return new PMBlackNode(null, this.origin, this.width, this.height, this.canvas, this.validator).addRoad(
+				landmark1, landmark2);
 	}
 
 	@Override
@@ -43,7 +40,7 @@ public class PMWhiteNode implements PMNode {
 	}
 
 	@Override
-	public boolean contains(City city) {
+	public boolean contains(Point2D.Float landmark) {
 		return false;
 	}
 
@@ -60,16 +57,6 @@ public class PMWhiteNode implements PMNode {
 	@Override
 	public int height() {
 		return this.height;
-	}
-
-	@Override
-	public void range(List<String> cities, int x, int y, int radius) {
-		return;
-	}
-
-	@Override
-	public void getCities(Set<City> cities) {
-		return;
 	}
 
 }

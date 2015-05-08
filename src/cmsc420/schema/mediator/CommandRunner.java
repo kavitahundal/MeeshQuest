@@ -241,9 +241,7 @@ public class CommandRunner {
 		if (this.cityAdjList.containsUndirectedEdge(city1, city2)) {
 			throw new RoadAlreadyMappedException();
 		}
-		// TODO loop through all neighboring locations to see if there's a city
-		// ...or some more appropriate version of validation
-		// add to adjacency list
+		// TODO validate
 		this.cityAdjList.addUndirectedEdge(city1, city2);
 		if (!this.metropoles.contains(new Point2D.Float(city1.remoteX, city1.remoteY))) {
 			Metropole metropole = new Metropole(city1.remoteX, city2.remoteY, this.pmOrder, this.localWidth,
@@ -258,15 +256,6 @@ public class CommandRunner {
 	void mapAirport(String name, String airlineName, int localX, int localY, int remoteX, int remoteY)
 			throws DuplicateAirportNameException, DuplicateAirportCoordinatesException, AirportOutOfBoundsException,
 			AirportViolatesPMRulesException {
-		// duplicateAirportName
-		// duplicateAirportCoordinates
-		// airportOutOfBounds
-		// airportViolatesPMRules
-		// TODO
-		// put airport in a global dictionary (mapping of airline to airport)
-		// put airport in a local dictionary
-		// BUT we need to validate? (look's like just the coordinate should be not occupied?)
-		// TODO PMQUADTREE HOLD AIRPORTS
 		City city = new City(name, localX, localY, remoteX, remoteY, null, 0);
 		Airport airport = new Airport(name, airlineName, localX, localY, remoteX, remoteY);
 		/* check for exceptions */
@@ -275,9 +264,10 @@ public class CommandRunner {
 		} else if (this.cityDictionary.contains(city) || this.airportDictionary.containsCoordinates(airport)) {
 			throw new DuplicateAirportCoordinatesException();
 		}
-		// check if violation or out of bounds here
+		// TODO check if violation or out of bounds here
 		this.airportDictionary.add(airport);
-		// map it in a local dictionary here
+		Metropole metropole = this.metropoles.getMetorpole(remoteX, remoteY);
+		metropole.getAirports().add(airport);
 	}
 
 	void unmapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
@@ -435,7 +425,6 @@ public class CommandRunner {
 
 		/* fill priority queue with cities based off proximity */
 		PriorityQueue<Airport> queue = new PriorityQueue<>(new CityDistanceComparator(localX, localY));
-		// this.fillQueue(queue, roads.getRoot(), false);
 		for (Airport airport : airports) {
 			queue.add(airport);
 		}
@@ -566,12 +555,12 @@ public class CommandRunner {
 
 	private void fillQueue(PriorityQueue<City> queue, PMNode node, boolean isolated) {
 		if (node instanceof PMBlackNode) {
-			City city = ((PMBlackNode) node).getCity();
+			Point2D landmark = ((PMBlackNode) node).getLandmark();
 			// if city isn't null and is isolated, add
 			// if (city != null && this.adjacencyList.isIsolated(city) ==
 			// isolated) {
-			if (city != null) {
-				queue.add(city);
+			if (landmark != null && landmark instanceof City) {
+				queue.add((City) landmark);
 			}
 
 		} else if (node instanceof PMGrayNode) {

@@ -7,12 +7,12 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.schema.Airport;
 import cmsc420.schema.City;
 import cmsc420.schema.CityCoordinateComparator;
 import cmsc420.schema.adjacencylist.AdjacencyList;
@@ -23,12 +23,12 @@ public class PMBlackNode implements PMNode {
 	private final int width;
 	private final int height;
 	private AdjacencyList<City> roads;
-	private City city;
+	private Point2D.Float landmark;
 	private CanvasPlus canvas;
 	private Validator validator;
 
-	public PMBlackNode(City city, Point2D.Float origin, int width, int height, CanvasPlus canvas, Validator validator) {
-		this.city = city;
+	public PMBlackNode(Point2D.Float landmark, Point2D.Float origin, int width, int height, CanvasPlus canvas, Validator validator) {
+		this.landmark = landmark;
 		this.origin = origin;
 		this.width = width;
 		this.height = height;
@@ -41,14 +41,14 @@ public class PMBlackNode implements PMNode {
 		return this.roads.size(); // number of directed edges
 	}
 
-	public City getCity() {
-		return this.city;
+	public Point2D.Float getLandmark() {
+		return this.landmark;
 	}
 
 	@Override
-	public PMNode addCity(City city) {
-		if (this.city == null && this.validator.valid(this, city)) {
-			this.city = city;
+	public PMNode addVertex(Point2D.Float landmark) {
+		if (this.landmark == null && this.validator.valid(this, landmark)) {
+			this.landmark = landmark;
 			return this;
 		} else {
 			if (this.width == 1 || this.height == 1) {
@@ -61,8 +61,8 @@ public class PMBlackNode implements PMNode {
 				this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
 						this.origin.y + this.height, Color.GRAY);
 			}
-			node.addCity(this.city); // add the old node that was removed
-			node.addCity(city); // add the new node
+			node.addVertex(this.landmark); // add the old node that was removed
+			node.addVertex(landmark); // add the new node
 			Iterator<City[]> roadsToAdd = this.roads.iterator();
 			while (roadsToAdd.hasNext()) {
 				Object[] road = roadsToAdd.next();
@@ -73,9 +73,9 @@ public class PMBlackNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addRoad(City city1, City city2) {
-		if (this.validator.valid(this, city1, city2)) {
-			this.roads.addUndirectedEdge(city1, city2);
+	public PMNode addRoad(Point2D.Float landmark1, Point2D.Float landmark2) {
+		if (this.validator.valid(this, landmark1, landmark2)) {
+			this.roads.addUndirectedEdge((City) landmark1, (City) landmark2);
 			return this;
 		} else {
 			throw new UnsupportedOperationException("I'll implement road functionality in part 3");
@@ -93,17 +93,32 @@ public class PMBlackNode implements PMNode {
 		Element ele = doc.createElement("black");
 		List<City[]> cities = this.getSortedUniqueRoads();
 		int cardinality = cities.size();
-		if (this.city != null) {
+		if (this.landmark != null) {
 			cardinality++;
-			// check if isolated
-			String tagName = this.roads.isIsolated(this.city) ? "isolatedCity" : "city";
-			Element cityTag = doc.createElement(tagName);
-			cityTag.setAttribute("color", this.city.getColor().toString());
-			cityTag.setAttribute("name", this.city.getName());
-			cityTag.setAttribute("radius", "" + this.city.getRadius());
-			cityTag.setAttribute("x", "" + (int) this.city.x);
-			cityTag.setAttribute("y", "" + (int) this.city.y);
-			ele.appendChild(cityTag);
+			Element landmarkTag;
+			if (this.landmark instanceof City) {
+				String tagName = "city";
+				City city = (City) this.landmark;
+				landmarkTag = doc.createElement(tagName);
+				landmarkTag.setAttribute("color", city.getColor().toString());
+				landmarkTag.setAttribute("name", city.getName());
+				landmarkTag.setAttribute("radius", "" + city.getRadius());
+				landmarkTag.setAttribute("localX", "" + (int) city.x);
+				landmarkTag.setAttribute("localY", "" + (int) city.y);
+				landmarkTag.setAttribute("remoteX", "" + city.remoteX);
+				landmarkTag.setAttribute("remoteY", "" + city.remoteY);
+			} else {
+				String tagName = "airport";
+				Airport airport = (Airport) this.landmark;
+				landmarkTag = doc.createElement(tagName);
+				landmarkTag.setAttribute("name", airport.getName());
+				landmarkTag.setAttribute("airlineName", airport.getAirlineName());
+				landmarkTag.setAttribute("localX", "" + (int) airport.x);
+				landmarkTag.setAttribute("localY", "" + (int) airport.y);
+				landmarkTag.setAttribute("remoteX", "" + airport.remoteX);
+				landmarkTag.setAttribute("remoteY", "" + airport.remoteY);
+			}
+			ele.appendChild(landmarkTag);
 		}
 		ele.setAttribute("cardinality", "" + cardinality);
 		for (City[] road : cities) {
@@ -143,11 +158,13 @@ public class PMBlackNode implements PMNode {
 	}
 
 	@Override
-	public boolean contains(City city) {
-		if (this.city == null) {
+	public boolean contains(Point2D.Float landmark) {
+		if (this.landmark == null) {
 			return false;
 		} else {
-			return this.city.equals(city) && this.city.getName().equals(city.getName());
+			String thisName = this.landmark instanceof City ? ((City) this.landmark).getName() : ((Airport) this.landmark).getName();
+			String otherName = landmark instanceof City ? ((City) landmark).getName() : ((Airport) landmark).getName();
+			return this.landmark.equals(landmark) && thisName.equals(otherName);
 		}
 	}
 
@@ -164,20 +181,6 @@ public class PMBlackNode implements PMNode {
 	@Override
 	public int height() {
 		return this.height;
-	}
-
-	@Override
-	public void range(List<String> cities, int x, int y, int radius) {
-		if (this.city != null && this.city.distance(x, y) <= radius) {
-			cities.add(this.city.getName());
-		}
-	}
-
-	@Override
-	public void getCities(Set<City> cities) {
-		if (this.city != null) {
-			cities.add(this.city);
-		}
 	}
 
 }

@@ -1,6 +1,6 @@
 package cmsc420.schema.spatial.PM;
 
-import cmsc420.schema.City;
+import java.awt.geom.Point2D;
 
 public interface Validator {
 
@@ -14,7 +14,7 @@ public interface Validator {
 	 * @return Whether adding the city without partitioning keeps the tree
 	 *         valid.
 	 */
-	public boolean valid(PMBlackNode node, City city);
+	public boolean valid(PMBlackNode node, Point2D.Float landmark);
 
 	/**
 	 * Checks if adding the road to the black node is safe without partitioning.
@@ -28,5 +28,5 @@ public interface Validator {
 	 * @return Whether adding the road without partitioning keeps the tree
 	 *         valid.
 	 */
-	public boolean valid(PMBlackNode node, City city1, City city2);
+	public boolean valid(PMBlackNode node, Point2D.Float landmark1, Point2D.Float landmark2);
 }

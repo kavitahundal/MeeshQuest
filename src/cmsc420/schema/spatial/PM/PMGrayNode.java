@@ -2,14 +2,12 @@ package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
-import cmsc420.schema.City;
 
 public class PMGrayNode implements PMNode {
 
@@ -41,11 +39,11 @@ public class PMGrayNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addCity(City city) {
-		if (city != null) {
+	public PMNode addVertex(Point2D.Float landmark) {
+		if (landmark != null) {
 			for (int i = 0; i < this.quadrants.length; i++) {
-				if (this.cityInQuadrant(this.quadrants[i], city)) {
-					this.quadrants[i] = this.quadrants[i].addCity(city);
+				if (this.cityInQuadrant(this.quadrants[i], landmark)) {
+					this.quadrants[i] = this.quadrants[i].addVertex(landmark);
 				}
 			}
 		}
@@ -53,85 +51,85 @@ public class PMGrayNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addRoad(City city1, City city2) {
+	public PMNode addRoad(Point2D.Float landmark1, Point2D.Float landmark2) {
 		// find all relevant quadrants
 		// add line to said quadrants
 		for (int i = 0; i < 4; i++) {
-			if (roadInQuadrant(this.quadrants[i], city1, city2)) {
-				this.quadrants[i] = this.quadrants[i].addRoad(city1, city2);
+			if (roadInQuadrant(this.quadrants[i], landmark1, landmark2)) {
+				this.quadrants[i] = this.quadrants[i].addRoad(landmark1, landmark2);
 			}
 		}
 		return this;
 	}
 
-	private boolean cityInQuadrant(PMNode quadrant, City city) {
+	private boolean cityInQuadrant(PMNode quadrant, Point2D.Float landmark) {
 		float x = quadrant.origin().x;
 		float y = quadrant.origin().y;
 		int w = quadrant.width();
 		int h = quadrant.height();
-		return city.x >= x && city.x <= x + w && city.y >= y && city.y <= y + h;
+		return landmark.x >= x && landmark.x <= x + w && landmark.y >= y && landmark.y <= y + h;
 	}
 
-	public static boolean roadInQuadrant(PMNode quadrant, City city1, City city2) {
+	public static boolean roadInQuadrant(PMNode quadrant, Point2D.Float landmark1, Point2D.Float landmark2) {
 		float x = quadrant.origin().x;
 		float y = quadrant.origin().y;
 		int w = quadrant.width();
 		int h = quadrant.height();
 		
-		float highX = Math.max(city1.x, city2.x);
-		float lowX = Math.min(city1.x, city2.x);
-		float highY = Math.max(city1.y, city2.y);
-		float lowY = Math.min(city1.y, city2.y);
+		float highX = Math.max(landmark1.x, landmark2.x);
+		float lowX = Math.min(landmark1.x, landmark2.x);
+		float highY = Math.max(landmark1.y, landmark2.y);
+		float lowY = Math.min(landmark1.y, landmark2.y);
 		// given a square and a line, determine if the line goes in the square
 
 		// determine if either end point is in the square
 		// if not, find a intersection between the and the 4 boundaries
 
 		// check city1
-		if (city1.x >= x && city1.x <= x + w && city1.y >= y && city1.y <= y + h) {
+		if (landmark1.x >= x && landmark1.x <= x + w && landmark1.y >= y && landmark1.y <= y + h) {
 			return true;
 		}
 
 		// check city2
-		if (city2.x >= x && city2.x <= x + w && city2.y >= y && city2.y <= y + h) {
+		if (landmark2.x >= x && landmark2.x <= x + w && landmark2.y >= y && landmark2.y <= y + h) {
 			return true;
 		}
 
 		// vertical lines
-		if (city1.x == city2.x) {
-			return city1.x >= x && city1.x <= x + w && highY >= y && lowY <= y + h;
+		if (landmark1.x == landmark2.x) {
+			return landmark1.x >= x && landmark1.x <= x + w && highY >= y && lowY <= y + h;
 		}
 		
 		// horizontal lines
-		if (city1.y == city2.y) {
-			return city1.y >= y && city1.y <= y + h && highX >= x && lowX <= x + w;
+		if (landmark1.y == landmark2.y) {
+			return landmark1.y >= y && landmark1.y <= y + h && highX >= x && lowX <= x + w;
 		}
 		
-		double slope = (city2.y - city1.y) / (city2.x - city1.x);
+		double slope = (landmark2.y - landmark1.y) / (landmark2.x - landmark1.x);
 		// y - y1 = m(x - x1)
 		// y = m(x - x1) + y1
 		// x = ((y - y1) / m) + x1
 
 		// when y = lower line, x is in range [xLow, xHigh)
-		double xTest = ((y - city1.y) / slope) + city1.x;
+		double xTest = ((y - landmark1.y) / slope) + landmark1.x;
 		if (xTest >= x && xTest <= x + w && xTest >= lowX && xTest <= highX) {
 			return true;
 		}
 
 		// when y = upper line - 1, x is in range [xLow, xHigh)
-		xTest = ((y + h - city1.y) / slope) + city1.x;
+		xTest = ((y + h - landmark1.y) / slope) + landmark1.x;
 		if (xTest >= x && xTest <= x + w && xTest >= lowX && xTest <= highX) {
 			return true;
 		}
 
 		// when x = left line, y is in range [yLow, yHigh)
-		double yTest = slope * (x - city1.x) + city1.y;
+		double yTest = slope * (x - landmark1.x) + landmark1.y;
 		if (yTest >= y && yTest <= y + h && yTest >= lowY && yTest <= highY) {
 			return true;
 		}
 
 		// when x = right line - 1, y is in range [yLow, yHigh)
-		yTest = slope * (x + w - city1.x) + city1.y;
+		yTest = slope * (x + w - landmark1.x) + landmark1.y;
 		if (yTest >= y && yTest <= y + h && yTest >= lowY && yTest <= highY) {
 			return true;
 		}
@@ -161,10 +159,10 @@ public class PMGrayNode implements PMNode {
 	}
 
 	@Override
-	public boolean contains(City city) {
+	public boolean contains(Point2D.Float landmark) {
 		for (int i = 0; i < this.quadrants.length; i++) {
-			if (this.cityInQuadrant(this.quadrants[i], city)) {
-				return this.quadrants[i].contains(city);
+			if (this.cityInQuadrant(this.quadrants[i], landmark)) {
+				return this.quadrants[i].contains(landmark);
 			}
 		}
 		return false;
@@ -184,18 +182,9 @@ public class PMGrayNode implements PMNode {
 	public int height() {
 		return this.height;
 	}
-
-	@Override
-	public void range(List<String> cities, int x, int y, int radius) {
-		for (int i = 0; i < this.quadrants.length; i++) {
-			this.quadrants[i].range(cities, x, y, radius);
-		}
+	
+	public String meeshEasterEgg() {
+		return "fuck you";
 	}
 
-	@Override
-	public void getCities(Set<City> cities) {
-		for (int i = 0; i < this.quadrants.length; i++) {
-			this.quadrants[i].getCities(cities);
-		}
-	}
 }
