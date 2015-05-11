@@ -157,23 +157,25 @@ public class CommandRunner {
 		List<City[]> roadList = new LinkedList<>();
 		if (this.metropoles.contains(loc)) {
 			// get metropole and pm quadtree
-			Metropole metropole= this.metropoles.getMetropole(loc);
+			Metropole metropole = this.metropoles.getMetropole(loc);
 			PMQuadTree pm = metropole.getRoads();
 			// delete each road
 			Set<City> neighbors = this.cityAdjList.neighbors(city);
-			for (City neighbor : neighbors) {
-				City[] road = new City[2];
-				if (city.getName().compareTo(neighbor.getName()) < 0) {
-					road[0] = city;
-					road[1] = neighbor;
-				} else {
-					road[0] = neighbor;
-					road[1] = city;
+			if (neighbors != null) {
+				for (City neighbor : neighbors) {
+					City[] road = new City[2];
+					if (city.getName().compareTo(neighbor.getName()) < 0) {
+						road[0] = city;
+						road[1] = neighbor;
+					} else {
+						road[0] = neighbor;
+						road[1] = city;
+					}
+					// add road to list
+					roadList.add(road);
+					// remove road from pm quadtree
+					pm.removeRoad(road[0], road[1]);
 				}
-				// add road to list
-				roadList.add(road);
-				// remove road from pm quadtree
-				pm.removeRoad(road[0], road[1]);
 			}
 
 		}
@@ -189,7 +191,7 @@ public class CommandRunner {
 					return firstCmp;
 				}
 			}
-			
+
 		});
 		return roadList;
 	}
@@ -234,7 +236,7 @@ public class CommandRunner {
 	}
 
 	AvlGTree<String, City> printAvlTree() throws EmptyTreeException {
-		AvlGTree<String, City> tree = this.cityDictionary.getPrintingTree(); 
+		AvlGTree<String, City> tree = this.cityDictionary.getPrintingTree();
 		if (tree.size() == 0) {
 			throw new EmptyTreeException();
 		}
@@ -243,7 +245,8 @@ public class CommandRunner {
 
 	void mapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
 			StartEqualsEndException, StartOrEndIsIsolatedException, RoadAlreadyMappedException,
-			RoadOutOfBoundsException, RoadNotInOneMetropoleException, RoadIntersectsAnotherRoadException, RoadViolatesPMRulesException {
+			RoadOutOfBoundsException, RoadNotInOneMetropoleException, RoadIntersectsAnotherRoadException,
+			RoadViolatesPMRulesException {
 		if (!this.cityDictionary.containsName(start)) {
 			throw new StartPointDoesNotExistException();
 		}
@@ -288,8 +291,16 @@ public class CommandRunner {
 		} else if (this.cityDictionary.contains(city) || this.airportDictionary.containsCoordinates(airport)) {
 			throw new DuplicateAirportCoordinatesException();
 		}
+		if (localX >= this.localWidth || localY >= this.localHeight || remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
+			throw new AirportOutOfBoundsException();
+		}
 		// TODO check if violation or out of bounds here
 		this.airportDictionary.add(airport);
+		if (!this.metropoles.contains(new Point2D.Float(remoteX, remoteY))) {
+			Metropole metropole = new Metropole(airport.remoteX, airport.remoteY, this.pmOrder, this.localWidth,
+					this.localHeight, this.g);
+			this.metropoles.add(metropole);
+		}
 		Metropole metropole = this.metropoles.getMetorpole(remoteX, remoteY);
 		metropole.getAirports().add(airport);
 	}
@@ -593,7 +604,6 @@ public class CommandRunner {
 			}
 		}
 	}
-
 
 	public double minSqDistanceBetweenCityAndRoad(int x, int y, City start, City end) {
 		double t = dot(x - start.x, y - start.y, end.x - start.x, end.y - start.y)
