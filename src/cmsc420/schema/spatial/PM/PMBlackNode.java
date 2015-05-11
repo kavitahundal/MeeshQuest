@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.exceptions.PartitionException;
 import cmsc420.schema.Airport;
 import cmsc420.schema.City;
 import cmsc420.schema.CityCoordinateComparator;
@@ -47,7 +48,7 @@ public class PMBlackNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addVertex(Point2D.Float landmark) {
+	public PMNode addVertex(Point2D.Float landmark) throws PartitionException {
 		if (this.landmark == null && this.validator.valid(this, landmark)) {
 			this.landmark = landmark;
 			return this;
@@ -58,9 +59,10 @@ public class PMBlackNode implements PMNode {
 		}
 	}
 	
-	private PMGrayNode partition() {
+	private PMGrayNode partition() throws PartitionException {
 		if (this.width == 1 || this.height == 1) {
-			throw new UnsupportedOperationException("Can't subdivide further!");
+//			throw new UnsupportedOperationException("Can't subdivide further!");
+			throw new PartitionException();
 		}
 		PMGrayNode node = new PMGrayNode(this.origin, this.width, this.height, this.canvas, this.validator); // partition
 		if (this.canvas != null) {
@@ -79,7 +81,7 @@ public class PMBlackNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addRoad(City city1, City city2) {
+	public PMNode addRoad(City city1, City city2) throws PartitionException {
 		if (this.validator.valid(this, city1, city2)) {
 			this.roads.addUndirectedEdge(city1, city2);
 			return this;
@@ -164,6 +166,9 @@ public class PMBlackNode implements PMNode {
 		if (this.landmark == null) {
 			return false;
 		} else {
+			if (!(landmark instanceof City) && !(landmark instanceof Airport)) {
+				return this.landmark.equals(landmark);
+			}
 			String thisName = this.landmark instanceof City ? ((City) this.landmark).getName() : ((Airport) this.landmark).getName();
 			String otherName = landmark instanceof City ? ((City) landmark).getName() : ((Airport) landmark).getName();
 			return this.landmark.equals(landmark) && thisName.equals(otherName);

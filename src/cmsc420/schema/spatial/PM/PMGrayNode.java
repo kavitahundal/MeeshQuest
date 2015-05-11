@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.exceptions.PartitionException;
 import cmsc420.schema.City;
 import cmsc420.schema.spatial.WhiteNode;
 
@@ -42,11 +43,12 @@ public class PMGrayNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addVertex(Point2D.Float landmark) {
+	public PMNode addVertex(Point2D.Float landmark) throws PartitionException {
 		if (landmark != null) {
 			for (int i = 0; i < this.quadrants.length; i++) {
 				if (this.cityInQuadrant(this.quadrants[i], landmark)) {
-					this.quadrants[i] = this.quadrants[i].addVertex(landmark);
+					PMNode newNode = this.quadrants[i].addVertex(landmark);
+					this.quadrants[i] = newNode;
 				}
 			}
 		}
@@ -54,12 +56,13 @@ public class PMGrayNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addRoad(City city1, City city2) {
+	public PMNode addRoad(City city1, City city2) throws PartitionException {
 		// find all relevant quadrants
 		// add line to said quadrants
 		for (int i = 0; i < 4; i++) {
 			if (roadInQuadrant(this.quadrants[i], city1, city2)) {
-				this.quadrants[i] = this.quadrants[i].addRoad(city1, city2);
+				PMNode newNode = this.quadrants[i].addRoad(city1, city2);
+				this.quadrants[i] = newNode;
 			}
 		}
 		return this;

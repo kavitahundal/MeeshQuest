@@ -36,6 +36,7 @@ import cmsc420.exceptions.NoCitiesToListException;
 import cmsc420.exceptions.NoPathExistsException;
 import cmsc420.exceptions.NonExistentEndException;
 import cmsc420.exceptions.NonExistentStartException;
+import cmsc420.exceptions.PartitionException;
 import cmsc420.exceptions.RoadAlreadyMappedException;
 import cmsc420.exceptions.RoadIntersectsAnotherRoadException;
 import cmsc420.exceptions.RoadNotInOneMetropoleException;
@@ -281,7 +282,6 @@ public class CommandRunner {
 		if (!valid) {
 			throw new RoadViolatesPMRulesException();
 		}
-		this.cityAdjList.addUndirectedEdge(city1, city2);
 		if (!this.metropoles.contains(new Point2D.Float(city1.remoteX, city1.remoteY))) {
 			Metropole metropole = new Metropole(city1.remoteX, city2.remoteY, this.pmOrder, this.localWidth,
 					this.localHeight, this.g);
@@ -289,7 +289,12 @@ public class CommandRunner {
 		}
 		Metropole metropole = this.metropoles.getMetropole(new Point2D.Float(city1.remoteX, city1.remoteY));
 		PMQuadTree quadtree = metropole.getRoads();
-		quadtree.addRoad(city1, city2);
+		try {
+			quadtree.addRoad(city1, city2);
+			this.cityAdjList.addUndirectedEdge(city1, city2);
+		} catch (PartitionException e) {
+			throw new RoadViolatesPMRulesException();
+		}
 	}
 
 	void mapAirport(String name, String airlineName, int localX, int localY, int remoteX, int remoteY)
@@ -319,14 +324,22 @@ public class CommandRunner {
 		if (!valid) {
 			throw new AirportViolatesPMRulesException();
 		}
-		this.airportDictionary.add(airport);
 		if (!this.metropoles.contains(new Point2D.Float(remoteX, remoteY))) {
 			Metropole metropole = new Metropole(airport.remoteX, airport.remoteY, this.pmOrder, this.localWidth,
 					this.localHeight, this.g);
 			this.metropoles.add(metropole);
 		}
-		Metropole metropole = this.metropoles.getMetorpole(remoteX, remoteY);
-		metropole.getAirports().add(airport);
+		Metropole metropole = this.metropoles.getMetropole(remoteX, remoteY);
+		AirportDictionary airports = metropole.getAirports();
+		PMQuadTree pm = metropole.getRoads();
+		try {
+			pm.add(airport);
+			airports.add(airport);
+			this.airportDictionary.add(airport);
+		} catch (PartitionException e) {
+			System.err.println("poppycock!");
+			throw new AirportViolatesPMRulesException();
+		}
 	}
 
 	void unmapRoad(String start, String end) throws StartPointDoesNotExistException, EndPointDoesNotExistException,
@@ -357,7 +370,7 @@ public class CommandRunner {
 		}
 		Airport airport = this.airportDictionary.get(name);
 		this.airportDictionary.remove(airport);
-		Metropole metropole = this.metropoles.getMetorpole(airport.remoteX, airport.remoteY);
+		Metropole metropole = this.metropoles.getMetropole(airport.remoteX, airport.remoteY);
 		metropole.getAirports().remove(airport);
 	}
 

@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.exceptions.PartitionException;
 import cmsc420.geom.Inclusive2DIntersectionVerifier;
 import cmsc420.schema.Airport;
 import cmsc420.schema.City;
@@ -42,19 +43,19 @@ public abstract class PMQuadTree {
 
 	protected abstract Validator getValidator();
 
-	public void add(Point2D.Float element) {
-		if (this.canvas != null) {
-			String name;
-			if (element instanceof City) {
-				name = ((City) element).getName();
-			} else {
-				name = ((Airport) element).getName();
-			}
-			this.canvas.addPoint(name, element.x, element.y, Color.BLACK);
-		}
+	public void add(Point2D.Float element) throws PartitionException {
 		if (!this.contains(element)) {
-			this.size++;
 			this.root = this.root.addVertex(element);
+			this.size++;
+			if (this.canvas != null) {
+				String name;
+				if (element instanceof City) {
+					name = ((City) element).getName();
+				} else {
+					name = ((Airport) element).getName();
+				}
+				this.canvas.addPoint(name, element.x, element.y, Color.BLACK);
+			}
 		}
 	}
 
@@ -106,14 +107,14 @@ public abstract class PMQuadTree {
 		this.root = null;
 	}
 
-	public void addRoad(City city1, City city2) {
-		if (this.canvas != null) {
-			this.canvas.addLine(city1.x, city1.y, city2.x, city2.y, Color.BLACK);
-		}
+	public void addRoad(City city1, City city2) throws PartitionException {
 		this.add(city1);
 		this.add(city2);
 		this.root = this.root.addRoad(city1, city2);
 		this.roads.addUndirectedEdge(city1, city2);
+		if (this.canvas != null) {
+			this.canvas.addLine(city1.x, city1.y, city2.x, city2.y, Color.BLACK);
+		}
 	}
 
 	public void removeRoad(City city1, City city2) {
@@ -152,8 +153,8 @@ public abstract class PMQuadTree {
 		}
 
 		// make sure this point intersects with no other line
-		for (City[] road : this.roads) {
-			Line2D edge = new Line2D.Float(road[0], road[1]);
+		for (Object[] road : this.roads) {
+			Line2D edge = new Line2D.Float((Point2D.Float) road[0], (Point2D.Float) road[1]);
 			if (Inclusive2DIntersectionVerifier.intersects(vertex, edge)) {
 				return false;
 			}
@@ -165,8 +166,8 @@ public abstract class PMQuadTree {
 		Line2D edge = new Line2D.Float(city1, city2);
 		// make sure this point doesn't intersect any other lines (except at
 		// endpoint)
-		for (City[] road : this.roads) {
-			Line2D otherEdge = new Line2D.Float(road[0], road[1]);
+		for (Object [] road : this.roads) {
+			Line2D otherEdge = new Line2D.Float((Point2D.Float) road[0], (Point2D.Float) road[1]);
 			if (Inclusive2DIntersectionVerifier.intersects(edge, otherEdge)
 					&& !Inclusive2DIntersectionVerifier.intersects(city1, edge)
 					&& !Inclusive2DIntersectionVerifier.intersects(city2, edge)) {

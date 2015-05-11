@@ -5,13 +5,14 @@ import java.awt.geom.Point2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import cmsc420.exceptions.PartitionException;
 import cmsc420.schema.City;
 
 public interface PMNode {
 
-	public PMNode addVertex(Point2D.Float landmark);
+	public PMNode addVertex(Point2D.Float landmark) throws PartitionException;
 
-	public PMNode addRoad(City city1, City city2);
+	public PMNode addRoad(City city1, City city2) throws PartitionException;
 
 	public Element elementize(Document doc);
 

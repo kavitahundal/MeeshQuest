@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.exceptions.PartitionException;
 import cmsc420.schema.City;
 
 public class PMWhiteNode implements PMNode {
@@ -31,7 +32,7 @@ public class PMWhiteNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addRoad(City city1, City city2) {
+	public PMNode addRoad(City city1, City city2) throws PartitionException {
 		return new PMBlackNode(null, this.origin, this.width, this.height, this.canvas, this.validator).addRoad(
 				city1, city2);
 	}
