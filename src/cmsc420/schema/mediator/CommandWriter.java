@@ -284,8 +284,8 @@ public class CommandWriter {
 		tag.setAttribute("airlineName", airport.getAirlineName());
 		tag.setAttribute("localX", Integer.toString((int) airport.x));
 		tag.setAttribute("localY", Integer.toString((int) airport.y));
-		tag.setAttribute("remoteX", Integer.toString(airport.remoteX));
-		tag.setAttribute("remoteY", Integer.toString(airport.remoteY));
+		tag.setAttribute("remoteX", Integer.toString((int) airport.remoteX));
+		tag.setAttribute("remoteY", Integer.toString((int) airport.remoteY));
 		return tag; // XML element with the city
 	}
 

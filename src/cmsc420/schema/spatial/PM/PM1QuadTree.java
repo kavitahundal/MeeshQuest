@@ -21,9 +21,8 @@ public class PM1QuadTree extends PMQuadTree {
 		public boolean valid(PMBlackNode node, Point2D.Float landmark1, Point2D.Float landmark2) {
 			// if node.city is null then false
 			// if it's not null then it should be one of the endpoints
-			//
 			Point2D.Float landmark = node.getLandmark();
-			return landmark == null || landmark instanceof City ? false : landmark.equals(landmark1) || landmark.equals(landmark2);
+			return landmark == null || !(landmark instanceof City) ? false : landmark.equals(landmark1) || landmark.equals(landmark2);
 		}
 
 	}

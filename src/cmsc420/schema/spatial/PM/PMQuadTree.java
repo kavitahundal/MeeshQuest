@@ -10,6 +10,8 @@ import org.w3c.dom.Element;
 import cmsc420.drawing.CanvasPlus;
 import cmsc420.schema.Airport;
 import cmsc420.schema.City;
+import cmsc420.schema.CityCoordinateComparator;
+import cmsc420.schema.adjacencylist.AdjacencyList;
 
 public abstract class PMQuadTree {
 	
@@ -21,6 +23,7 @@ public abstract class PMQuadTree {
 	private int size;
 	private CanvasPlus canvas;
 	private String name;
+	private AdjacencyList<City> roads;
 
 	public PMQuadTree(String name, int width, int height) {
 		this.name = name;
@@ -32,6 +35,7 @@ public abstract class PMQuadTree {
 		this.canvas.addRectangle(0, 0, width, height, Color.BLACK, false);
 		this.validator = this.getValidator();
 		this.root = new PMWhiteNode(this.origin, this.width, this.height, this.canvas, this.validator);
+		this.roads = new AdjacencyList<City>(new CityCoordinateComparator());
 	}
 
 	protected abstract Validator getValidator();
@@ -57,8 +61,14 @@ public abstract class PMQuadTree {
 	}
 
 	public void remove(Point2D.Float element) {
-		// TODO
-//		throw new UnsupportedOperationException("I need to implement remove!");
+		this.root = this.root.remove(element);
+		// remove corresponding roads too!
+		if (element instanceof City) {
+			City source = (City) element;
+			for (City sink : this.roads.neighbors(source)) {
+				this.removeRoad(source, sink);
+			}
+		}
 	}
 
 	public int size() {
@@ -94,18 +104,19 @@ public abstract class PMQuadTree {
 		this.root = null;
 	}
 
-	public void addRoad(Point2D.Float endpoint1, Point2D.Float endpoint2) {
+	public void addRoad(City city1, City city2) {
 		if (this.canvas != null) {
-			this.canvas.addLine(endpoint1.x, endpoint1.y, endpoint2.x, endpoint2.y, Color.BLACK);
+			this.canvas.addLine(city1.x, city1.y, city2.x, city2.y, Color.BLACK);
 		}
-		this.add(endpoint1);
-		this.add(endpoint2);
-		this.root = this.root.addRoad(endpoint1, endpoint2);
+		this.add(city1);
+		this.add(city2);
+		this.root = this.root.addRoad(city1, city2);
+		this.roads.addUndirectedEdge(city1, city2);
 	}
 	
-	public void removeRoad(Point2D.Float endpoint1, Point2D.Float endpoint2) {
-		// TODO
-//		throw new UnsupportedOperationException("I need to implement removeRoad!");
+	public void removeRoad(City city1, City city2) {
+		this.root = this.root.removeRoad(city1, city2);
+		this.roads.removeUndirectedEdge(city1, city2);
 	}
 
 	public String getName() {

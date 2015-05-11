@@ -2,6 +2,7 @@ package cmsc420.schema.spatial.PM;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -51,41 +52,41 @@ public class PMBlackNode implements PMNode {
 			this.landmark = landmark;
 			return this;
 		} else {
-			if (this.width == 1 || this.height == 1) {
-				throw new UnsupportedOperationException("Can't subdivide further!");
-			}
-			PMNode node = new PMGrayNode(this.origin, this.width, this.height, this.canvas, this.validator); // partition
-			if (this.canvas != null) {
-				this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
-						this.origin.y + this.height / 2, Color.GRAY);
-				this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
-						this.origin.y + this.height, Color.GRAY);
-			}
-			node.addVertex(this.landmark); // add the old node that was removed
-			node.addVertex(landmark); // add the new node
-			Iterator<City[]> roadsToAdd = this.roads.iterator();
-			while (roadsToAdd.hasNext()) {
-				Object[] road = roadsToAdd.next();
-				node.addRoad((City) road[0], (City) road[1]);
-			}
-			return node;
+			PMNode toAdd = this.partition();
+			toAdd.addVertex(landmark);
+			return toAdd;
 		}
+	}
+	
+	private PMGrayNode partition() {
+		if (this.width == 1 || this.height == 1) {
+			throw new UnsupportedOperationException("Can't subdivide further!");
+		}
+		PMGrayNode node = new PMGrayNode(this.origin, this.width, this.height, this.canvas, this.validator); // partition
+		if (this.canvas != null) {
+			this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
+					this.origin.y + this.height / 2, Color.GRAY);
+			this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
+					this.origin.y + this.height, Color.GRAY);
+		}
+		node.addVertex(this.landmark); // add the old node that was removed
+		Iterator<City[]> roadsToAdd = this.roads.iterator();
+		while (roadsToAdd.hasNext()) {
+			Object[] road = roadsToAdd.next();
+			node.addRoad((City) road[0], (City) road[1]);
+		}
+		return node;
 	}
 
 	@Override
-	public PMNode addRoad(Point2D.Float landmark1, Point2D.Float landmark2) {
-		if (this.validator.valid(this, landmark1, landmark2)) {
-			this.roads.addUndirectedEdge((City) landmark1, (City) landmark2);
+	public PMNode addRoad(City city1, City city2) {
+		if (this.validator.valid(this, city1, city2)) {
+			this.roads.addUndirectedEdge(city1, city2);
 			return this;
 		} else {
-			// TODO
-			throw new UnsupportedOperationException("I'll implement road functionality in part 3");
-			// create gray node
-			// add city to gray node if it isn't null
-			// add all cities in this node's adj list
-			// add the new city
-			// return the gray node
-			// return null;
+			PMNode toAdd = this.partition();
+			toAdd.addRoad(city1, city2);
+			return toAdd;
 		}
 	}
 
@@ -182,6 +183,21 @@ public class PMBlackNode implements PMNode {
 	@Override
 	public int height() {
 		return this.height;
+	}
+
+	@Override
+	public PMNode remove(Float element) {
+		return new PMWhiteNode(this.origin, this.width, this.height, this.canvas, this.validator);
+	}
+
+	@Override
+	public PMNode removeRoad(City city1, City city2) {
+		this.roads.removeUndirectedEdge(city1, city2);
+		if (this.landmark == null && this.roads.size() == 0) {
+			return new PMWhiteNode(this.origin, this.width, this.height, this.canvas, this.validator);
+		} else {
+			return this;
+		}
 	}
 
 }

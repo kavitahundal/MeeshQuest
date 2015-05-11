@@ -1,11 +1,13 @@
 package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.schema.City;
 
 public class PMWhiteNode implements PMNode {
 
@@ -29,9 +31,9 @@ public class PMWhiteNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addRoad(Point2D.Float landmark1, Point2D.Float landmark2) {
+	public PMNode addRoad(City city1, City city2) {
 		return new PMBlackNode(null, this.origin, this.width, this.height, this.canvas, this.validator).addRoad(
-				landmark1, landmark2);
+				city1, city2);
 	}
 
 	@Override
@@ -57,6 +59,16 @@ public class PMWhiteNode implements PMNode {
 	@Override
 	public int height() {
 		return this.height;
+	}
+
+	@Override
+	public PMNode remove(Float element) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public PMNode removeRoad(City city1, City city2) {
+		throw new UnsupportedOperationException();
 	}
 
 }

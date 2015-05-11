@@ -1,6 +1,7 @@
 package cmsc420.schema.spatial.PM;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,6 +9,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.schema.City;
+import cmsc420.schema.spatial.WhiteNode;
 
 public class PMGrayNode implements PMNode {
 
@@ -51,12 +54,12 @@ public class PMGrayNode implements PMNode {
 	}
 
 	@Override
-	public PMNode addRoad(Point2D.Float landmark1, Point2D.Float landmark2) {
+	public PMNode addRoad(City city1, City city2) {
 		// find all relevant quadrants
 		// add line to said quadrants
 		for (int i = 0; i < 4; i++) {
-			if (roadInQuadrant(this.quadrants[i], landmark1, landmark2)) {
-				this.quadrants[i] = this.quadrants[i].addRoad(landmark1, landmark2);
+			if (roadInQuadrant(this.quadrants[i], city1, city2)) {
+				this.quadrants[i] = this.quadrants[i].addRoad(city1, city2);
 			}
 		}
 		return this;
@@ -75,7 +78,7 @@ public class PMGrayNode implements PMNode {
 		float y = quadrant.origin().y;
 		int w = quadrant.width();
 		int h = quadrant.height();
-		
+
 		float highX = Math.max(landmark1.x, landmark2.x);
 		float lowX = Math.min(landmark1.x, landmark2.x);
 		float highY = Math.max(landmark1.y, landmark2.y);
@@ -99,12 +102,12 @@ public class PMGrayNode implements PMNode {
 		if (landmark1.x == landmark2.x) {
 			return landmark1.x >= x && landmark1.x <= x + w && highY >= y && lowY <= y + h;
 		}
-		
+
 		// horizontal lines
 		if (landmark1.y == landmark2.y) {
 			return landmark1.y >= y && landmark1.y <= y + h && highX >= x && lowX <= x + w;
 		}
-		
+
 		double slope = (landmark2.y - landmark1.y) / (landmark2.x - landmark1.x);
 		// y - y1 = m(x - x1)
 		// y = m(x - x1) + y1
@@ -182,9 +185,58 @@ public class PMGrayNode implements PMNode {
 	public int height() {
 		return this.height;
 	}
-	
+
 	public String meeshEasterEgg() {
 		return "fuck you";
+	}
+
+	@Override
+	public PMNode remove(Float element) {
+		if (element != null) {
+			for (int i = 0; i < this.quadrants.length; i++) {
+				if (this.cityInQuadrant(this.quadrants[i], element)) {
+					this.quadrants[i] = this.quadrants[i].remove(element);
+				}
+			}
+		}
+		return this.unPartition();
+	}
+
+	private PMNode unPartition() {
+		// check if we need to un-partition
+		PMNode quad = null;
+		int occupiedQuadrants = 0;
+
+		/* find number of non-white quadrants */
+		for (PMNode q : this.quadrants) {
+			if (!(q instanceof WhiteNode)) {
+				occupiedQuadrants++;
+				quad = q; // get instance of occupied quadrant
+			}
+		}
+
+		/* check if this (gray) node needs to change */
+		if (occupiedQuadrants < 2 && !(quad instanceof PMGrayNode)) {
+			/* check if zero or one city is left */
+			if (occupiedQuadrants == 0) {
+				return new PMWhiteNode(this.origin, this.width, this.height, this.canvas, this.validator);
+			} else {
+				return new PMBlackNode(((PMBlackNode) quad).getLandmark(), this.origin, this.width, this.height,
+						this.canvas, this.validator);
+			}
+		} else {
+			return this;
+		}
+	}
+
+	@Override
+	public PMNode removeRoad(City city1, City city2) {
+		for (int i = 0; i < this.quadrants.length; i++) {
+			if (roadInQuadrant(this.quadrants[i], city1, city2)) {
+				this.quadrants[i] = this.quadrants[i].removeRoad(city1, city2);
+			}
+		}
+		return this.unPartition();
 	}
 
 }
