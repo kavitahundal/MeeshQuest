@@ -1,6 +1,7 @@
 package cmsc420.schema.spatial.PM;
 
 import java.awt.Color;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 
@@ -8,13 +9,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import cmsc420.drawing.CanvasPlus;
+import cmsc420.geom.Inclusive2DIntersectionVerifier;
 import cmsc420.schema.Airport;
 import cmsc420.schema.City;
 import cmsc420.schema.CityCoordinateComparator;
 import cmsc420.schema.adjacencylist.AdjacencyList;
 
 public abstract class PMQuadTree {
-	
+
 	private final int width;
 	private final int height;
 	protected Validator validator;
@@ -113,7 +115,7 @@ public abstract class PMQuadTree {
 		this.root = this.root.addRoad(city1, city2);
 		this.roads.addUndirectedEdge(city1, city2);
 	}
-	
+
 	public void removeRoad(City city1, City city2) {
 		this.root = this.root.removeRoad(city1, city2);
 		this.roads.removeUndirectedEdge(city1, city2);
@@ -126,15 +128,53 @@ public abstract class PMQuadTree {
 	public PMNode getRoot() {
 		return this.root;
 	}
-	
+
 	public Element elementize(Document doc) {
 		Element xmlRoot = doc.createElement("quadtree");
-		int order = this instanceof PM1QuadTree? 1 : 3;
+		int order = this instanceof PM1QuadTree ? 1 : 3;
 		xmlRoot.setAttribute("order", "" + order);
 		xmlRoot.appendChild(this.root.elementize(doc)); // recursive call
 		return xmlRoot;
 	}
-	
+
 	public abstract PMQuadTree reset();
+
+	public boolean validAddVertex(Point2D.Float vertex) {
+		// check if this point and neighboring points are empty
+		int x = (int) vertex.x;
+		int y = (int) vertex.y;
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if (this.contains(new Point2D.Float(x + i, y + j))) {
+					return false;
+				}
+			}
+		}
+
+		// make sure this point intersects with no other line
+		for (City[] road : this.roads) {
+			Line2D edge = new Line2D.Float(road[0], road[1]);
+			if (Inclusive2DIntersectionVerifier.intersects(vertex, edge)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean validAddEdge(City city1, City city2) {
+		Line2D edge = new Line2D.Float(city1, city2);
+		// make sure this point doesn't intersect any other lines (except at
+		// endpoint)
+		for (City[] road : this.roads) {
+			Line2D otherEdge = new Line2D.Float(road[0], road[1]);
+			if (Inclusive2DIntersectionVerifier.intersects(edge, otherEdge)
+					&& !Inclusive2DIntersectionVerifier.intersects(city1, edge)
+					&& !Inclusive2DIntersectionVerifier.intersects(city2, edge)) {
+				return false;
+			}
+		}
+		// what if PM1 and point is really really close to edge?
+		return true;
+	}
 
 }

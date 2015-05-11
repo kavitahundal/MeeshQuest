@@ -268,7 +268,19 @@ public class CommandRunner {
 		if (this.cityAdjList.containsUndirectedEdge(city1, city2)) {
 			throw new RoadAlreadyMappedException();
 		}
-		// TODO validate
+		boolean valid = false;
+		if (!this.metropoles.contains(new Point2D.Float(city1.remoteX, city1.remoteY))) {
+			valid = true;
+		} else {
+			Metropole metropole = this.metropoles.getMetropole(new Point2D.Float(city1.remoteX, city1.remoteY));
+			PMQuadTree quadtree = metropole.getRoads();
+			if (quadtree.validAddEdge(city1, city2)) {
+				valid = true;
+			}
+		}
+		if (!valid) {
+			throw new RoadViolatesPMRulesException();
+		}
 		this.cityAdjList.addUndirectedEdge(city1, city2);
 		if (!this.metropoles.contains(new Point2D.Float(city1.remoteX, city1.remoteY))) {
 			Metropole metropole = new Metropole(city1.remoteX, city2.remoteY, this.pmOrder, this.localWidth,
@@ -294,7 +306,19 @@ public class CommandRunner {
 		if (localX >= this.localWidth || localY >= this.localHeight || remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
 			throw new AirportOutOfBoundsException();
 		}
-		// TODO check if violation or out of bounds here
+		boolean valid = false;
+		if (!this.metropoles.contains(new Point2D.Float(remoteX, remoteY))) {
+			valid = true;
+		} else {
+			Metropole metropole = this.metropoles.getMetropole(new Point2D.Float(remoteX, remoteY));
+			PMQuadTree quadtree = metropole.getRoads();
+			if (quadtree.validAddVertex(airport)) {
+				valid = true;
+			}
+		}
+		if (!valid) {
+			throw new AirportViolatesPMRulesException();
+		}
 		this.airportDictionary.add(airport);
 		if (!this.metropoles.contains(new Point2D.Float(remoteX, remoteY))) {
 			Metropole metropole = new Metropole(airport.remoteX, airport.remoteY, this.pmOrder, this.localWidth,
