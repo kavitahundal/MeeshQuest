@@ -108,8 +108,12 @@ public abstract class PMQuadTree {
 	}
 
 	public void addRoad(City city1, City city2) throws PartitionException {
-		this.add(city1);
-		this.add(city2);
+		if (!this.contains(city1)) {
+			this.add(city1);
+		}
+		if (!this.contains(city2)) {
+			this.add(city2);
+		}
 		this.root = this.root.addRoad(city1, city2);
 		this.roads.addUndirectedEdge(city1, city2);
 		if (this.canvas != null) {

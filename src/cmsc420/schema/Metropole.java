@@ -31,8 +31,6 @@ public class Metropole extends Point2D.Float {
 		} else {
 			throw new UnsupportedOperationException("wrong pm order");
 		}
-//		this.roads = new PM3QuadTree("metropole PM", width, height);
-		// TODO
 		this.dict = new AvlGTreeDictionary(g);
 		this.adj = new AdjacencyList<City>(new CityCoordinateComparator());
 		this.airports = new AirportDictionary();

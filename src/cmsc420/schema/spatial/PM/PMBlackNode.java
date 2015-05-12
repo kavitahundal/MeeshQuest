@@ -54,7 +54,8 @@ public class PMBlackNode implements PMNode {
 			return this;
 		} else {
 			PMNode toAdd = this.partition();
-			toAdd.addVertex(landmark);
+			toAdd = toAdd.addVertex(landmark);
+			this.partitionCanvas();
 			return toAdd;
 		}
 	}
@@ -62,16 +63,11 @@ public class PMBlackNode implements PMNode {
 	private PMGrayNode partition() throws PartitionException {
 		if (this.width == 1 || this.height == 1) {
 //			throw new UnsupportedOperationException("Can't subdivide further!");
-//			System.err.println("hnnnnngggggggg");
+			System.err.println("hnnnnngggggggg");
+			System.err.println(this.origin.x + " " + this.origin.y);
 			throw new PartitionException();
 		}
 		PMGrayNode node = new PMGrayNode(this.origin, this.width, this.height, this.canvas, this.validator); // partition
-		if (this.canvas != null) {
-			this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
-					this.origin.y + this.height / 2, Color.GRAY);
-			this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
-					this.origin.y + this.height, Color.GRAY);
-		}
 		node.addVertex(this.landmark); // add the old node that was removed
 		Iterator<City[]> roadsToAdd = this.roads.iterator();
 		while (roadsToAdd.hasNext()) {
@@ -79,6 +75,15 @@ public class PMBlackNode implements PMNode {
 			node.addRoad((City) road[0], (City) road[1]);
 		}
 		return node;
+	}
+	
+	private void partitionCanvas() {
+		if (this.canvas != null) {
+			this.canvas.addLine(this.origin.x, this.origin.y + this.height / 2, this.origin.x + this.width,
+					this.origin.y + this.height / 2, Color.GRAY);
+			this.canvas.addLine(this.origin.x + this.width / 2, this.origin.y, this.origin.x + this.width / 2,
+					this.origin.y + this.height, Color.GRAY);
+		}
 	}
 
 	@Override
@@ -88,7 +93,8 @@ public class PMBlackNode implements PMNode {
 			return this;
 		} else {
 			PMNode toAdd = this.partition();
-			toAdd.addRoad(city1, city2);
+			toAdd = toAdd.addRoad(city1, city2);
+			this.partitionCanvas();
 			return toAdd;
 		}
 	}

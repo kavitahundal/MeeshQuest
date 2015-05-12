@@ -23,9 +23,13 @@ public class PM1QuadTree extends PMQuadTree {
 			// if it's not null then it should be one of the endpoints
 			Point2D.Float landmark = node.getLandmark();
 //			return landmark == null || !(landmark instanceof City) ? false : landmark.equals(landmark1) || landmark.equals(landmark2);
+			System.err.println("validity test");
 			if (landmark == null) {
-				return true;
+				System.err.println("num roads is " + node.numRoads());
+//				return node.numRoads() == 0;
+				return !true; // WRONG TODO
 			}
+			System.err.println("there's a city here!");
 			if (!(landmark instanceof City)) {
 				return false;
 			}
