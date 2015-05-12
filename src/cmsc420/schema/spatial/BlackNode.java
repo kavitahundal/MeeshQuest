@@ -50,7 +50,7 @@ public class BlackNode implements TreeNode {
 
 	@Override
 	public boolean contains(Point2D.Float loc) {
-		return true;
+		return this.metropole.x == loc.x && this.metropole.y == loc.y;
 	}
 
 	@Override

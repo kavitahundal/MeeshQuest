@@ -1,7 +1,7 @@
 package cmsc420.schema.dictionary;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 import cmsc420.schema.Airport;
@@ -13,15 +13,15 @@ public class AirportDictionary implements Iterable<Airport> {
 	// coords -> airport
 	// airline -> set<airport>
 	
-	private HashMap<String, Airport> nameToAirport;
-	private HashMap<Airport, String> airportToName;
-	private HashMap<String, HashSet<Airport>> airlineToAirports;
+	private Hashtable<String, Airport> nameToAirport;
+	private Hashtable<Airport, String> airportToName;
+	private Hashtable<String, HashSet<Airport>> airlineToAirports;
 	private int size;
 	
 	public AirportDictionary() {
-		this.nameToAirport = new HashMap<>();
-		this.airportToName = new HashMap<>();
-		this.airlineToAirports = new HashMap<>();
+		this.nameToAirport = new Hashtable<>();
+		this.airportToName = new Hashtable<>();
+		this.airlineToAirports = new Hashtable<>();
 		this.size = 0;
 	}
 	

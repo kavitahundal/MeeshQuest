@@ -58,7 +58,7 @@ public class WhiteNode implements TreeNode {
 
 	@Override
 	public Metropole getMetropole(Float loc) {
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 }

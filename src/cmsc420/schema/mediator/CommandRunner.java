@@ -308,7 +308,7 @@ public class CommandRunner {
 		} else if (this.cityDictionary.contains(city) || this.airportDictionary.containsCoordinates(airport)) {
 			throw new DuplicateAirportCoordinatesException();
 		}
-		if (localX >= this.localWidth || localY >= this.localHeight || remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
+		if (localX > this.localWidth || localY > this.localHeight || remoteX >= this.globalWidth || remoteY >= this.globalHeight) {
 			throw new AirportOutOfBoundsException();
 		}
 		boolean valid = false;
@@ -337,7 +337,6 @@ public class CommandRunner {
 			airports.add(airport);
 			this.airportDictionary.add(airport);
 		} catch (PartitionException e) {
-			System.err.println("poppycock!");
 			throw new AirportViolatesPMRulesException();
 		}
 	}
@@ -365,7 +364,7 @@ public class CommandRunner {
 	}
 
 	void unmapAirport(String name) throws AirportDoesNotExistException {
-		if (this.airportDictionary.containsName(name)) {
+		if (!this.airportDictionary.containsName(name)) {
 			throw new AirportDoesNotExistException();
 		}
 		Airport airport = this.airportDictionary.get(name);

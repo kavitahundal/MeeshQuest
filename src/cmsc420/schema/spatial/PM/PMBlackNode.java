@@ -62,6 +62,7 @@ public class PMBlackNode implements PMNode {
 	private PMGrayNode partition() throws PartitionException {
 		if (this.width == 1 || this.height == 1) {
 //			throw new UnsupportedOperationException("Can't subdivide further!");
+//			System.err.println("hnnnnngggggggg");
 			throw new PartitionException();
 		}
 		PMGrayNode node = new PMGrayNode(this.origin, this.width, this.height, this.canvas, this.validator); // partition
